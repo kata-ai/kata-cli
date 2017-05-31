@@ -1,0 +1,26 @@
+{
+   "compileOnSave": true,
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "baseUrl": "./",
+        "sourceMap": true,
+        "sourceRoot": "./",
+        "noImplicitAny": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "outDir": "./lib"
+    },
+
+    "include": [
+        "components/**/*.ts",
+        "components/*.ts",
+        "test/**/*.ts",
+        "test/*.ts",
+        "interfaces/*.ts"
+    ],
+
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "kata-cli",
+  "version": "0.1.0",
+  "description": "Command line tools for Diaenne",
+  "main": "index.js",
+  "bin": {
+    "kata": "./bin/kata.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "clean": "rm -rf ./lib",
+    "build": "tsc",
+    "test": "NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail",
+    "cover": "NODE_ENV=test nyc npm t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org:yesboss/kata-cli.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "nyc": {
+    "include": [
+      "components/**/*.ts",
+      "components/*.ts",
+      "interfaces/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "json",
+      "html"
+    ],
+    "all": true
+  },
+  "author": "Febry Antonius",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/yesboss/kata-cli#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "js-yaml": "^3.8.2",
+    "merapi": "^0.17.1"
+  },
+  "devDependencies": {}
+}

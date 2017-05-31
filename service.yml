@@ -1,0 +1,32 @@
+schema: kata.ai/schema/merapi/1.0
+
+name: ${package.name}
+version: ${package.version}
+
+components:
+    main: Main
+    bot: Bot
+
+commands:
+    bot:
+        type: group
+        desc: Commands for bot management
+        # middleware:
+            # name of component function
+            # - acl.login
+        subcommands:
+            init:
+                desc: initialize new bot.yml file
+                args: "<bot> <name> [version]"
+                params:
+                    config:
+                        type: string
+                        desc: param string
+                handler: bot.init
+    
+    deploy:
+        type: alias
+        desc: alias for call deployment update
+        alias: bot init
+# entry point
+main: main
