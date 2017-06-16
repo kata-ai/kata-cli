@@ -10,6 +10,7 @@
     "test": "test"
   },
   "scripts": {
+    "postinstall": "tsc",
     "clean": "rm -rf ./lib",
     "build": "tsc",
     "test": "NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail",
@@ -47,9 +48,16 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/yesboss/kata-cli#readme",
   "dependencies": {
+    "@types/node": "^7.0.28",
+    "@types/node-uuid": "0.0.28",
     "commander": "^2.9.0",
+    "inquirer": "^3.0.6",
     "js-yaml": "^3.8.2",
-    "merapi": "^0.17.1"
+    "merapi": "^0.17.1",
+    "node-uuid": "^1.4.8"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^7.0.28",
+    "@types/node-uuid": "0.0.28"
+  }
 }

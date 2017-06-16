@@ -6,6 +6,9 @@ version: ${package.version}
 components:
     main: Main
     bot: Bot
+    compile: scripts/Compile
+    utils: scripts/Utils
+    tester: scripts/Tester
 
 commands:
     bot:
@@ -23,10 +26,57 @@ commands:
                         type: string
                         desc: param string
                 handler: bot.init
+            versions:
+                desc: list all bot versions
+                handler: bot.versions
+            list:
+                desc: list all user's bots
+                handler: bot.list
+            push:
+                desc: push and update version bot
+                params:
+                    rev:
+                        type: enum
+                        enum:
+                            - major
+                            - minor
+                            - patch
+                handler: bot.update
+            delete:
+                desc: delete bot
+                handler: bot.delete
+                # middleware:
+                #     - confirm
+            test:
+                desc: running test file
+                args: "[file]"
+                handler: bot.test
+    set:
+        type: command
+        desc: Command for set property value
+        args: "<prop> <value>"
+        handler: utils.setProp
     
-    deploy:
-        type: alias
-        desc: alias for call deployment update
-        alias: bot init
+    login:
+        type: command
+        desc: login to kata
+        params:
+            user:
+                type: string
+                desc: username login
+                short: u
+            password:
+                type: string
+                desc: password login
+                short: p
+            token:
+                type: string
+                desc: token login
+                short: t
+        handler: bot.login
+    # deploy:
+    #     type: alias
+    #     desc: alias for call deployment update
+    #     alias: bot init
 # entry point
 main: main

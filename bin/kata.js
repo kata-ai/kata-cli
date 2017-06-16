@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-let boot = require("./index.js");
+let boot = require("../index.js");
 
 try {
     boot.start();

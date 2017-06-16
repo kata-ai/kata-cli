@@ -1,4 +1,4 @@
-import { Json } from "merapi";
+import { Json, IConfig, IHash, JsonObject } from "merapi";
 
 export interface CommandOptions {
         noHelp?: boolean;
@@ -276,4 +276,26 @@ export interface CommandDescriptor {
     };
     handler?: string;
     alias?: string;
+}
+
+export interface ICompile {
+    execDirectives(config: IConfig, basepath: string) : IConfig;
+    execDirective(name: string, directive: any, dict: IHash<any>, basepath: string) : void
+}
+
+export interface IUtils {
+    getFiles(dir: string, ending: string) : string[];
+    loadYaml(file: string) : JsonObject;
+    dumpYaml(file: string, object: JsonObject) : void;
+    compareTestResult(result: Json, expect: Json) : {field: string, expect: any, result: any}[];
+    setProp(prop: string, value: string, options?: JsonObject) : void;
+    toPromise(ctx: any, func: any, ...args: any[]): Promise<any>;
+    getBotId(): string;
+}
+
+export interface ITester {
+    execIntentTest(yaml: any, botApi: any, botId: string, print: (text: string) => void) : Promise<IHash<{field: string, expect: any, result: any}[]>>;
+    execStateTest(yaml: any, botApi: any, botId: string, print: (text: string) => void) : Promise<IHash<{field: string, expect: any, result: any}[]>>;
+    execActionsTest(yaml: any, botApi: any, botId: string, print: (text: string) => void) : Promise<IHash<{field: string, expect: any, result: any}[]>>;
+    execFlowTest(yaml: any, botApi: any, botId: string, print: (text: string) => void) : Promise<IHash<{field: string, expect: any, result: any}[]>>;
 }
