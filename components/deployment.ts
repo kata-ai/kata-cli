@@ -214,13 +214,13 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "type",
-                message: "channel type (generic, line, facebook): ",
+                message: "channel type (line, fbmessenger): ",
                 when: function() { return !type; },
                 validate: function (type: string) {
                     if (!type)
                         return "Channel type cannot be empty";
                     
-                    if (type.toLowerCase() !== "generic" && type.toLowerCase() !== "line" && type.toLowerCase() !== "facebook")
+                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger")
                         return "Invalid type for channel";
 
                     return true;

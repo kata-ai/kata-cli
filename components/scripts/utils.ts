@@ -96,7 +96,8 @@ export default class Utils extends Component {
     }
 
     createDirectory(path: string, mode?: number) {
-        fs.mkdirSync(path, mode);
+        if (!fs.existsSync(path))
+            fs.mkdirSync(path, mode);
     }
 
     getCurrentToken() : JsonObject {

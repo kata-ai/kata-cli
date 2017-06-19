@@ -17,7 +17,7 @@ export default class Api extends Component {
         this.authApi = new zaun.AuthApi();
         this.userApi = new zaun.UserApi();
         this.deploymentApi = new zaun.DeploymentApi();
-        this.channelApi = new zaun.channelApi();
+        this.channelApi = new zaun.ChannelApi();
         let currentLogin = <string> this.utils.getProp("current_login") || "user";
         let tokenObj = <JsonObject> this.utils.getProp("token") || {};
 

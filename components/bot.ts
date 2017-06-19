@@ -17,7 +17,7 @@ export default class Bot extends Component {
         let botDesc = {
             schema: "kata.ai/schema/kata-ml/1.0",
             name,
-            desc: "Bot",
+            desc: "Bot Description",
             version,
             flows: {
                 "fallback": "$include(./flows/fallback.yml)"
@@ -29,35 +29,59 @@ export default class Bot extends Component {
             nlus: "$include(./nlu.yml)",
             methods: {
                 'confidenceLevel(message,context,data,options,config)': {
-                    code: 'function confidenceLevel(message, context, data, options, config) { return 1; }',
+                    code: 'function confidenceLevel(message, context, data, options, config) { if (message.content === "hi") return 1; return 0; }',
                     entry: "confidenceLevel"
                 }
             },
-            id: uuid()
+            id: bot ? bot : uuid()
         }
 
         let fallbackFlow = {
             priority: 0,
             fallback: true,
             intents: {
-                dunno: {
+                hi: {
                     initial: true,
+                    type: "text",
+                    classifier: {
+                        nlu: "confidenceLevel",
+                        match: 1
+                    }
+                },
+                dunno: {
                     fallback: true
                 }
             },
             states: {
-                sorry: {
+                init: {
                     initial: true,
-                    end: true,
-                    action: [ { name: 'saySorry' } ],
                     transitions: {
+                        sayHi: {
+                            condition: "intent==\"hi\""
+                        },
                         sorry: {
                             fallback: true
                         }
                     }
+                },
+                sayHi: {
+                    end: true,
+                    action: [{ name: "sayHi" }]
+                },
+                sorry: {
+                    end: true,
+                    action: [ { name: "saySorry" } ],
                 }
             },
             actions: {
+                sayHi: {
+                    type: "text",
+                    options: {
+                        data: "$(config.messages)",
+                        path: "templates",
+                        template: "$[sayHi]"
+                    }
+                },
                 saySorry: {
                     type: "text",
                     options: {
@@ -71,7 +95,8 @@ export default class Bot extends Component {
 
         let messages = {
             templates: {
-                saySorry: 'type=text;;message=Maaf, Veronika tidak mengerti kata-kata yang Kamu tulis'
+                sayHi: "Hi, ada yang bisa saya bantu?",
+                saySorry: "Maaf, saya tidak mengerti kata-kata anda."
             }
         };
 
@@ -191,8 +216,8 @@ export default class Bot extends Component {
                 if (!currToken)
                     currToken = <string>options.token;
 
-                this.api.loginApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
-                let result = await this.utils.toPromise(this.api.loginApi, this.api.loginApi.tokensTokenIdGet, options.token);
+                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
+                let result = await this.utils.toPromise(this.api.authApi, this.api.authApi.tokensTokenIdGet, options.token);
                 let tokenObj = result.data;
 
                 if (tokenObj.type === "user") {
@@ -223,7 +248,7 @@ export default class Bot extends Component {
                     teamId: team.id
                 };
 
-                result = await this.utils.toPromise(this.api.loginApi, this.api.loginApi.tokensPost, body);
+                result = await this.utils.toPromise(this.api.authApi, this.api.authApi.tokensPost, body);
                 let teamToken = result.data;
 
                 this.setToken(name, teamToken.id);
@@ -275,7 +300,7 @@ export default class Bot extends Component {
                     password: pass
                 }
 
-                let result = await this.utils.toPromise(this.api.loginApi, this.api.loginApi.loginPost, body);
+                let result = await this.utils.toPromise(this.api.authApi, this.api.authApi.loginPost, body);
                 let userObj = result.data;
 
                 this.setToken("user", userObj.id);
@@ -344,7 +369,7 @@ export default class Bot extends Component {
 
         let botDesc = bot.get();
         botDesc.name = botDesc.name || "bot";
-
+        
         if (!botDesc.id) {
             let id = uuid();
             botDesc.id = id;
@@ -371,7 +396,7 @@ export default class Bot extends Component {
                 
                 desc.version = result.data.version;
 
-                console.log("UPDATE BOT SUCCESSFULLY");
+                console.log("UPDATED BOT SUCCESSFULLY");
             } catch (e) {
                 let errorMessage;
                 
@@ -386,7 +411,7 @@ export default class Bot extends Component {
                     let result = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
 
                     desc.version = result.data.version;
-                    console.log("UPDATE BOT SUCCESSFULLY");
+                    console.log("CREATED BOT SUCCESSFULLY");
                 }
                 else {
                     console.log(errorMessage);
