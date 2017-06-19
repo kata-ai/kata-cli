@@ -100,7 +100,7 @@ export default class Utils extends Component {
     }
 
     getCurrentToken() : JsonObject {
-        let currentLogin = <string> this.getProp("current_login");
+        let currentLogin = <string> this.getProp("current_login") || "";
         let tokenProp = <JsonObject>(this.getProp("token") || {});
 
         return {

@@ -185,11 +185,13 @@ export default class Bot extends Component {
 
     async login(type: string, name: string, options: JsonObject) {
         try {
+            let currToken = this.utils.getCurrentToken()["token"];
+            
             if (options.token) {
-                if (!this.currToken)
-                    this.currToken = <string>options.token;
+                if (!currToken)
+                    currToken = <string>options.token;
 
-                this.api.loginApi.apiClient.defaultHeaders.Authorization = `Bearer ${this.currToken}`;
+                this.api.loginApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
                 let result = await this.utils.toPromise(this.api.loginApi, this.api.loginApi.tokensTokenIdGet, options.token);
                 let tokenObj = result.data;
 
@@ -210,7 +212,7 @@ export default class Bot extends Component {
                 if (!name)
                     throw new Error("You need to provide teamname to login to team");
 
-                if (!this.currToken)
+                if (!currToken)
                     throw new Error("You need to login your user before login to team");
 
                 let result = await this.utils.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, name);
