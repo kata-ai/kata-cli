@@ -31,7 +31,7 @@ export default class Tester extends Component {
                 "data": testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecIntentPost, botId, body);
+            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "intent", body);
             result[name] = this.utils.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length  ? colors.green("passed") : colors.red("not passing")));
         }
@@ -63,7 +63,7 @@ export default class Tester extends Component {
                 data: testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecStateMapperPost, botId, body);
+            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "state-mapper", body);
             result[name] = this.utils.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
         }
@@ -95,7 +95,7 @@ export default class Tester extends Component {
                 data: testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecActionsPost, botId, body);
+            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "action", body);
             result[name] = this.utils.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
         }
@@ -119,7 +119,7 @@ export default class Tester extends Component {
 
             let body = { flow, state, message, context, data };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecFlowPost, botId, body);
+            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "flow", body);
             result[name] = this.utils.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
             if (!execResult) break;

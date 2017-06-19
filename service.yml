@@ -6,9 +6,11 @@ version: ${package.version}
 components:
     main: Main
     bot: Bot
+    deployment: Deployment
     compile: scripts/Compile
     utils: scripts/Utils
     tester: scripts/Tester
+    api: Api
 
 commands:
     bot:
@@ -51,6 +53,32 @@ commands:
                 desc: running test file
                 args: "[file]"
                 handler: bot.test
+    deployment:
+        type: group
+        desc: Commands for deployment bot
+        # middleware:
+        #     - acl.login
+        subcommands:
+            deploy:
+                desc: create or update deployment
+                args: <bot> <name> [version]
+                handler: deployment.deploy
+            addChannel:
+                args: <bot> <name> <channelName>
+                params:
+                    data:
+                        type: json
+                        desc: channel json data
+                        short: d
+                handler: deployment.addChannel
+            removeChannel:
+                desc: remove channel
+                args: <bot> <name> <channelName>
+                handler: deployment.removeChannel
+            drop:
+                desc: remove deployment
+                args: <bot> <name>
+                handler: deployment.drop
     set:
         type: command
         desc: Command for set property value
@@ -60,6 +88,7 @@ commands:
     login:
         type: command
         desc: login to kata
+        args: "<type> [name]"
         params:
             user:
                 type: string

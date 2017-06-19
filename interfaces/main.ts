@@ -288,9 +288,12 @@ export interface IUtils {
     loadYaml(file: string) : JsonObject;
     dumpYaml(file: string, object: JsonObject) : void;
     compareTestResult(result: Json, expect: Json) : {field: string, expect: any, result: any}[];
-    setProp(prop: string, value: string, options?: JsonObject) : void;
+    setProp(prop: string, value: Json, options?: JsonObject) : void;
+    getProp(prop: string, options?: JsonObject): Json;
     toPromise(ctx: any, func: any, ...args: any[]): Promise<any>;
     getBotId(): string;
+    createDirectory(path: string, mode?: number) : void;
+    getCurrentToken() : JsonObject;
 }
 
 export interface ITester {

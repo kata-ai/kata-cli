@@ -62,6 +62,20 @@ export default class Utils extends Component {
         fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");
     };
 
+    getProp(prop: string, options?: JsonObject) : Json {
+        let jsonPath = `${os.homedir()}/.katajson`;
+        let jsonProp;
+
+        if (fs.existsSync(jsonPath)) {
+            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+        }
+        else {
+            jsonProp = {};
+        }
+
+        return jsonProp[prop];
+    }
+
     toPromise(ctx: any, func: any, ...args: any[]): Promise<any> {
         return new Promise((resolve, reject) => {
             args.push((error: Error, data: any, response: Response) => {
@@ -79,5 +93,19 @@ export default class Utils extends Component {
         let desc = this.loadYaml("./bot.yml");
 
         return <string>desc.id;
+    }
+
+    createDirectory(path: string, mode?: number) {
+        fs.mkdirSync(path, mode);
+    }
+
+    getCurrentToken() : JsonObject {
+        let currentLogin = <string> this.getProp("current_login");
+        let tokenProp = <JsonObject>(this.getProp("token") || {});
+
+        return {
+            currentLogin,
+            token: tokenProp[currentLogin]
+        };
     }
 };
