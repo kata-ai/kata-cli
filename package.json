@@ -54,7 +54,8 @@
     "inquirer": "^3.0.6",
     "js-yaml": "^3.8.2",
     "merapi": "^0.17.1",
-    "node-uuid": "^1.4.8"
+    "node-uuid": "^1.4.8",
+    "superagent": "^3.5.2"
   },
   "devDependencies": {
     "@types/node": "^7.0.28",
