@@ -53,6 +53,19 @@ commands:
                 desc: running test file
                 args: "[file]"
                 handler: bot.test
+            console:
+                desc: kata-cli interactive command
+                args: "<diaenneUrl>"
+                params:
+                    session:
+                        type: string
+                        desc: session id to use in console
+                        short: s
+                    token:
+                        type: string
+                        desc: token to connect to diaenne
+                        short: t
+                handler: bot.console
     deployment:
         type: group
         desc: Commands for deployment bot

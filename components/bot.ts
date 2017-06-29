@@ -4,6 +4,9 @@ import {v4 as uuid} from "node-uuid";
 import { ICompile, IUtils, ITester } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
+const repl = require("repl");
+const util = require("util");
+const {proxySync} = require("merapi-proxy");
 
 export default class Bot extends Component {
     constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any) {
@@ -450,6 +453,73 @@ export default class Bot extends Component {
                 errorMessage = e.message;
             
             console.log(errorMessage);
+        }
+    }
+
+    console(diaenneUrl: string, options: JsonObject) {
+        let currentSession = <string> (options.session ? options.session : uuid());
+        let botDesc = this.utils.loadYaml("./bot.yml");
+        let botId = botDesc.id;
+        let diaenne = proxySync(diaenneUrl, {secret: options.token, timeout:25000});
+
+        let con = repl.start({
+            prompt: botDesc.name + ">",
+            writer: function(obj: any) {
+                return util.inspect(obj, false, null, true);
+            }
+        });
+
+        con.context.text = function text(str: string){
+            return diaenne.converseFkey(botId, currentSession, {
+                type: "text",
+                content: str
+            });
+        };
+
+        con.context.button = function button(op: JsonObject, obj: JsonObject = {}){
+            obj.op = op;
+            return diaenne.converseFkey(botId, currentSession, {
+                type: "data",
+                payload: obj
+            });
+        };
+
+        con.context.command = function button(command: string, obj: JsonObject = {}){
+            return diaenne.converseFkey(botId, currentSession, {
+                type: "command",
+                content: command,
+                payload: obj
+            });
+        };
+
+        con.context.current = function(session: string) {
+            if (arguments.length)
+                currentSession = session;
+            else
+                return currentSession;
+        };
+
+        con.context.session = function session(name: string, update: JsonObject) {
+            if (!arguments.length) {
+                return diaenne.getSessionFkey(currentSession);
+            } else if (arguments.length == 1) {
+                return diaenne.getSessionFkey(name)
+            } else {
+                let session = diaenne.getOrCreateFkey(name);
+                diaenne.updateSession(session.id, update);
+            }
+        };
+
+        con.context.clear = function clear(name: string) {
+            name = name || currentSession;
+            let session = diaenne.getSessionFkey(name);
+            if (session)
+                diaenne.removeSession(session.id);
+        }
+
+        con.context.clearCaches = function clearCaches(num: number = 20) {
+            for(let i=0; i<num; i++)
+                diaenne.clearAllCache();
         }
     }
 
