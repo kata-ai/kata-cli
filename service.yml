@@ -16,9 +16,6 @@ commands:
     bot:
         type: group
         desc: Commands for bot management
-        # middleware:
-            # name of component function
-            # - acl.login
         subcommands:
             init:
                 desc: initialize new bot.yml file
@@ -28,12 +25,15 @@ commands:
                         type: string
                         desc: param string
                 handler: bot.init
+                alias: init
             versions:
                 desc: list all bot versions
                 handler: bot.versions
+                alias: versions
             list:
                 desc: list all user's bots
                 handler: bot.list
+                alias: list-bots
             push:
                 desc: push and update version bot
                 params:
@@ -44,15 +44,16 @@ commands:
                             - minor
                             - patch
                 handler: bot.update
+                alias: push
             delete:
                 desc: delete bot
                 handler: bot.delete
-                # middleware:
-                #     - confirm
+                alias: remove-bot
             test:
                 desc: running test file
                 args: "[file]"
                 handler: bot.test
+                alias: test
             console:
                 desc: kata-cli interactive command
                 args: "<diaenneUrl>"
@@ -66,6 +67,7 @@ commands:
                         desc: token to connect to diaenne
                         short: t
                 handler: bot.console
+                alias: console
     deployment:
         type: group
         desc: Commands for deployment bot
@@ -76,6 +78,7 @@ commands:
                 desc: create or update deployment
                 args: <bot> <name> [version]
                 handler: deployment.deploy
+                alias: deploy
             addChannel:
                 args: <bot> <name> <channelName>
                 params:
@@ -84,14 +87,17 @@ commands:
                         desc: channel json data
                         short: d
                 handler: deployment.addChannel
+                alias: add-channel
             removeChannel:
                 desc: remove channel
                 args: <bot> <name> <channelName>
                 handler: deployment.removeChannel
+                alias: remove-channel
             drop:
                 desc: remove deployment
                 args: <bot> <name>
                 handler: deployment.drop
+                alias: drop
     set:
         type: command
         desc: Command for set property value
@@ -116,9 +122,5 @@ commands:
                 desc: token login
                 short: t
         handler: bot.login
-    # deploy:
-    #     type: alias
-    #     desc: alias for call deployment update
-    #     alias: bot init
 # entry point
 main: main

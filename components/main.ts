@@ -34,24 +34,6 @@ export default class Main extends Component {
         }
     }
 
-    // compileGroup(key: string, command: CommandDescriptor, program: Command) {
-    //     let subcommand = program.command(key);
-    //     subcommand.description(command.desc);
-    //     this.compile(command.subcommands, subcommand);
-
-    //     subcommand.action((...args : any[]) => {
-    //         if (args.length == 1) {
-    //             let [self] = args;
-    //             subcommand.parse(self._args);
-    //         } else {
-    //             console.log(args);
-    //             args.pop();
-    //             let cmd = args.shift();
-    //             subcommand.emit(cmd, args);
-    //         }
-    //     })
-    // }
-
     async compileGroup(key: string, command: CommandDescriptor, program: Command) {
         await this.compile(command.subcommands, program, `${key}-`);
     }
@@ -83,6 +65,9 @@ export default class Main extends Component {
                     subcommand.option(`${flag} [value]`, param.desc || "");
             }
         }
+
+        if (command.alias)
+            subcommand.alias(command.alias);
 
         subcommand.action(await this.createAction(command.handler, command.middleware));
     }
