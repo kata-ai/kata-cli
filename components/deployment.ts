@@ -10,8 +10,9 @@ export default class Deployment extends Component {
         super();
     }
 
-    async deploy(bot: string, name: string, version: string, options: JsonObject) {
+    async deploy(name: string, version: string, options: JsonObject) {
         let deployment;
+        let bot = this.utils.getBotId();
 
         try {
             let {data} = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
@@ -96,8 +97,9 @@ export default class Deployment extends Component {
         }
     }
 
-    async addChannel(bot: string, name: string, channelName: string, options: JsonObject) {
+    async addChannel(name: string, channelName: string, options: JsonObject) {
         try {
+            let bot = this.utils.getBotId();
             let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
             let deployment = result.data;
 
@@ -138,7 +140,9 @@ export default class Deployment extends Component {
         }
     }
 
-    async removeChannel(bot: string, name: string, channelName: string, options: JsonObject) {
+    async removeChannel(name: string, channelName: string, options: JsonObject) {
+        let bot = this.utils.getBotId();
+
         try {
             let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
             let deployment = result.data;
@@ -170,7 +174,9 @@ export default class Deployment extends Component {
         }
     }
 
-    async drop(bot: string, name: string, options: JsonObject) {
+    async drop(name: string, options: JsonObject) {
+        let bot = this.utils.getBotId();
+
         try {
             let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdDelete, bot, name);
             let deployment = result.data;

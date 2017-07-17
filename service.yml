@@ -76,11 +76,11 @@ commands:
         subcommands:
             deploy:
                 desc: create or update deployment
-                args: <bot> <name> [version]
+                args: <name> [version]
                 handler: deployment.deploy
                 alias: deploy
             addChannel:
-                args: <bot> <name> <channelName>
+                args: <name> <channelName>
                 params:
                     data:
                         type: json
@@ -90,12 +90,12 @@ commands:
                 alias: add-channel
             removeChannel:
                 desc: remove channel
-                args: <bot> <name> <channelName>
+                args: <name> <channelName>
                 handler: deployment.removeChannel
                 alias: remove-channel
             drop:
                 desc: remove deployment
-                args: <bot> <name>
+                args: <name>
                 handler: deployment.drop
                 alias: drop
     set:
