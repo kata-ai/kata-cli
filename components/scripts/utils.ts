@@ -95,9 +95,9 @@ export default class Utils extends Component {
         return <string>desc.id;
     }
 
-    createDirectory(path: string, mode?: number) {
-        if (!fs.existsSync(path))
-            fs.mkdirSync(path, mode);
+    createDirectory(dirPath: string, mode?: number) {
+        if (!fs.existsSync(dirPath))
+            fs.mkdirSync(dirPath, mode);
     }
 
     getCurrentToken() : JsonObject {
@@ -108,5 +108,21 @@ export default class Utils extends Component {
             currentLogin,
             token: tokenProp[currentLogin]
         };
+    }
+
+    loadYamlOrJsonFile(filePath: string) {
+        if (!fs.existsSync(filePath))
+            return new Error("FILE NOT FOUND");
+
+        let fileExt = path.extname(filePath);
+
+        if (fileExt === ".json") {
+            return JSON.parse(fs.readFileSync(filePath, "utf8"));
+        }
+        else if (fileExt === ".yml" || fileExt === ".yaml") {
+            return this.loadYaml(filePath);
+        }
+        else
+            return new Error("UNSUPPORTED FILE TYPE");
     }
 };

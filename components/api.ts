@@ -10,6 +10,7 @@ export default class Api extends Component {
     private userApi: any;
     private deploymentApi: any;
     private channelApi: any;
+    private sessionApi: any;
 
     constructor(private utils: IUtils) {
         super();
@@ -18,6 +19,7 @@ export default class Api extends Component {
         this.userApi = new zaun.UserApi();
         this.deploymentApi = new zaun.DeploymentApi();
         this.channelApi = new zaun.ChannelApi();
+        this.sessionApi = new zaun.SessionApi();
         let currentLogin = <string> this.utils.getProp("current_login") || "user";
         let tokenObj = <JsonObject> this.utils.getProp("token") || {};
 
