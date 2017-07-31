@@ -294,6 +294,7 @@ export interface IUtils {
     getBotId(): string;
     createDirectory(path: string, mode?: number) : void;
     getCurrentToken() : JsonObject;
+    loadYamlOrJsonFile(filePath: string) : JsonObject;
 }
 
 export interface ITester {

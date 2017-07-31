@@ -7,6 +7,7 @@ components:
     main: Main
     bot: Bot
     deployment: Deployment
+    session: Session
     compile: scripts/Compile
     utils: scripts/Utils
     tester: scripts/Tester
@@ -71,8 +72,6 @@ commands:
     deployment:
         type: group
         desc: Commands for deployment bot
-        # middleware:
-        #     - acl.login
         subcommands:
             deploy:
                 desc: create or update deployment
@@ -98,6 +97,45 @@ commands:
                 args: <name>
                 handler: deployment.drop
                 alias: drop
+    session:
+        type: group
+        desc: Commands for session management
+        subcommands:
+            get:
+                desc: get session
+                args: "<id> [deploymentId]"
+                handler: session.get
+            create:
+                desc: create session
+                args: "[id] [deploymentId]"
+                params:
+                    data:
+                        type: json
+                        desc: session json object
+                        short: d
+                    file:
+                        type: file
+                        desc: file yaml or json contains session
+                        short: f
+                handler: session.create
+            update:
+                desc: update session
+                args: "<id> [deploymentId]"
+                params:
+                    data:
+                        type: json
+                        desc: session json object
+                        short: d
+                    file:
+                        type: file
+                        desc: file yaml or json contains session
+                        short: f
+                handler: session.update
+            delete:
+                desc: delete session
+                args: "<id> [deploymentId]"
+                handler: session.delete
+            
     set:
         type: command
         desc: Command for set property value
