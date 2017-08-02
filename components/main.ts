@@ -47,11 +47,14 @@ export default class Main extends Component {
 
     async compileCommand(key: string, command: CommandDescriptor, program: Command) {
         let subcommand;
+        let commandKey = command.alias ? command.alias : key;
 
-        if (command.args)
-            subcommand = program.command(`${key} ${command.args}`)
-        else
-            subcommand = program.command(key);
+        if (command.args) {
+            subcommand = program.command(`${commandKey} ${command.args}`)
+        }
+        else {
+            subcommand = program.command(commandKey);
+        }
         
         if (command.params) {
             for (let i in command.params) {
@@ -65,9 +68,6 @@ export default class Main extends Component {
                     subcommand.option(`${flag} [value]`, param.desc || "");
             }
         }
-
-        if (command.alias)
-            subcommand.alias(command.alias);
 
         subcommand.action(await this.createAction(command.handler, command.middleware));
     }
