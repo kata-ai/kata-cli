@@ -410,7 +410,7 @@ export default class Bot extends Component {
 
                 errorMessage = errorMessage.replace(/\s/g, "_").toUpperCase();
 
-                if (errorMessage === "BOT_NOT_FOUND.") {
+                if (errorMessage === "Bot not found.") {
                     let result = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
 
                     desc.version = result.data.version;
