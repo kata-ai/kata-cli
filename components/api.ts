@@ -18,7 +18,7 @@ export default class Api extends Component {
         super();
         
         this.apiClient = zaun.ApiClient.instance;
-        let basePath = this.utils.getProp("zaunUrl") || "http://zaun.katalabs.io/";
+        let basePath = this.utils.getProp("zaunUrl") || "http://zaun.katalabs.io";
         
         this.apiClient.basePath = basePath;
         this.bearer = this.apiClient.authentications['Bearer'];
