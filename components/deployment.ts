@@ -39,8 +39,6 @@ export default class Deployment extends Component {
             let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
 
             deployment = data;
-
-            console.log("DEPLOYMENT", deployment);
         } catch (e) {
             let errorMessage;
 
@@ -113,21 +111,13 @@ export default class Deployment extends Component {
             channelData.name = channelName;
             channelData = await this.getRequiredChannelData(channelData);
 
-            result = await this.utils.toPromise(this.api.channelApi, this.api.channelApi.channelsPost, channelData);
+            result = await this.utils.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDepIdChannelsPost, channelData, bot, name);
             let channel = result.data;
 
-            let body : IHash<IHash<IHash<string>>> = {
-                options: {
-                    channels: {
-                    }
-                }
-            }
-
-            body.options.channels[channelName] = channel.id;
-            result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdPut, bot, name, body);
+            deployment.channels[channelName] = channel.id;
 
             console.log("CHANNEL ADDED SUCCESSFULLY");
-            console.log(result.data);
+            console.log(deployment);
         } catch (e) {
             let errorMessage;
 
@@ -150,16 +140,7 @@ export default class Deployment extends Component {
             if (!deployment.channels[channelName])
                 throw new Error("CHANNEL NOT FOUND");
 
-            let body : IHash<IHash<IHash<string>>> = {
-                options: {
-                    channels: {
-                    }
-                }
-            }
-
-            body.options.channels[channelName] = null;
-            let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdPut, bot, name, body);
-            result = await this.utils.toPromise(this.api.channelApi, this.api.channelApi.channelsChannelIdDelete, deployment.channels[channelName]);
+            await this.utils.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDepIdChannelsChannelIdDelete, bot, name, deployment.channels[channelName]);
 
             console.log("CHANNEL REMOVED SUCCESSFULLY");
         } catch (e) {
@@ -180,14 +161,8 @@ export default class Deployment extends Component {
         try {
             let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdDelete, bot, name);
             let deployment = result.data;
-            let promises : Promise<any>[] = [];
 
-            for (let channelName in deployment.channels) {
-                promises.push(this.utils.toPromise(this.api.channelApi, this.api.channelApi.channelsChannelIdDelete, deployment.channels[channelName]));
-            }
-
-            await Promise.all(promises);
-
+            console.log(deployment);
             console.log("DEPLOYMENT DELETED SUCCESSFULLY");
         } catch (e) {
             let errorMessage;
@@ -220,13 +195,13 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "type",
-                message: "channel type (line, fbmessenger): ",
+                message: "channel type (line, fbmessenger, slack): ",
                 when: function() { return !type; },
                 validate: function (type: string) {
                     if (!type)
                         return "Channel type cannot be empty";
                     
-                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger")
+                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger" && type.toLowerCase() !== "slack")
                         return "Invalid type for channel";
 
                     return true;
@@ -264,11 +239,11 @@ export default class Deployment extends Component {
                 name: "secret",
                 message: "channel secret key: ",
                 when: function() { return !secret },
-                validate: function (secret: string) {
-                    if (!secret)
-                        return "Channel secret cannot be empty";
+                filter: function(secret: string) {
+                    if (!secret && secret.length === 0)
+                        return null;
                     
-                    return true;
+                    return secret;
                 }
             },
             {
