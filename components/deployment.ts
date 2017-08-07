@@ -240,7 +240,7 @@ export default class Deployment extends Component {
                 message: "channel secret key: ",
                 when: function() { return !secret },
                 filter: function(secret: string) {
-                    if (!secret && secret.length === 0)
+                    if (!secret || secret.length === 0)
                         return null;
                     
                     return secret;
