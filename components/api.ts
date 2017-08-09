@@ -13,6 +13,7 @@ export default class Api extends Component {
     private deploymentApi: any;
     private channelApi: any;
     private sessionApi: any;
+    private cachesApi: any;
 
     constructor(private utils: IUtils) {
         super();
@@ -32,5 +33,6 @@ export default class Api extends Component {
         this.deploymentApi = new zaun.DeploymentApi();
         this.channelApi = new zaun.ChannelApi();
         this.sessionApi = new zaun.SessionApi();
+        this.cachesApi = new zaun.CachesApi();
     }
 }

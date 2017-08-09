@@ -62,6 +62,13 @@ Create token
 ### Example
 ```javascript
 var Zaun = require('zaun');
+var defaultClient = Zaun.ApiClient.default;
+
+// Configure API key authorization: Bearer
+var Bearer = defaultClient.authentications['Bearer'];
+Bearer.apiKey = 'YOUR API KEY';
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//Bearer.apiKeyPrefix = 'Token';
 
 var apiInstance = new Zaun.AuthApi();
 
@@ -90,7 +97,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[Bearer](../README.md#Bearer)
 
 ### HTTP request headers
 
@@ -106,6 +113,13 @@ Read token by ID
 ### Example
 ```javascript
 var Zaun = require('zaun');
+var defaultClient = Zaun.ApiClient.default;
+
+// Configure API key authorization: Bearer
+var Bearer = defaultClient.authentications['Bearer'];
+Bearer.apiKey = 'YOUR API KEY';
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//Bearer.apiKeyPrefix = 'Token';
 
 var apiInstance = new Zaun.AuthApi();
 
@@ -134,7 +148,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[Bearer](../README.md#Bearer)
 
 ### HTTP request headers
 
