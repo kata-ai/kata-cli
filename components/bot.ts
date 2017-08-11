@@ -6,7 +6,7 @@ const colors = require("colors");
 const inquirer = require("inquirer");
 const repl = require("repl");
 const util = require("util");
-const {proxySync} = require("merapi-proxy");
+const deasync = require("deasync");
 
 export default class Bot extends Component {
     constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any) {
@@ -454,11 +454,11 @@ export default class Bot extends Component {
         }
     }
 
-    console(diaenneUrl: string, options: JsonObject) {
+    console(options: JsonObject) {
         let currentSession = <string> (options.session ? options.session : uuid());
         let botDesc = this.utils.loadYaml("./bot.yml");
         let botId = botDesc.id;
-        let diaenne = proxySync(diaenneUrl, {secret: options.token, timeout:25000});
+        let defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
         let con = repl.start({
             prompt: botDesc.name + ">",
@@ -468,57 +468,134 @@ export default class Bot extends Component {
         });
 
         con.context.text = function text(str: string){
-            return diaenne.converseFkey(botId, currentSession, {
+            let message = {
                 type: "text",
                 content: str
-            });
-        };
+            };
+            let body = {
+                sessionId: currentSession,
+                message
+            }
+
+            try {
+                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+
+                return data;
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
+            }
+        }.bind(this);
 
         con.context.button = function button(op: JsonObject, obj: JsonObject = {}){
             obj.op = op;
-            return diaenne.converseFkey(botId, currentSession, {
+            let message = {
                 type: "data",
                 payload: obj
-            });
-        };
+            };
+            let body = {
+                sessionId: currentSession,
+                message
+            }
+
+            try {
+                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+
+                return data;
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
+            }
+        }.bind(this);
 
         con.context.command = function button(command: string, obj: JsonObject = {}){
-            return diaenne.converseFkey(botId, currentSession, {
+            let message = {
                 type: "command",
                 content: command,
                 payload: obj
-            });
-        };
+            };
+            let body = {
+                sessionId: currentSession,
+                message
+            }
+
+            try {
+                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+
+                return data;
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
+            }
+        }.bind(this);
 
         con.context.current = function(session: string) {
             if (arguments.length)
                 currentSession = session;
             else
                 return currentSession;
-        };
+        }.bind(this);
 
         con.context.session = function session(name: string, update: JsonObject) {
-            if (!arguments.length) {
-                return diaenne.getSessionFkey(currentSession);
-            } else if (arguments.length == 1) {
-                return diaenne.getSessionFkey(name)
-            } else {
-                let session = diaenne.getOrCreateFkey(name);
-                diaenne.updateSession(session.id, update);
+            try {
+                if (!arguments.length) {
+                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
+
+                    return res.data;
+                } else if (arguments.length == 1) {
+                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+
+                    return res.data;
+                } else {
+                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
+                    let session = res.data;
+                    res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
+
+                    return res.data;
+                }
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
             }
-        };
+        }.bind(this);
 
         con.context.clear = function clear(name: string) {
             name = name || currentSession;
-            let session = diaenne.getSessionFkey(name);
-            if (session)
-                diaenne.removeSession(session.id);
-        }
+
+            try {
+                let { data } = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+                let session = { ...data };
+
+                if (session)
+                    this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
+            }
+        }.bind(this);
 
         con.context.clearCaches = function clearCaches(num: number = 20) {
-            for(let i=0; i<num; i++)
-                diaenne.clearAllCache();
-        }
+            try {
+                for(let i=0; i<num; i++) {
+                    this.sync(this.utils.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
+                }
+            } catch (e) {
+                if (e.response && e.response.body && e.response.body.message)
+                    return e.response.body.message;
+                else
+                    return e.message;
+            }
+        }.bind(this);
     }
 
     private setToken(user: string, token: string) {
@@ -526,5 +603,32 @@ export default class Bot extends Component {
         let tokenProp = <JsonObject>(this.utils.getProp("token") || {});
         tokenProp[user] = token;
         this.utils.setProp("token", tokenProp);
+    }
+
+    private sync(promise: any) {
+        if (promise && typeof promise.then == "function") {
+            let done = false;
+            let error : Error = null;
+            let result;
+
+            promise.then((res : any) => {
+                done = true;
+                result = res;
+            }).catch((e : Error) => {
+                error = e;
+            });
+
+            deasync.loopWhile(() => {
+                return !done && !error;
+            });
+
+            if (error)
+                throw error;
+
+            return result;
+        }
+        
+
+        throw new Error("Sync only accept promises");
     }
 }

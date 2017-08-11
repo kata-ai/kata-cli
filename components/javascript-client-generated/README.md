@@ -101,6 +101,7 @@ Class | Method | HTTP request | Description
 *Zaun.BotApi* | [**botsBotIdVersionsGet**](docs/BotApi.md#botsBotIdVersionsGet) | **GET** /bots/{botId}/versions | Get bot versions
 *Zaun.BotApi* | [**botsGet**](docs/BotApi.md#botsGet) | **GET** /bots | Get all bots
 *Zaun.BotApi* | [**botsPost**](docs/BotApi.md#botsPost) | **POST** /bots | Create bot
+*Zaun.CachesApi* | [**cachesDelete**](docs/CachesApi.md#cachesDelete) | **DELETE** /caches | Clear diaenne&#39;s caches
 *Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdDelete**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdDelete) | **DELETE** /bots/{botId}/deployments/{depId}/channels/{channelId} | Delete channel by ID
 *Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdGet**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdGet) | **GET** /bots/{botId}/deployments/{depId}/channels/{channelId} | Find channel by ID
 *Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdPut**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdPut) | **PUT** /bots/{botId}/deployments/{depId}/channels/{channelId} | Update channel by ID

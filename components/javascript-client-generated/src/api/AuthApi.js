@@ -132,7 +132,7 @@
       var formParams = {
       };
 
-      var authNames = [];
+      var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
       var returnType = Token;
@@ -177,7 +177,7 @@
       var formParams = {
       };
 
-      var authNames = [];
+      var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
       var returnType = Token;
