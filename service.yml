@@ -155,5 +155,10 @@ commands:
                 desc: token login
                 short: t
         handler: bot.login
+    
+    whoami:
+        type: command
+        desc: identify current user
+        handler: bot.whoami
 # entry point
 main: main
