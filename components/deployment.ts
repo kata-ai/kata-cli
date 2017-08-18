@@ -59,10 +59,8 @@ export default class Deployment extends Component {
                 let opts = {
                     body: {
                         name,
-                        options: {
-                            version,
-                            channels: {}
-                        }
+                        botVersion: version,
+                        channels: {}
                     }
                 }
 
@@ -73,9 +71,8 @@ export default class Deployment extends Component {
             }
             else {
                 let body = {
-                    options: {
-                        version
-                    }
+                    name,
+                    botVersion: version
                 };
 
                 let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdPut, bot, name, body);
