@@ -577,10 +577,18 @@ export default class Bot extends Component {
                 if (session)
                     this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
             } catch (e) {
+                let errorMessage;
+                
                 if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
+                    errorMessage = e.response.body.message;
                 else
-                    return e.message;
+                    errorMessage = e.message;
+
+                if (errorMessage == "Session not found.") {
+                    return;
+                }
+
+                return errorMessage;
             }
         }.bind(this);
 
