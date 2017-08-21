@@ -198,7 +198,7 @@ export default class Deployment extends Component {
                     if (!type)
                         return "Channel type cannot be empty";
                     
-                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger" && type.toLowerCase() !== "slack")
+                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger" && type.toLowerCase() !== "slack" && type.toLowerCase() !== "generic")
                         return "Invalid type for channel";
 
                     return true;
@@ -212,11 +212,11 @@ export default class Deployment extends Component {
                 name: "token",
                 message: "channel token: ",
                 when: function() { return !token; },
-                validate: function (token: string) {
-                    if (!token)
-                        return "Channel token cannot be empty";
+                filter: function(token: string) {
+                    if (!token || token.length === 0)
+                        return null;
                     
-                    return true;
+                    return token;
                 }
             },
             {
