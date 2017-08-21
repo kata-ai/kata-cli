@@ -22,10 +22,6 @@ pipelines:
             - export PATH=$HOME/.yarn/bin:$PATH
             - yarn
             - npm run cover
-            - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-            - docker build --force-rm=true -t=$REPO_NAME .
-            - docker tag $REPO_NAME $DOCKER_TEAMNAME/$REPO_NAME:$BITBUCKET_TAG
-            - docker push $DOCKER_TEAMNAME/$REPO_NAME:$BITBUCKET_TAG
 
   branches:
     develop:
@@ -37,10 +33,6 @@ pipelines:
             - export PATH=$HOME/.yarn/bin:$PATH
             - yarn
             - npm run cover
-            - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-            - docker build --force-rm=true -t=$REPO_NAME .
-            - docker tag $REPO_NAME $DOCKER_TEAMNAME/$REPO_NAME:latest
-            - docker push $DOCKER_TEAMNAME/$REPO_NAME:latest
 
 options:
   docker: true
