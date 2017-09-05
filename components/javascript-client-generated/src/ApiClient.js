@@ -55,9 +55,9 @@
     /**
      * The base URL against which to resolve every API call's (relative) path.
      * @type {String}
-     * @default http://zaun.katalabs.io/
+     * @default https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0
      */
-    this.basePath = 'http://zaun.katalabs.io/'.replace(/\/+$/, '');
+    this.basePath = 'https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0'.replace(/\/+$/, '');
 
     /**
      * The authentication methods to be included for all API calls.

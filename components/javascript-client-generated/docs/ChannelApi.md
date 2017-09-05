@@ -1,19 +1,19 @@
 # Zaun.ChannelApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**botsBotIdDeploymentsDepIdChannelsChannelIdDelete**](ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdDelete) | **DELETE** /bots/{botId}/deployments/{depId}/channels/{channelId} | Delete channel by ID
-[**botsBotIdDeploymentsDepIdChannelsChannelIdGet**](ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdGet) | **GET** /bots/{botId}/deployments/{depId}/channels/{channelId} | Find channel by ID
-[**botsBotIdDeploymentsDepIdChannelsChannelIdPut**](ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdPut) | **PUT** /bots/{botId}/deployments/{depId}/channels/{channelId} | Update channel by ID
-[**botsBotIdDeploymentsDepIdChannelsGet**](ChannelApi.md#botsBotIdDeploymentsDepIdChannelsGet) | **GET** /bots/{botId}/deployments/{depId}/channels | Get all channels
-[**botsBotIdDeploymentsDepIdChannelsPost**](ChannelApi.md#botsBotIdDeploymentsDepIdChannelsPost) | **POST** /bots/{botId}/deployments/{depId}/channels | Create a channel
+[**botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete**](ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Delete channel by ID
+[**botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet**](ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Find channel by ID
+[**botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut**](ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Update channel by ID
+[**botsBotIdDeploymentsDeploymentIdChannelsGet**](ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsGet) | **GET** /bots/{botId}/deployments/{deploymentId}/channels | Get all channels
+[**botsBotIdDeploymentsDeploymentIdChannelsPost**](ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsPost) | **POST** /bots/{botId}/deployments/{deploymentId}/channels | Create a channel
 
 
-<a name="botsBotIdDeploymentsDepIdChannelsChannelIdDelete"></a>
-# **botsBotIdDeploymentsDepIdChannelsChannelIdDelete**
-> Channel botsBotIdDeploymentsDepIdChannelsChannelIdDelete(botId, depId, channelId)
+<a name="botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete"></a>
+# **botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete**
+> Channel botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete(botId, deploymentId, channelId)
 
 Delete channel by ID
 
@@ -32,7 +32,7 @@ var apiInstance = new Zaun.ChannelApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to update
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
 var channelId = "channelId_example"; // String | ID of channel to delete
 
@@ -44,7 +44,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdDelete(botId, depId, channelId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete(botId, deploymentId, channelId, callback);
 ```
 
 ### Parameters
@@ -52,7 +52,7 @@ apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdDelete(botId, depId, chann
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to update | 
+ **deploymentId** | **String**| ID of deployment to update | 
  **channelId** | **String**| ID of channel to delete | 
 
 ### Return type
@@ -68,9 +68,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdChannelsChannelIdGet"></a>
-# **botsBotIdDeploymentsDepIdChannelsChannelIdGet**
-> Channel botsBotIdDeploymentsDepIdChannelsChannelIdGet(botId, depId, channelId)
+<a name="botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet"></a>
+# **botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet**
+> Channel botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet(botId, deploymentId, channelId)
 
 Find channel by ID
 
@@ -89,7 +89,7 @@ var apiInstance = new Zaun.ChannelApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to update
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
 var channelId = "channelId_example"; // String | ID of channel
 
@@ -101,7 +101,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdGet(botId, depId, channelId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet(botId, deploymentId, channelId, callback);
 ```
 
 ### Parameters
@@ -109,7 +109,7 @@ apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdGet(botId, depId, channelI
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to update | 
+ **deploymentId** | **String**| ID of deployment to update | 
  **channelId** | **String**| ID of channel | 
 
 ### Return type
@@ -125,9 +125,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdChannelsChannelIdPut"></a>
-# **botsBotIdDeploymentsDepIdChannelsChannelIdPut**
-> Channel botsBotIdDeploymentsDepIdChannelsChannelIdPut(botId, depId, channelId, body)
+<a name="botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut"></a>
+# **botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut**
+> Channel botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut(botId, deploymentId, channelId, body)
 
 Update channel by ID
 
@@ -146,7 +146,7 @@ var apiInstance = new Zaun.ChannelApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to update
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
 var channelId = "channelId_example"; // String | ID of channel to update
 
@@ -160,7 +160,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdPut(botId, depId, channelId, body, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut(botId, deploymentId, channelId, body, callback);
 ```
 
 ### Parameters
@@ -168,7 +168,7 @@ apiInstance.botsBotIdDeploymentsDepIdChannelsChannelIdPut(botId, depId, channelI
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to update | 
+ **deploymentId** | **String**| ID of deployment to update | 
  **channelId** | **String**| ID of channel to update | 
  **body** | [**Channel**](Channel.md)| Channel object | 
 
@@ -185,9 +185,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdChannelsGet"></a>
-# **botsBotIdDeploymentsDepIdChannelsGet**
-> InlineResponse2002 botsBotIdDeploymentsDepIdChannelsGet(botId, depId, opts)
+<a name="botsBotIdDeploymentsDeploymentIdChannelsGet"></a>
+# **botsBotIdDeploymentsDeploymentIdChannelsGet**
+> InlineResponse2002 botsBotIdDeploymentsDeploymentIdChannelsGet(botId, deploymentId, opts)
 
 Get all channels
 
@@ -206,7 +206,7 @@ var apiInstance = new Zaun.ChannelApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to update
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
 var opts = { 
   'limit': 56, // Number | Limit returned channels in a page
@@ -220,7 +220,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdChannelsGet(botId, depId, opts, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdChannelsGet(botId, deploymentId, opts, callback);
 ```
 
 ### Parameters
@@ -228,7 +228,7 @@ apiInstance.botsBotIdDeploymentsDepIdChannelsGet(botId, depId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to update | 
+ **deploymentId** | **String**| ID of deployment to update | 
  **limit** | **Number**| Limit returned channels in a page | [optional] 
  **page** | **Number**| A number representing page | [optional] 
 
@@ -245,9 +245,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdChannelsPost"></a>
-# **botsBotIdDeploymentsDepIdChannelsPost**
-> Channel botsBotIdDeploymentsDepIdChannelsPost(body, botId, depId)
+<a name="botsBotIdDeploymentsDeploymentIdChannelsPost"></a>
+# **botsBotIdDeploymentsDeploymentIdChannelsPost**
+> Channel botsBotIdDeploymentsDeploymentIdChannelsPost(body, botId, deploymentId)
 
 Create a channel
 
@@ -268,7 +268,7 @@ var body = new Zaun.Channel(); // Channel | Channel object
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment
+var deploymentId = "deploymentId_example"; // String | ID of deployment
 
 
 var callback = function(error, data, response) {
@@ -278,7 +278,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdChannelsPost(body, botId, depId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdChannelsPost(body, botId, deploymentId, callback);
 ```
 
 ### Parameters
@@ -287,7 +287,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**Channel**](Channel.md)| Channel object | 
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment | 
+ **deploymentId** | **String**| ID of deployment | 
 
 ### Return type
 

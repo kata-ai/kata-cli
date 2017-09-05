@@ -1,4 +1,4 @@
-# Zaun.InlineResponse2005Members
+# Zaun.InlineResponse2006Members
 
 ## Properties
 Name | Type | Description | Notes

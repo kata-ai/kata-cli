@@ -59,50 +59,50 @@
   }
 
   describe('ChannelApi', function() {
-    describe('botsBotIdDeploymentsDepIdChannelsChannelIdDelete', function() {
-      it('should call botsBotIdDeploymentsDepIdChannelsChannelIdDelete successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdChannelsChannelIdDelete
-        //instance.botsBotIdDeploymentsDepIdChannelsChannelIdDelete(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete
+        //instance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdChannelsChannelIdGet', function() {
-      it('should call botsBotIdDeploymentsDepIdChannelsChannelIdGet successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdChannelsChannelIdGet
-        //instance.botsBotIdDeploymentsDepIdChannelsChannelIdGet(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet
+        //instance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdChannelsChannelIdPut', function() {
-      it('should call botsBotIdDeploymentsDepIdChannelsChannelIdPut successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdChannelsChannelIdPut
-        //instance.botsBotIdDeploymentsDepIdChannelsChannelIdPut(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut
+        //instance.botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdChannelsGet', function() {
-      it('should call botsBotIdDeploymentsDepIdChannelsGet successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdChannelsGet
-        //instance.botsBotIdDeploymentsDepIdChannelsGet(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdChannelsGet', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdChannelsGet successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdChannelsGet
+        //instance.botsBotIdDeploymentsDeploymentIdChannelsGet(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdChannelsPost', function() {
-      it('should call botsBotIdDeploymentsDepIdChannelsPost successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdChannelsPost
-        //instance.botsBotIdDeploymentsDepIdChannelsPost(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdChannelsPost', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdChannelsPost successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdChannelsPost
+        //instance.botsBotIdDeploymentsDeploymentIdChannelsPost(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});

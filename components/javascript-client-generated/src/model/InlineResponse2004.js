@@ -25,18 +25,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/User'], factory);
+    define(['ApiClient', 'model/Role'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./User'));
+    module.exports = factory(require('../ApiClient'), require('./Role'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.InlineResponse2004 = factory(root.Zaun.ApiClient, root.Zaun.User);
+    root.Zaun.InlineResponse2004 = factory(root.Zaun.ApiClient, root.Zaun.Role);
   }
-}(this, function(ApiClient, User) {
+}(this, function(ApiClient, Role) {
   'use strict';
 
 
@@ -87,7 +87,7 @@
         obj['total'] = ApiClient.convertToType(data['total'], 'Number');
       }
       if (data.hasOwnProperty('items')) {
-        obj['items'] = ApiClient.convertToType(data['items'], [User]);
+        obj['items'] = ApiClient.convertToType(data['items'], [Role]);
       }
     }
     return obj;
@@ -110,7 +110,7 @@
    */
   exports.prototype['total'] = undefined;
   /**
-   * @member {Array.<module:model/User>} items
+   * @member {Array.<module:model/Role>} items
    */
   exports.prototype['items'] = undefined;
 

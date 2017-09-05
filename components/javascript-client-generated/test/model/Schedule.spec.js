@@ -39,7 +39,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new Zaun.InlineResponse2005();
+    instance = new Zaun.Schedule();
   });
 
   var getProperty = function(object, getter, property) {
@@ -58,40 +58,58 @@
       object[property] = value;
   }
 
-  describe('InlineResponse2005', function() {
-    it('should create an instance of InlineResponse2005', function() {
-      // uncomment below and update the code to test InlineResponse2005
-      //var instane = new Zaun.InlineResponse2005();
-      //expect(instance).to.be.a(Zaun.InlineResponse2005);
+  describe('Schedule', function() {
+    it('should create an instance of Schedule', function() {
+      // uncomment below and update the code to test Schedule
+      //var instane = new Zaun.Schedule();
+      //expect(instance).to.be.a(Zaun.Schedule);
     });
 
-    it('should have the property page (base name: "page")', function() {
-      // uncomment below and update the code to test the property page
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property id (base name: "id")', function() {
+      // uncomment below and update the code to test the property id
+      //var instane = new Zaun.Schedule();
       //expect(instance).to.be();
     });
 
-    it('should have the property limit (base name: "limit")', function() {
-      // uncomment below and update the code to test the property limit
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property name (base name: "name")', function() {
+      // uncomment below and update the code to test the property name
+      //var instane = new Zaun.Schedule();
       //expect(instance).to.be();
     });
 
-    it('should have the property count (base name: "count")', function() {
-      // uncomment below and update the code to test the property count
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property message (base name: "message")', function() {
+      // uncomment below and update the code to test the property message
+      //var instane = new Zaun.Schedule();
       //expect(instance).to.be();
     });
 
-    it('should have the property total (base name: "total")', function() {
-      // uncomment below and update the code to test the property total
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property start (base name: "start")', function() {
+      // uncomment below and update the code to test the property start
+      //var instane = new Zaun.Schedule();
       //expect(instance).to.be();
     });
 
-    it('should have the property items (base name: "items")', function() {
-      // uncomment below and update the code to test the property items
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property end (base name: "end")', function() {
+      // uncomment below and update the code to test the property end
+      //var instane = new Zaun.Schedule();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property freqType (base name: "freqType")', function() {
+      // uncomment below and update the code to test the property freqType
+      //var instane = new Zaun.Schedule();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property freqInterval (base name: "freqInterval")', function() {
+      // uncomment below and update the code to test the property freqInterval
+      //var instane = new Zaun.Schedule();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property users (base name: "users")', function() {
+      // uncomment below and update the code to test the property users
+      //var instane = new Zaun.Schedule();
       //expect(instance).to.be();
     });
 

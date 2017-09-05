@@ -1,20 +1,20 @@
-# Zaun.SessionApi
+# Zaun.ScheduleApi
 
 All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**botsBotIdDeploymentsDeploymentIdSessionsPost**](SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsPost) | **POST** /bots/{botId}/deployments/{deploymentId}/sessions | Create session for bot deployment
-[**botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete**](SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Delete session by ID
-[**botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet**](SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Find session by ID
-[**botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut**](SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Update session by ID
+[**botsBotIdDeploymentsDeploymentIdSchedulesGet**](ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesGet) | **GET** /bots/{botId}/deployments/{deploymentId}/schedules | Get all schedules
+[**botsBotIdDeploymentsDeploymentIdSchedulesPost**](ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesPost) | **POST** /bots/{botId}/deployments/{deploymentId}/schedules | Create a schedule
+[**botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete**](ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/schedules/{scheduleId} | Delete schedule by ID
+[**botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet**](ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/schedules/{scheduleId} | Find schedule by ID
 
 
-<a name="botsBotIdDeploymentsDeploymentIdSessionsPost"></a>
-# **botsBotIdDeploymentsDeploymentIdSessionsPost**
-> Session botsBotIdDeploymentsDeploymentIdSessionsPost(botId, deploymentId, body)
+<a name="botsBotIdDeploymentsDeploymentIdSchedulesGet"></a>
+# **botsBotIdDeploymentsDeploymentIdSchedulesGet**
+> InlineResponse2003 botsBotIdDeploymentsDeploymentIdSchedulesGet(botId, deploymentId, opts)
 
-Create session for bot deployment
+Get all schedules
 
 ### Example
 ```javascript
@@ -27,14 +27,74 @@ Bearer.apiKey = 'YOUR API KEY';
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //Bearer.apiKeyPrefix = 'Token';
 
-var apiInstance = new Zaun.SessionApi();
+var apiInstance = new Zaun.ScheduleApi();
+
+var botId = "botId_example"; // String | ID of bot
+
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
+
+var opts = { 
+  'limit': 56, // Number | Limit returned schedules in a page
+  'page': 56 // Number | A number representing page
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+apiInstance.botsBotIdDeploymentsDeploymentIdSchedulesGet(botId, deploymentId, opts, callback);
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **botId** | **String**| ID of bot | 
+ **deploymentId** | **String**| ID of deployment to update | 
+ **limit** | **Number**| Limit returned schedules in a page | [optional] 
+ **page** | **Number**| A number representing page | [optional] 
+
+### Return type
+
+[**InlineResponse2003**](InlineResponse2003.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="botsBotIdDeploymentsDeploymentIdSchedulesPost"></a>
+# **botsBotIdDeploymentsDeploymentIdSchedulesPost**
+> Schedule botsBotIdDeploymentsDeploymentIdSchedulesPost(body, botId, deploymentId)
+
+Create a schedule
+
+### Example
+```javascript
+var Zaun = require('zaun');
+var defaultClient = Zaun.ApiClient.default;
+
+// Configure API key authorization: Bearer
+var Bearer = defaultClient.authentications['Bearer'];
+Bearer.apiKey = 'YOUR API KEY';
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//Bearer.apiKeyPrefix = 'Token';
+
+var apiInstance = new Zaun.ScheduleApi();
+
+var body = new Zaun.Schedule(); // Schedule | Schedule object
 
 var botId = "botId_example"; // String | ID of bot
 
 var deploymentId = "deploymentId_example"; // String | ID of deployment
 
-var body = new Zaun.Session(); // Session | Session
-
 
 var callback = function(error, data, response) {
   if (error) {
@@ -43,20 +103,20 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDeploymentIdSessionsPost(botId, deploymentId, body, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdSchedulesPost(body, botId, deploymentId, callback);
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **body** | [**Schedule**](Schedule.md)| Schedule object | 
  **botId** | **String**| ID of bot | 
  **deploymentId** | **String**| ID of deployment | 
- **body** | [**Session**](Session.md)| Session | 
 
 ### Return type
 
-[**Session**](Session.md)
+[**Schedule**](Schedule.md)
 
 ### Authorization
 
@@ -67,11 +127,11 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete"></a>
-# **botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete**
-> Session botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete(botId, deploymentId, sessionId)
+<a name="botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete"></a>
+# **botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete**
+> Schedule botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete(botId, deploymentId, scheduleId)
 
-Delete session by ID
+Delete schedule by ID
 
 ### Example
 ```javascript
@@ -84,13 +144,13 @@ Bearer.apiKey = 'YOUR API KEY';
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //Bearer.apiKeyPrefix = 'Token';
 
-var apiInstance = new Zaun.SessionApi();
+var apiInstance = new Zaun.ScheduleApi();
 
 var botId = "botId_example"; // String | ID of bot
 
 var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
-var sessionId = "sessionId_example"; // String | ID of session to delete
+var scheduleId = "scheduleId_example"; // String | ID of schedule to delete
 
 
 var callback = function(error, data, response) {
@@ -100,7 +160,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete(botId, deploymentId, sessionId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete(botId, deploymentId, scheduleId, callback);
 ```
 
 ### Parameters
@@ -109,11 +169,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
  **deploymentId** | **String**| ID of deployment to update | 
- **sessionId** | **String**| ID of session to delete | 
+ **scheduleId** | **String**| ID of schedule to delete | 
 
 ### Return type
 
-[**Session**](Session.md)
+[**Schedule**](Schedule.md)
 
 ### Authorization
 
@@ -124,11 +184,11 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet"></a>
-# **botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet**
-> Session botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet(botId, deploymentId, sessionId, mode)
+<a name="botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet"></a>
+# **botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet**
+> Schedule botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet(botId, deploymentId, scheduleId)
 
-Find session by ID
+Find schedule by ID
 
 ### Example
 ```javascript
@@ -141,15 +201,13 @@ Bearer.apiKey = 'YOUR API KEY';
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //Bearer.apiKeyPrefix = 'Token';
 
-var apiInstance = new Zaun.SessionApi();
+var apiInstance = new Zaun.ScheduleApi();
 
 var botId = "botId_example"; // String | ID of bot
 
 var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
-var sessionId = "sessionId_example"; // String | ID of session to return
-
-var mode = "mode_example"; // String | get mode
+var scheduleId = "scheduleId_example"; // String | ID of schedule
 
 
 var callback = function(error, data, response) {
@@ -159,7 +217,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet(botId, deploymentId, sessionId, mode, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet(botId, deploymentId, scheduleId, callback);
 ```
 
 ### Parameters
@@ -168,72 +226,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
  **deploymentId** | **String**| ID of deployment to update | 
- **sessionId** | **String**| ID of session to return | 
- **mode** | **String**| get mode | 
+ **scheduleId** | **String**| ID of schedule | 
 
 ### Return type
 
-[**Session**](Session.md)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-<a name="botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut"></a>
-# **botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut**
-> Object botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut(botId, deploymentId, sessionId, body)
-
-Update session by ID
-
-### Example
-```javascript
-var Zaun = require('zaun');
-var defaultClient = Zaun.ApiClient.default;
-
-// Configure API key authorization: Bearer
-var Bearer = defaultClient.authentications['Bearer'];
-Bearer.apiKey = 'YOUR API KEY';
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//Bearer.apiKeyPrefix = 'Token';
-
-var apiInstance = new Zaun.SessionApi();
-
-var botId = "botId_example"; // String | ID of bot
-
-var deploymentId = "deploymentId_example"; // String | ID of deployment to update
-
-var sessionId = "sessionId_example"; // String | ID of session to update
-
-var body = new Zaun.Session(); // Session | Session
-
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-apiInstance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut(botId, deploymentId, sessionId, body, callback);
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **botId** | **String**| ID of bot | 
- **deploymentId** | **String**| ID of deployment to update | 
- **sessionId** | **String**| ID of session to update | 
- **body** | [**Session**](Session.md)| Session | 
-
-### Return type
-
-**Object**
+[**Schedule**](Schedule.md)
 
 ### Authorization
 

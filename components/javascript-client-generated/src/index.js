@@ -25,12 +25,12 @@
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/Action', 'model/Bot', 'model/Channel', 'model/Conversation', 'model/Deployment', 'model/ExecActions', 'model/ExecFlow', 'model/ExecIntent', 'model/ExecStateMapper', 'model/Flow', 'model/FlowActions', 'model/FlowIntents', 'model/FlowMethods', 'model/FlowNlus', 'model/FlowProcessResult', 'model/FlowStateActions', 'model/FlowStates', 'model/InlineResponse200', 'model/InlineResponse2001', 'model/InlineResponse2002', 'model/InlineResponse2003', 'model/InlineResponse2004', 'model/InlineResponse2005', 'model/InlineResponse2005Members', 'model/Intent', 'model/IntentAttribute', 'model/IntentAttributes', 'model/IntentClassifier', 'model/Login', 'model/Message', 'model/Method', 'model/Nlu', 'model/PagedBot', 'model/ProcessedMessage', 'model/Response', 'model/ResponseMessage', 'model/Role', 'model/Session', 'model/SessionHistory', 'model/State', 'model/StateAction', 'model/StateMapResult', 'model/StateTransition', 'model/StateTransitions', 'model/Subscription', 'model/Team', 'model/Token', 'model/User', 'api/AnalyticApi', 'api/AuthApi', 'api/BotApi', 'api/CachesApi', 'api/ChannelApi', 'api/DeploymentApi', 'api/RoleApi', 'api/SessionApi', 'api/TeamApi', 'api/UserApi'], factory);
+    define(['ApiClient', 'model/Action', 'model/Bot', 'model/Channel', 'model/Conversation', 'model/Deployment', 'model/ExecActions', 'model/ExecFlow', 'model/ExecIntent', 'model/ExecStateMapper', 'model/Flow', 'model/FlowActions', 'model/FlowIntents', 'model/FlowMethods', 'model/FlowNlus', 'model/FlowProcessResult', 'model/FlowStateActions', 'model/FlowStates', 'model/InlineResponse200', 'model/InlineResponse2001', 'model/InlineResponse2002', 'model/InlineResponse2003', 'model/InlineResponse2004', 'model/InlineResponse2005', 'model/InlineResponse2006', 'model/InlineResponse2006Members', 'model/Intent', 'model/IntentAttribute', 'model/IntentAttributes', 'model/IntentClassifier', 'model/Login', 'model/Message', 'model/Method', 'model/Nlu', 'model/PagedBot', 'model/ProcessedMessage', 'model/Response', 'model/ResponseMessage', 'model/Role', 'model/Schedule', 'model/Session', 'model/SessionHistory', 'model/State', 'model/StateAction', 'model/StateMapResult', 'model/StateTransition', 'model/StateTransitions', 'model/Subscription', 'model/Team', 'model/Token', 'model/User', 'api/AnalyticApi', 'api/AuthApi', 'api/BotApi', 'api/CachesApi', 'api/ChannelApi', 'api/DeploymentApi', 'api/RoleApi', 'api/ScheduleApi', 'api/SessionApi', 'api/TeamApi', 'api/UserApi'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('./ApiClient'), require('./model/Action'), require('./model/Bot'), require('./model/Channel'), require('./model/Conversation'), require('./model/Deployment'), require('./model/ExecActions'), require('./model/ExecFlow'), require('./model/ExecIntent'), require('./model/ExecStateMapper'), require('./model/Flow'), require('./model/FlowActions'), require('./model/FlowIntents'), require('./model/FlowMethods'), require('./model/FlowNlus'), require('./model/FlowProcessResult'), require('./model/FlowStateActions'), require('./model/FlowStates'), require('./model/InlineResponse200'), require('./model/InlineResponse2001'), require('./model/InlineResponse2002'), require('./model/InlineResponse2003'), require('./model/InlineResponse2004'), require('./model/InlineResponse2005'), require('./model/InlineResponse2005Members'), require('./model/Intent'), require('./model/IntentAttribute'), require('./model/IntentAttributes'), require('./model/IntentClassifier'), require('./model/Login'), require('./model/Message'), require('./model/Method'), require('./model/Nlu'), require('./model/PagedBot'), require('./model/ProcessedMessage'), require('./model/Response'), require('./model/ResponseMessage'), require('./model/Role'), require('./model/Session'), require('./model/SessionHistory'), require('./model/State'), require('./model/StateAction'), require('./model/StateMapResult'), require('./model/StateTransition'), require('./model/StateTransitions'), require('./model/Subscription'), require('./model/Team'), require('./model/Token'), require('./model/User'), require('./api/AnalyticApi'), require('./api/AuthApi'), require('./api/BotApi'), require('./api/CachesApi'), require('./api/ChannelApi'), require('./api/DeploymentApi'), require('./api/RoleApi'), require('./api/SessionApi'), require('./api/TeamApi'), require('./api/UserApi'));
+    module.exports = factory(require('./ApiClient'), require('./model/Action'), require('./model/Bot'), require('./model/Channel'), require('./model/Conversation'), require('./model/Deployment'), require('./model/ExecActions'), require('./model/ExecFlow'), require('./model/ExecIntent'), require('./model/ExecStateMapper'), require('./model/Flow'), require('./model/FlowActions'), require('./model/FlowIntents'), require('./model/FlowMethods'), require('./model/FlowNlus'), require('./model/FlowProcessResult'), require('./model/FlowStateActions'), require('./model/FlowStates'), require('./model/InlineResponse200'), require('./model/InlineResponse2001'), require('./model/InlineResponse2002'), require('./model/InlineResponse2003'), require('./model/InlineResponse2004'), require('./model/InlineResponse2005'), require('./model/InlineResponse2006'), require('./model/InlineResponse2006Members'), require('./model/Intent'), require('./model/IntentAttribute'), require('./model/IntentAttributes'), require('./model/IntentClassifier'), require('./model/Login'), require('./model/Message'), require('./model/Method'), require('./model/Nlu'), require('./model/PagedBot'), require('./model/ProcessedMessage'), require('./model/Response'), require('./model/ResponseMessage'), require('./model/Role'), require('./model/Schedule'), require('./model/Session'), require('./model/SessionHistory'), require('./model/State'), require('./model/StateAction'), require('./model/StateMapResult'), require('./model/StateTransition'), require('./model/StateTransitions'), require('./model/Subscription'), require('./model/Team'), require('./model/Token'), require('./model/User'), require('./api/AnalyticApi'), require('./api/AuthApi'), require('./api/BotApi'), require('./api/CachesApi'), require('./api/ChannelApi'), require('./api/DeploymentApi'), require('./api/RoleApi'), require('./api/ScheduleApi'), require('./api/SessionApi'), require('./api/TeamApi'), require('./api/UserApi'));
   }
-}(function(ApiClient, Action, Bot, Channel, Conversation, Deployment, ExecActions, ExecFlow, ExecIntent, ExecStateMapper, Flow, FlowActions, FlowIntents, FlowMethods, FlowNlus, FlowProcessResult, FlowStateActions, FlowStates, InlineResponse200, InlineResponse2001, InlineResponse2002, InlineResponse2003, InlineResponse2004, InlineResponse2005, InlineResponse2005Members, Intent, IntentAttribute, IntentAttributes, IntentClassifier, Login, Message, Method, Nlu, PagedBot, ProcessedMessage, Response, ResponseMessage, Role, Session, SessionHistory, State, StateAction, StateMapResult, StateTransition, StateTransitions, Subscription, Team, Token, User, AnalyticApi, AuthApi, BotApi, CachesApi, ChannelApi, DeploymentApi, RoleApi, SessionApi, TeamApi, UserApi) {
+}(function(ApiClient, Action, Bot, Channel, Conversation, Deployment, ExecActions, ExecFlow, ExecIntent, ExecStateMapper, Flow, FlowActions, FlowIntents, FlowMethods, FlowNlus, FlowProcessResult, FlowStateActions, FlowStates, InlineResponse200, InlineResponse2001, InlineResponse2002, InlineResponse2003, InlineResponse2004, InlineResponse2005, InlineResponse2006, InlineResponse2006Members, Intent, IntentAttribute, IntentAttributes, IntentClassifier, Login, Message, Method, Nlu, PagedBot, ProcessedMessage, Response, ResponseMessage, Role, Schedule, Session, SessionHistory, State, StateAction, StateMapResult, StateTransition, StateTransitions, Subscription, Team, Token, User, AnalyticApi, AuthApi, BotApi, CachesApi, ChannelApi, DeploymentApi, RoleApi, ScheduleApi, SessionApi, TeamApi, UserApi) {
   'use strict';
 
   /**
@@ -186,10 +186,15 @@
      */
     InlineResponse2005: InlineResponse2005,
     /**
-     * The InlineResponse2005Members model constructor.
-     * @property {module:model/InlineResponse2005Members}
+     * The InlineResponse2006 model constructor.
+     * @property {module:model/InlineResponse2006}
      */
-    InlineResponse2005Members: InlineResponse2005Members,
+    InlineResponse2006: InlineResponse2006,
+    /**
+     * The InlineResponse2006Members model constructor.
+     * @property {module:model/InlineResponse2006Members}
+     */
+    InlineResponse2006Members: InlineResponse2006Members,
     /**
      * The Intent model constructor.
      * @property {module:model/Intent}
@@ -255,6 +260,11 @@
      * @property {module:model/Role}
      */
     Role: Role,
+    /**
+     * The Schedule model constructor.
+     * @property {module:model/Schedule}
+     */
+    Schedule: Schedule,
     /**
      * The Session model constructor.
      * @property {module:model/Session}
@@ -345,6 +355,11 @@
      * @property {module:api/RoleApi}
      */
     RoleApi: RoleApi,
+    /**
+     * The ScheduleApi service constructor.
+     * @property {module:api/ScheduleApi}
+     */
+    ScheduleApi: ScheduleApi,
     /**
      * The SessionApi service constructor.
      * @property {module:api/SessionApi}

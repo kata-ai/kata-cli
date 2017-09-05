@@ -57,8 +57,8 @@
 
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdChannelsChannelIdDelete operation.
-     * @callback module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdDeleteCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete operation.
+     * @callback module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdDeleteCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Channel} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -67,33 +67,33 @@
     /**
      * Delete channel by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} channelId ID of channel to delete
-     * @param {module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Channel}
      */
-    this.botsBotIdDeploymentsDepIdChannelsChannelIdDelete = function(botId, depId, channelId, callback) {
+    this.botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete = function(botId, deploymentId, channelId, callback) {
       var postBody = null;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdDelete");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdDelete");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete");
       }
 
       // verify the required parameter 'channelId' is set
       if (channelId == undefined || channelId == null) {
-        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdDelete");
+        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'channelId': channelId
       };
       var queryParams = {
@@ -109,15 +109,15 @@
       var returnType = Channel;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/channels/{channelId}', 'DELETE',
+        '/bots/{botId}/deployments/{deploymentId}/channels/{channelId}', 'DELETE',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdChannelsChannelIdGet operation.
-     * @callback module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdGetCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet operation.
+     * @callback module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdGetCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Channel} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -126,33 +126,33 @@
     /**
      * Find channel by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} channelId ID of channel
-     * @param {module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdGetCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Channel}
      */
-    this.botsBotIdDeploymentsDepIdChannelsChannelIdGet = function(botId, depId, channelId, callback) {
+    this.botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet = function(botId, deploymentId, channelId, callback) {
       var postBody = null;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdGet");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdGet");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet");
       }
 
       // verify the required parameter 'channelId' is set
       if (channelId == undefined || channelId == null) {
-        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdGet");
+        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'channelId': channelId
       };
       var queryParams = {
@@ -168,15 +168,15 @@
       var returnType = Channel;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/channels/{channelId}', 'GET',
+        '/bots/{botId}/deployments/{deploymentId}/channels/{channelId}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdChannelsChannelIdPut operation.
-     * @callback module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdPutCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut operation.
+     * @callback module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdPutCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Channel} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -185,39 +185,39 @@
     /**
      * Update channel by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} channelId ID of channel to update
      * @param {module:model/Channel} body Channel object
-     * @param {module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsChannelIdPutCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsChannelIdPutCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Channel}
      */
-    this.botsBotIdDeploymentsDepIdChannelsChannelIdPut = function(botId, depId, channelId, body, callback) {
+    this.botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut = function(botId, deploymentId, channelId, body, callback) {
       var postBody = body;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdPut");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdPut");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut");
       }
 
       // verify the required parameter 'channelId' is set
       if (channelId == undefined || channelId == null) {
-        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDepIdChannelsChannelIdPut");
+        throw new Error("Missing the required parameter 'channelId' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut");
       }
 
       // verify the required parameter 'body' is set
       if (body == undefined || body == null) {
-        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDepIdChannelsChannelIdPut");
+        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'channelId': channelId
       };
       var queryParams = {
@@ -233,15 +233,15 @@
       var returnType = Channel;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/channels/{channelId}', 'PUT',
+        '/bots/{botId}/deployments/{deploymentId}/channels/{channelId}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdChannelsGet operation.
-     * @callback module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsGetCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdChannelsGet operation.
+     * @callback module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsGetCallback
      * @param {String} error Error message, if any.
      * @param {module:model/InlineResponse2002} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -250,31 +250,31 @@
     /**
      * Get all channels
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {Object} opts Optional parameters
      * @param {Number} opts.limit Limit returned channels in a page
      * @param {Number} opts.page A number representing page
-     * @param {module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsGetCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/InlineResponse2002}
      */
-    this.botsBotIdDeploymentsDepIdChannelsGet = function(botId, depId, opts, callback) {
+    this.botsBotIdDeploymentsDeploymentIdChannelsGet = function(botId, deploymentId, opts, callback) {
       opts = opts || {};
       var postBody = null;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdChannelsGet");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdChannelsGet");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdChannelsGet");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdChannelsGet");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId
+        'deploymentId': deploymentId
       };
       var queryParams = {
         'limit': opts['limit'],
@@ -291,15 +291,15 @@
       var returnType = InlineResponse2002;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/channels', 'GET',
+        '/bots/{botId}/deployments/{deploymentId}/channels', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdChannelsPost operation.
-     * @callback module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsPostCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdChannelsPost operation.
+     * @callback module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsPostCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Channel} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -309,32 +309,32 @@
      * Create a channel
      * @param {module:model/Channel} body Channel object
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment
-     * @param {module:api/ChannelApi~botsBotIdDeploymentsDepIdChannelsPostCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {String} deploymentId ID of deployment
+     * @param {module:api/ChannelApi~botsBotIdDeploymentsDeploymentIdChannelsPostCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Channel}
      */
-    this.botsBotIdDeploymentsDepIdChannelsPost = function(body, botId, depId, callback) {
+    this.botsBotIdDeploymentsDeploymentIdChannelsPost = function(body, botId, deploymentId, callback) {
       var postBody = body;
 
       // verify the required parameter 'body' is set
       if (body == undefined || body == null) {
-        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDepIdChannelsPost");
+        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDeploymentIdChannelsPost");
       }
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdChannelsPost");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdChannelsPost");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdChannelsPost");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdChannelsPost");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId
+        'deploymentId': deploymentId
       };
       var queryParams = {
       };
@@ -349,7 +349,7 @@
       var returnType = Channel;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/channels', 'POST',
+        '/bots/{botId}/deployments/{deploymentId}/channels', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );

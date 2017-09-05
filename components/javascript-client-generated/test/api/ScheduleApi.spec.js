@@ -39,7 +39,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new Zaun.DeploymentApi();
+    instance = new Zaun.ScheduleApi();
   });
 
   var getProperty = function(object, getter, property) {
@@ -58,51 +58,41 @@
       object[property] = value;
   }
 
-  describe('DeploymentApi', function() {
-    describe('botsBotIdDeploymentsDeploymentIdDelete', function() {
-      it('should call botsBotIdDeploymentsDeploymentIdDelete successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdDelete
-        //instance.botsBotIdDeploymentsDeploymentIdDelete(pet, function(error) {
+  describe('ScheduleApi', function() {
+    describe('botsBotIdDeploymentsDeploymentIdSchedulesGet', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSchedulesGet successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSchedulesGet
+        //instance.botsBotIdDeploymentsDeploymentIdSchedulesGet(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDeploymentIdGet', function() {
-      it('should call botsBotIdDeploymentsDeploymentIdGet successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdGet
-        //instance.botsBotIdDeploymentsDeploymentIdGet(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSchedulesPost', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSchedulesPost successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSchedulesPost
+        //instance.botsBotIdDeploymentsDeploymentIdSchedulesPost(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDeploymentIdPut', function() {
-      it('should call botsBotIdDeploymentsDeploymentIdPut successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdPut
-        //instance.botsBotIdDeploymentsDeploymentIdPut(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete
+        //instance.botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsGet', function() {
-      it('should call botsBotIdDeploymentsGet successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsGet
-        //instance.botsBotIdDeploymentsGet(pet, function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('botsBotIdDeploymentsPost', function() {
-      it('should call botsBotIdDeploymentsPost successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsPost
-        //instance.botsBotIdDeploymentsPost(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet
+        //instance.botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});

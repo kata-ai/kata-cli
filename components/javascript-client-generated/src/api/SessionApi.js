@@ -57,8 +57,8 @@
 
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdSessionsPost operation.
-     * @callback module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsPostCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdSessionsPost operation.
+     * @callback module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsPostCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Session} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -67,33 +67,33 @@
     /**
      * Create session for bot deployment
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment
+     * @param {String} deploymentId ID of deployment
      * @param {module:model/Session} body Session
-     * @param {module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsPostCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsPostCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Session}
      */
-    this.botsBotIdDeploymentsDepIdSessionsPost = function(botId, depId, body, callback) {
+    this.botsBotIdDeploymentsDeploymentIdSessionsPost = function(botId, deploymentId, body, callback) {
       var postBody = body;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdSessionsPost");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdSessionsPost");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdSessionsPost");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdSessionsPost");
       }
 
       // verify the required parameter 'body' is set
       if (body == undefined || body == null) {
-        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDepIdSessionsPost");
+        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDeploymentIdSessionsPost");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId
+        'deploymentId': deploymentId
       };
       var queryParams = {
       };
@@ -108,15 +108,15 @@
       var returnType = Session;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/sessions', 'POST',
+        '/bots/{botId}/deployments/{deploymentId}/sessions', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdSessionsSessionIdDelete operation.
-     * @callback module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdDeleteCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete operation.
+     * @callback module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdDeleteCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Session} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -125,33 +125,33 @@
     /**
      * Delete session by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} sessionId ID of session to delete
-     * @param {module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Session}
      */
-    this.botsBotIdDeploymentsDepIdSessionsSessionIdDelete = function(botId, depId, sessionId, callback) {
+    this.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete = function(botId, deploymentId, sessionId, callback) {
       var postBody = null;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdDelete");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdDelete");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete");
       }
 
       // verify the required parameter 'sessionId' is set
       if (sessionId == undefined || sessionId == null) {
-        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdDelete");
+        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'sessionId': sessionId
       };
       var queryParams = {
@@ -167,15 +167,15 @@
       var returnType = Session;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/sessions/{sessionId}', 'DELETE',
+        '/bots/{botId}/deployments/{deploymentId}/sessions/{sessionId}', 'DELETE',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdSessionsSessionIdGet operation.
-     * @callback module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdGetCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet operation.
+     * @callback module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdGetCallback
      * @param {String} error Error message, if any.
      * @param {module:model/Session} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -184,39 +184,39 @@
     /**
      * Find session by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} sessionId ID of session to return
      * @param {String} mode get mode
-     * @param {module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdGetCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/Session}
      */
-    this.botsBotIdDeploymentsDepIdSessionsSessionIdGet = function(botId, depId, sessionId, mode, callback) {
+    this.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet = function(botId, deploymentId, sessionId, mode, callback) {
       var postBody = null;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdGet");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdGet");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet");
       }
 
       // verify the required parameter 'sessionId' is set
       if (sessionId == undefined || sessionId == null) {
-        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdGet");
+        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet");
       }
 
       // verify the required parameter 'mode' is set
       if (mode == undefined || mode == null) {
-        throw new Error("Missing the required parameter 'mode' when calling botsBotIdDeploymentsDepIdSessionsSessionIdGet");
+        throw new Error("Missing the required parameter 'mode' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'sessionId': sessionId
       };
       var queryParams = {
@@ -233,15 +233,15 @@
       var returnType = Session;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/sessions/{sessionId}', 'GET',
+        '/bots/{botId}/deployments/{deploymentId}/sessions/{sessionId}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
     }
 
     /**
-     * Callback function to receive the result of the botsBotIdDeploymentsDepIdSessionsSessionIdPut operation.
-     * @callback module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdPutCallback
+     * Callback function to receive the result of the botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut operation.
+     * @callback module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdPutCallback
      * @param {String} error Error message, if any.
      * @param {Object} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
@@ -250,39 +250,39 @@
     /**
      * Update session by ID
      * @param {String} botId ID of bot
-     * @param {String} depId ID of deployment to update
+     * @param {String} deploymentId ID of deployment to update
      * @param {String} sessionId ID of session to update
      * @param {module:model/Session} body Session
-     * @param {module:api/SessionApi~botsBotIdDeploymentsDepIdSessionsSessionIdPutCallback} callback The callback function, accepting three arguments: error, data, response
+     * @param {module:api/SessionApi~botsBotIdDeploymentsDeploymentIdSessionsSessionIdPutCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link Object}
      */
-    this.botsBotIdDeploymentsDepIdSessionsSessionIdPut = function(botId, depId, sessionId, body, callback) {
+    this.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut = function(botId, deploymentId, sessionId, body, callback) {
       var postBody = body;
 
       // verify the required parameter 'botId' is set
       if (botId == undefined || botId == null) {
-        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdPut");
+        throw new Error("Missing the required parameter 'botId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut");
       }
 
-      // verify the required parameter 'depId' is set
-      if (depId == undefined || depId == null) {
-        throw new Error("Missing the required parameter 'depId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdPut");
+      // verify the required parameter 'deploymentId' is set
+      if (deploymentId == undefined || deploymentId == null) {
+        throw new Error("Missing the required parameter 'deploymentId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut");
       }
 
       // verify the required parameter 'sessionId' is set
       if (sessionId == undefined || sessionId == null) {
-        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDepIdSessionsSessionIdPut");
+        throw new Error("Missing the required parameter 'sessionId' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut");
       }
 
       // verify the required parameter 'body' is set
       if (body == undefined || body == null) {
-        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDepIdSessionsSessionIdPut");
+        throw new Error("Missing the required parameter 'body' when calling botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut");
       }
 
 
       var pathParams = {
         'botId': botId,
-        'depId': depId,
+        'deploymentId': deploymentId,
         'sessionId': sessionId
       };
       var queryParams = {
@@ -298,7 +298,7 @@
       var returnType = Object;
 
       return this.apiClient.callApi(
-        '/bots/{botId}/deployments/{depId}/sessions/{sessionId}', 'PUT',
+        '/bots/{botId}/deployments/{deploymentId}/sessions/{sessionId}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );

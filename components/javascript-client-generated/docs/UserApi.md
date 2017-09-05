@@ -1,6 +1,6 @@
 # Zaun.UserApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 <a name="usersGet"></a>
 # **usersGet**
-> InlineResponse2004 usersGet(opts)
+> InlineResponse2005 usersGet(opts)
 
 Get all users
 
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2004**](InlineResponse2004.md)
+[**InlineResponse2005**](InlineResponse2005.md)
 
 ### Authorization
 

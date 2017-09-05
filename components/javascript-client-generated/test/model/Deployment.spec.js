@@ -71,6 +71,12 @@
       //expect(instance).to.be();
     });
 
+    it('should have the property dashboard (base name: "dashboard")', function() {
+      // uncomment below and update the code to test the property dashboard
+      //var instane = new Zaun.Deployment();
+      //expect(instance).to.be();
+    });
+
     it('should have the property name (base name: "name")', function() {
       // uncomment below and update the code to test the property name
       //var instane = new Zaun.Deployment();

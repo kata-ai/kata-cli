@@ -59,40 +59,40 @@
   }
 
   describe('SessionApi', function() {
-    describe('botsBotIdDeploymentsDepIdSessionsPost', function() {
-      it('should call botsBotIdDeploymentsDepIdSessionsPost successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdSessionsPost
-        //instance.botsBotIdDeploymentsDepIdSessionsPost(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSessionsPost', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSessionsPost successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSessionsPost
+        //instance.botsBotIdDeploymentsDeploymentIdSessionsPost(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdSessionsSessionIdDelete', function() {
-      it('should call botsBotIdDeploymentsDepIdSessionsSessionIdDelete successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdSessionsSessionIdDelete
-        //instance.botsBotIdDeploymentsDepIdSessionsSessionIdDelete(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete
+        //instance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdSessionsSessionIdGet', function() {
-      it('should call botsBotIdDeploymentsDepIdSessionsSessionIdGet successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdSessionsSessionIdGet
-        //instance.botsBotIdDeploymentsDepIdSessionsSessionIdGet(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet
+        //instance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
         done();
       });
     });
-    describe('botsBotIdDeploymentsDepIdSessionsSessionIdPut', function() {
-      it('should call botsBotIdDeploymentsDepIdSessionsSessionIdPut successfully', function(done) {
-        //uncomment below and update the code to test botsBotIdDeploymentsDepIdSessionsSessionIdPut
-        //instance.botsBotIdDeploymentsDepIdSessionsSessionIdPut(pet, function(error) {
+    describe('botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut', function() {
+      it('should call botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut successfully', function(done) {
+        //uncomment below and update the code to test botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut
+        //instance.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut(pet, function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});

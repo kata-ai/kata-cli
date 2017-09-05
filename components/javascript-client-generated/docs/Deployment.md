@@ -4,6 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
+**dashboard** | **Boolean** |  | [optional] 
 **name** | **String** |  | [optional] 
 **botId** | **String** |  | [optional] 
 **botVersion** | **String** |  | [optional] 

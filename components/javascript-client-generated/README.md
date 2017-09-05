@@ -85,7 +85,7 @@ api.analyticsBotIdDeploymentIdObjectGet(botId, deploymentId, _object, opts, call
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -102,14 +102,14 @@ Class | Method | HTTP request | Description
 *Zaun.BotApi* | [**botsGet**](docs/BotApi.md#botsGet) | **GET** /bots | Get all bots
 *Zaun.BotApi* | [**botsPost**](docs/BotApi.md#botsPost) | **POST** /bots | Create bot
 *Zaun.CachesApi* | [**cachesDelete**](docs/CachesApi.md#cachesDelete) | **DELETE** /caches | Clear diaenne&#39;s caches
-*Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdDelete**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdDelete) | **DELETE** /bots/{botId}/deployments/{depId}/channels/{channelId} | Delete channel by ID
-*Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdGet**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdGet) | **GET** /bots/{botId}/deployments/{depId}/channels/{channelId} | Find channel by ID
-*Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsChannelIdPut**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsChannelIdPut) | **PUT** /bots/{botId}/deployments/{depId}/channels/{channelId} | Update channel by ID
-*Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsGet**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsGet) | **GET** /bots/{botId}/deployments/{depId}/channels | Get all channels
-*Zaun.ChannelApi* | [**botsBotIdDeploymentsDepIdChannelsPost**](docs/ChannelApi.md#botsBotIdDeploymentsDepIdChannelsPost) | **POST** /bots/{botId}/deployments/{depId}/channels | Create a channel
-*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDepIdDelete**](docs/DeploymentApi.md#botsBotIdDeploymentsDepIdDelete) | **DELETE** /bots/{botId}/deployments/{depId} | Delete deployment by ID
-*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDepIdGet**](docs/DeploymentApi.md#botsBotIdDeploymentsDepIdGet) | **GET** /bots/{botId}/deployments/{depId} | Find deployment by ID
-*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDepIdPut**](docs/DeploymentApi.md#botsBotIdDeploymentsDepIdPut) | **PUT** /bots/{botId}/deployments/{depId} | Update deployment by ID
+*Zaun.ChannelApi* | [**botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete**](docs/ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Delete channel by ID
+*Zaun.ChannelApi* | [**botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet**](docs/ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Find channel by ID
+*Zaun.ChannelApi* | [**botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut**](docs/ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsChannelIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId}/channels/{channelId} | Update channel by ID
+*Zaun.ChannelApi* | [**botsBotIdDeploymentsDeploymentIdChannelsGet**](docs/ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsGet) | **GET** /bots/{botId}/deployments/{deploymentId}/channels | Get all channels
+*Zaun.ChannelApi* | [**botsBotIdDeploymentsDeploymentIdChannelsPost**](docs/ChannelApi.md#botsBotIdDeploymentsDeploymentIdChannelsPost) | **POST** /bots/{botId}/deployments/{deploymentId}/channels | Create a channel
+*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDeploymentIdDelete**](docs/DeploymentApi.md#botsBotIdDeploymentsDeploymentIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId} | Delete deployment by ID
+*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDeploymentIdGet**](docs/DeploymentApi.md#botsBotIdDeploymentsDeploymentIdGet) | **GET** /bots/{botId}/deployments/{deploymentId} | Find deployment by ID
+*Zaun.DeploymentApi* | [**botsBotIdDeploymentsDeploymentIdPut**](docs/DeploymentApi.md#botsBotIdDeploymentsDeploymentIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId} | Update deployment by ID
 *Zaun.DeploymentApi* | [**botsBotIdDeploymentsGet**](docs/DeploymentApi.md#botsBotIdDeploymentsGet) | **GET** /bots/{botId}/deployments | Get all bot deployments
 *Zaun.DeploymentApi* | [**botsBotIdDeploymentsPost**](docs/DeploymentApi.md#botsBotIdDeploymentsPost) | **POST** /bots/{botId}/deployments | Create bot deployment
 *Zaun.RoleApi* | [**rolesGet**](docs/RoleApi.md#rolesGet) | **GET** /roles | Get all roles
@@ -117,10 +117,14 @@ Class | Method | HTTP request | Description
 *Zaun.RoleApi* | [**rolesRoleIdDelete**](docs/RoleApi.md#rolesRoleIdDelete) | **DELETE** /roles/{roleId} | Delete role by ID
 *Zaun.RoleApi* | [**rolesRoleIdGet**](docs/RoleApi.md#rolesRoleIdGet) | **GET** /roles/{roleId} | Find role by ID
 *Zaun.RoleApi* | [**rolesRoleIdPut**](docs/RoleApi.md#rolesRoleIdPut) | **PUT** /roles/{roleId} | Update role by ID
-*Zaun.SessionApi* | [**botsBotIdDeploymentsDepIdSessionsPost**](docs/SessionApi.md#botsBotIdDeploymentsDepIdSessionsPost) | **POST** /bots/{botId}/deployments/{depId}/sessions | Create session for bot deployment
-*Zaun.SessionApi* | [**botsBotIdDeploymentsDepIdSessionsSessionIdDelete**](docs/SessionApi.md#botsBotIdDeploymentsDepIdSessionsSessionIdDelete) | **DELETE** /bots/{botId}/deployments/{depId}/sessions/{sessionId} | Delete session by ID
-*Zaun.SessionApi* | [**botsBotIdDeploymentsDepIdSessionsSessionIdGet**](docs/SessionApi.md#botsBotIdDeploymentsDepIdSessionsSessionIdGet) | **GET** /bots/{botId}/deployments/{depId}/sessions/{sessionId} | Find session by ID
-*Zaun.SessionApi* | [**botsBotIdDeploymentsDepIdSessionsSessionIdPut**](docs/SessionApi.md#botsBotIdDeploymentsDepIdSessionsSessionIdPut) | **PUT** /bots/{botId}/deployments/{depId}/sessions/{sessionId} | Update session by ID
+*Zaun.ScheduleApi* | [**botsBotIdDeploymentsDeploymentIdSchedulesGet**](docs/ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesGet) | **GET** /bots/{botId}/deployments/{deploymentId}/schedules | Get all schedules
+*Zaun.ScheduleApi* | [**botsBotIdDeploymentsDeploymentIdSchedulesPost**](docs/ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesPost) | **POST** /bots/{botId}/deployments/{deploymentId}/schedules | Create a schedule
+*Zaun.ScheduleApi* | [**botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete**](docs/ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/schedules/{scheduleId} | Delete schedule by ID
+*Zaun.ScheduleApi* | [**botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet**](docs/ScheduleApi.md#botsBotIdDeploymentsDeploymentIdSchedulesScheduleIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/schedules/{scheduleId} | Find schedule by ID
+*Zaun.SessionApi* | [**botsBotIdDeploymentsDeploymentIdSessionsPost**](docs/SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsPost) | **POST** /bots/{botId}/deployments/{deploymentId}/sessions | Create session for bot deployment
+*Zaun.SessionApi* | [**botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete**](docs/SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Delete session by ID
+*Zaun.SessionApi* | [**botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet**](docs/SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet) | **GET** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Find session by ID
+*Zaun.SessionApi* | [**botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut**](docs/SessionApi.md#botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId}/sessions/{sessionId} | Update session by ID
 *Zaun.TeamApi* | [**teamsPost**](docs/TeamApi.md#teamsPost) | **POST** /teams | Create a team
 *Zaun.TeamApi* | [**teamsTeamIdUsersGet**](docs/TeamApi.md#teamsTeamIdUsersGet) | **GET** /teams/{teamId}/users | Find users in a team
 *Zaun.TeamApi* | [**teamsTeamIdUsersPost**](docs/TeamApi.md#teamsTeamIdUsersPost) | **POST** /teams/{teamId}/users | Add user to team
@@ -159,7 +163,8 @@ Class | Method | HTTP request | Description
  - [Zaun.InlineResponse2003](docs/InlineResponse2003.md)
  - [Zaun.InlineResponse2004](docs/InlineResponse2004.md)
  - [Zaun.InlineResponse2005](docs/InlineResponse2005.md)
- - [Zaun.InlineResponse2005Members](docs/InlineResponse2005Members.md)
+ - [Zaun.InlineResponse2006](docs/InlineResponse2006.md)
+ - [Zaun.InlineResponse2006Members](docs/InlineResponse2006Members.md)
  - [Zaun.Intent](docs/Intent.md)
  - [Zaun.IntentAttribute](docs/IntentAttribute.md)
  - [Zaun.IntentAttributes](docs/IntentAttributes.md)
@@ -173,6 +178,7 @@ Class | Method | HTTP request | Description
  - [Zaun.Response](docs/Response.md)
  - [Zaun.ResponseMessage](docs/ResponseMessage.md)
  - [Zaun.Role](docs/Role.md)
+ - [Zaun.Schedule](docs/Schedule.md)
  - [Zaun.Session](docs/Session.md)
  - [Zaun.SessionHistory](docs/SessionHistory.md)
  - [Zaun.State](docs/State.md)

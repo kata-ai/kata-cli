@@ -16,7 +16,7 @@ export default class Session extends Component {
         
         try {
             deploymentId = deploymentId || "depId";
-            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, deploymentId, id);
+            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, deploymentId, id);
 
             console.log(data);
         } catch (e) {
@@ -49,7 +49,7 @@ export default class Session extends Component {
             
             deploymentId = deploymentId || "depId";
 
-            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsPost, botId, deploymentId, session);
+            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsPost, botId, deploymentId, session);
 
             console.log(data);
             console.log("Session created successfully");
@@ -83,7 +83,7 @@ export default class Session extends Component {
             
             deploymentId = deploymentId || "depId";
 
-            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdPut, botId, deploymentId, id, session);
+            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, deploymentId, id, session);
 
             console.log(data);
             console.log("Session updated successfully");
@@ -103,7 +103,7 @@ export default class Session extends Component {
         let botId = this.helper.getBotId();
         
         try {
-            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdDelete, botId, deploymentId, id);
+            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, deploymentId, id);
 
             console.log(data);
             console.log("Session deleted successfully");

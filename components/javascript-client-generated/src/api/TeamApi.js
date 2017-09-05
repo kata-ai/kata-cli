@@ -25,18 +25,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/InlineResponse2005', 'model/Team'], factory);
+    define(['ApiClient', 'model/InlineResponse2006', 'model/Team'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2005'), require('../model/Team'));
+    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2006'), require('../model/Team'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.TeamApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2005, root.Zaun.Team);
+    root.Zaun.TeamApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2006, root.Zaun.Team);
   }
-}(this, function(ApiClient, InlineResponse2005, Team) {
+}(this, function(ApiClient, InlineResponse2006, Team) {
   'use strict';
 
   /**
@@ -60,7 +60,7 @@
      * Callback function to receive the result of the teamsPost operation.
      * @callback module:api/TeamApi~teamsPostCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2005} data The data returned by the service call.
+     * @param {module:model/InlineResponse2006} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -68,7 +68,7 @@
      * Create a team
      * @param {module:model/Team} body Team object
      * @param {module:api/TeamApi~teamsPostCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2005}
+     * data is of type: {@link module:model/InlineResponse2006}
      */
     this.teamsPost = function(body, callback) {
       var postBody = body;
@@ -91,7 +91,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2005;
+      var returnType = InlineResponse2006;
 
       return this.apiClient.callApi(
         '/teams', 'POST',
@@ -104,7 +104,7 @@
      * Callback function to receive the result of the teamsTeamIdUsersGet operation.
      * @callback module:api/TeamApi~teamsTeamIdUsersGetCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2005} data The data returned by the service call.
+     * @param {module:model/InlineResponse2006} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -112,7 +112,7 @@
      * Find users in a team
      * @param {String} teamId ID of team to return
      * @param {module:api/TeamApi~teamsTeamIdUsersGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2005}
+     * data is of type: {@link module:model/InlineResponse2006}
      */
     this.teamsTeamIdUsersGet = function(teamId, callback) {
       var postBody = null;
@@ -136,7 +136,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2005;
+      var returnType = InlineResponse2006;
 
       return this.apiClient.callApi(
         '/teams/{teamId}/users', 'GET',
@@ -149,7 +149,7 @@
      * Callback function to receive the result of the teamsTeamIdUsersPost operation.
      * @callback module:api/TeamApi~teamsTeamIdUsersPostCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2005} data The data returned by the service call.
+     * @param {module:model/InlineResponse2006} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -159,7 +159,7 @@
      * @param {String} userId User ID
      * @param {String} roleId Role ID
      * @param {module:api/TeamApi~teamsTeamIdUsersPostCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2005}
+     * data is of type: {@link module:model/InlineResponse2006}
      */
     this.teamsTeamIdUsersPost = function(teamId, userId, roleId, callback) {
       var postBody = null;
@@ -195,7 +195,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2005;
+      var returnType = InlineResponse2006;
 
       return this.apiClient.callApi(
         '/teams/{teamId}/users', 'POST',
@@ -208,7 +208,7 @@
      * Callback function to receive the result of the teamsTeamIdUsersUserIdDelete operation.
      * @callback module:api/TeamApi~teamsTeamIdUsersUserIdDeleteCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2005} data The data returned by the service call.
+     * @param {module:model/InlineResponse2006} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -217,7 +217,7 @@
      * @param {String} teamId Team ID
      * @param {String} userId User ID
      * @param {module:api/TeamApi~teamsTeamIdUsersUserIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2005}
+     * data is of type: {@link module:model/InlineResponse2006}
      */
     this.teamsTeamIdUsersUserIdDelete = function(teamId, userId, callback) {
       var postBody = null;
@@ -247,7 +247,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2005;
+      var returnType = InlineResponse2006;
 
       return this.apiClient.callApi(
         '/teams/{teamId}/users/{userId}', 'DELETE',

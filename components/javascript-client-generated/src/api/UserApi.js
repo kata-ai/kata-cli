@@ -25,18 +25,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/InlineResponse2004', 'model/Token', 'model/User'], factory);
+    define(['ApiClient', 'model/InlineResponse2005', 'model/Token', 'model/User'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2004'), require('../model/Token'), require('../model/User'));
+    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2005'), require('../model/Token'), require('../model/User'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.UserApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2004, root.Zaun.Token, root.Zaun.User);
+    root.Zaun.UserApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2005, root.Zaun.Token, root.Zaun.User);
   }
-}(this, function(ApiClient, InlineResponse2004, Token, User) {
+}(this, function(ApiClient, InlineResponse2005, Token, User) {
   'use strict';
 
   /**
@@ -60,7 +60,7 @@
      * Callback function to receive the result of the usersGet operation.
      * @callback module:api/UserApi~usersGetCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2004} data The data returned by the service call.
+     * @param {module:model/InlineResponse2005} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -70,7 +70,7 @@
      * @param {Number} opts.limit Limit returned users in a page
      * @param {Number} opts.page A number representing page
      * @param {module:api/UserApi~usersGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2004}
+     * data is of type: {@link module:model/InlineResponse2005}
      */
     this.usersGet = function(opts, callback) {
       opts = opts || {};
@@ -91,7 +91,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2004;
+      var returnType = InlineResponse2005;
 
       return this.apiClient.callApi(
         '/users', 'GET',

@@ -3,7 +3,10 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**team** | [**Team**](Team.md) |  | [optional] 
-**members** | [**[InlineResponse2005Members]**](InlineResponse2005Members.md) |  | [optional] 
+**page** | **Number** |  | [optional] 
+**limit** | **Number** |  | [optional] 
+**count** | **Number** |  | [optional] 
+**total** | **Number** |  | [optional] 
+**items** | [**[User]**](User.md) |  | [optional] 
 
 

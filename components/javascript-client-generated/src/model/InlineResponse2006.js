@@ -25,32 +25,32 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient'], factory);
+    define(['ApiClient', 'model/InlineResponse2006Members', 'model/Team'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'));
+    module.exports = factory(require('../ApiClient'), require('./InlineResponse2006Members'), require('./Team'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.InlineResponse2005Members = factory(root.Zaun.ApiClient);
+    root.Zaun.InlineResponse2006 = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2006Members, root.Zaun.Team);
   }
-}(this, function(ApiClient) {
+}(this, function(ApiClient, InlineResponse2006Members, Team) {
   'use strict';
 
 
 
 
   /**
-   * The InlineResponse2005Members model module.
-   * @module model/InlineResponse2005Members
+   * The InlineResponse2006 model module.
+   * @module model/InlineResponse2006
    * @version 1.0.0
    */
 
   /**
-   * Constructs a new <code>InlineResponse2005Members</code>.
-   * @alias module:model/InlineResponse2005Members
+   * Constructs a new <code>InlineResponse2006</code>.
+   * @alias module:model/InlineResponse2006
    * @class
    */
   var exports = function() {
@@ -61,52 +61,35 @@
   };
 
   /**
-   * Constructs a <code>InlineResponse2005Members</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>InlineResponse2006</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/InlineResponse2005Members} obj Optional instance to populate.
-   * @return {module:model/InlineResponse2005Members} The populated <code>InlineResponse2005Members</code> instance.
+   * @param {module:model/InlineResponse2006} obj Optional instance to populate.
+   * @return {module:model/InlineResponse2006} The populated <code>InlineResponse2006</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('userId')) {
-        obj['userId'] = ApiClient.convertToType(data['userId'], 'String');
+      if (data.hasOwnProperty('team')) {
+        obj['team'] = Team.constructFromObject(data['team']);
       }
-      if (data.hasOwnProperty('role')) {
-        obj['role'] = ApiClient.convertToType(data['role'], 'String');
+      if (data.hasOwnProperty('members')) {
+        obj['members'] = ApiClient.convertToType(data['members'], [InlineResponse2006Members]);
       }
     }
     return obj;
   }
 
   /**
-   * @member {String} userId
+   * @member {module:model/Team} team
    */
-  exports.prototype['userId'] = undefined;
+  exports.prototype['team'] = undefined;
   /**
-   * @member {module:model/InlineResponse2005Members.RoleEnum} role
+   * @member {Array.<module:model/InlineResponse2006Members>} members
    */
-  exports.prototype['role'] = undefined;
+  exports.prototype['members'] = undefined;
 
-
-  /**
-   * Allowed values for the <code>role</code> property.
-   * @enum {String}
-   * @readonly
-   */
-  exports.RoleEnum = {
-    /**
-     * value: "admin"
-     * @const
-     */
-    "admin": "admin",
-    /**
-     * value: "member"
-     * @const
-     */
-    "member": "member"  };
 
 
   return exports;

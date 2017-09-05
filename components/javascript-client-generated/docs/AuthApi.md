@@ -1,6 +1,6 @@
 # Zaun.AuthApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

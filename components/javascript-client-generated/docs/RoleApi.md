@@ -1,6 +1,6 @@
 # Zaun.RoleApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 <a name="rolesGet"></a>
 # **rolesGet**
-> InlineResponse2003 rolesGet(opts)
+> InlineResponse2004 rolesGet(opts)
 
 Get all roles
 
@@ -54,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2003**](InlineResponse2003.md)
+[**InlineResponse2004**](InlineResponse2004.md)
 
 ### Authorization
 

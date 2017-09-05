@@ -25,32 +25,32 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient'], factory);
+    define(['ApiClient', 'model/Message'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'));
+    module.exports = factory(require('../ApiClient'), require('./Message'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.Deployment = factory(root.Zaun.ApiClient);
+    root.Zaun.Schedule = factory(root.Zaun.ApiClient, root.Zaun.Message);
   }
-}(this, function(ApiClient) {
+}(this, function(ApiClient, Message) {
   'use strict';
 
 
 
 
   /**
-   * The Deployment model module.
-   * @module model/Deployment
+   * The Schedule model module.
+   * @module model/Schedule
    * @version 1.0.0
    */
 
   /**
-   * Constructs a new <code>Deployment</code>.
-   * @alias module:model/Deployment
+   * Constructs a new <code>Schedule</code>.
+   * @alias module:model/Schedule
    * @class
    */
   var exports = function() {
@@ -62,14 +62,16 @@
 
 
 
+
+
   };
 
   /**
-   * Constructs a <code>Deployment</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>Schedule</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/Deployment} obj Optional instance to populate.
-   * @return {module:model/Deployment} The populated <code>Deployment</code> instance.
+   * @param {module:model/Schedule} obj Optional instance to populate.
+   * @return {module:model/Schedule} The populated <code>Schedule</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
@@ -78,20 +80,26 @@
       if (data.hasOwnProperty('id')) {
         obj['id'] = ApiClient.convertToType(data['id'], 'String');
       }
-      if (data.hasOwnProperty('dashboard')) {
-        obj['dashboard'] = ApiClient.convertToType(data['dashboard'], 'Boolean');
-      }
       if (data.hasOwnProperty('name')) {
         obj['name'] = ApiClient.convertToType(data['name'], 'String');
       }
-      if (data.hasOwnProperty('botId')) {
-        obj['botId'] = ApiClient.convertToType(data['botId'], 'String');
+      if (data.hasOwnProperty('message')) {
+        obj['message'] = Message.constructFromObject(data['message']);
       }
-      if (data.hasOwnProperty('botVersion')) {
-        obj['botVersion'] = ApiClient.convertToType(data['botVersion'], 'String');
+      if (data.hasOwnProperty('start')) {
+        obj['start'] = ApiClient.convertToType(data['start'], 'String');
       }
-      if (data.hasOwnProperty('channels')) {
-        obj['channels'] = ApiClient.convertToType(data['channels'], Object);
+      if (data.hasOwnProperty('end')) {
+        obj['end'] = ApiClient.convertToType(data['end'], 'String');
+      }
+      if (data.hasOwnProperty('freqType')) {
+        obj['freqType'] = ApiClient.convertToType(data['freqType'], 'String');
+      }
+      if (data.hasOwnProperty('freqInterval')) {
+        obj['freqInterval'] = ApiClient.convertToType(data['freqInterval'], 'Number');
+      }
+      if (data.hasOwnProperty('users')) {
+        obj['users'] = ApiClient.convertToType(data['users'], ['String']);
       }
     }
     return obj;
@@ -102,25 +110,33 @@
    */
   exports.prototype['id'] = undefined;
   /**
-   * @member {Boolean} dashboard
-   */
-  exports.prototype['dashboard'] = undefined;
-  /**
    * @member {String} name
    */
   exports.prototype['name'] = undefined;
   /**
-   * @member {String} botId
+   * @member {module:model/Message} message
    */
-  exports.prototype['botId'] = undefined;
+  exports.prototype['message'] = undefined;
   /**
-   * @member {String} botVersion
+   * @member {String} start
    */
-  exports.prototype['botVersion'] = undefined;
+  exports.prototype['start'] = undefined;
   /**
-   * @member {Object} channels
+   * @member {String} end
    */
-  exports.prototype['channels'] = undefined;
+  exports.prototype['end'] = undefined;
+  /**
+   * @member {String} freqType
+   */
+  exports.prototype['freqType'] = undefined;
+  /**
+   * @member {Number} freqInterval
+   */
+  exports.prototype['freqInterval'] = undefined;
+  /**
+   * @member {Array.<String>} users
+   */
+  exports.prototype['users'] = undefined;
 
 
 

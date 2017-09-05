@@ -7,6 +7,6 @@ Name | Type | Description | Notes
 **limit** | **Number** |  | [optional] 
 **count** | **Number** |  | [optional] 
 **total** | **Number** |  | [optional] 
-**items** | [**[User]**](User.md) |  | [optional] 
+**items** | [**[Role]**](Role.md) |  | [optional] 
 
 

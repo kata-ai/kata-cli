@@ -1,19 +1,19 @@
 # Zaun.DeploymentApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**botsBotIdDeploymentsDepIdDelete**](DeploymentApi.md#botsBotIdDeploymentsDepIdDelete) | **DELETE** /bots/{botId}/deployments/{depId} | Delete deployment by ID
-[**botsBotIdDeploymentsDepIdGet**](DeploymentApi.md#botsBotIdDeploymentsDepIdGet) | **GET** /bots/{botId}/deployments/{depId} | Find deployment by ID
-[**botsBotIdDeploymentsDepIdPut**](DeploymentApi.md#botsBotIdDeploymentsDepIdPut) | **PUT** /bots/{botId}/deployments/{depId} | Update deployment by ID
+[**botsBotIdDeploymentsDeploymentIdDelete**](DeploymentApi.md#botsBotIdDeploymentsDeploymentIdDelete) | **DELETE** /bots/{botId}/deployments/{deploymentId} | Delete deployment by ID
+[**botsBotIdDeploymentsDeploymentIdGet**](DeploymentApi.md#botsBotIdDeploymentsDeploymentIdGet) | **GET** /bots/{botId}/deployments/{deploymentId} | Find deployment by ID
+[**botsBotIdDeploymentsDeploymentIdPut**](DeploymentApi.md#botsBotIdDeploymentsDeploymentIdPut) | **PUT** /bots/{botId}/deployments/{deploymentId} | Update deployment by ID
 [**botsBotIdDeploymentsGet**](DeploymentApi.md#botsBotIdDeploymentsGet) | **GET** /bots/{botId}/deployments | Get all bot deployments
 [**botsBotIdDeploymentsPost**](DeploymentApi.md#botsBotIdDeploymentsPost) | **POST** /bots/{botId}/deployments | Create bot deployment
 
 
-<a name="botsBotIdDeploymentsDepIdDelete"></a>
-# **botsBotIdDeploymentsDepIdDelete**
-> Deployment botsBotIdDeploymentsDepIdDelete(botId, depId)
+<a name="botsBotIdDeploymentsDeploymentIdDelete"></a>
+# **botsBotIdDeploymentsDeploymentIdDelete**
+> Deployment botsBotIdDeploymentsDeploymentIdDelete(botId, deploymentId)
 
 Delete deployment by ID
 
@@ -32,7 +32,7 @@ var apiInstance = new Zaun.DeploymentApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to delete
+var deploymentId = "deploymentId_example"; // String | ID of deployment to delete
 
 
 var callback = function(error, data, response) {
@@ -42,7 +42,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdDelete(botId, depId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdDelete(botId, deploymentId, callback);
 ```
 
 ### Parameters
@@ -50,7 +50,7 @@ apiInstance.botsBotIdDeploymentsDepIdDelete(botId, depId, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to delete | 
+ **deploymentId** | **String**| ID of deployment to delete | 
 
 ### Return type
 
@@ -65,9 +65,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdGet"></a>
-# **botsBotIdDeploymentsDepIdGet**
-> Deployment botsBotIdDeploymentsDepIdGet(botId, depId)
+<a name="botsBotIdDeploymentsDeploymentIdGet"></a>
+# **botsBotIdDeploymentsDeploymentIdGet**
+> Deployment botsBotIdDeploymentsDeploymentIdGet(botId, deploymentId)
 
 Find deployment by ID
 
@@ -86,7 +86,7 @@ var apiInstance = new Zaun.DeploymentApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to return
+var deploymentId = "deploymentId_example"; // String | ID of deployment to return
 
 
 var callback = function(error, data, response) {
@@ -96,7 +96,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdGet(botId, depId, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdGet(botId, deploymentId, callback);
 ```
 
 ### Parameters
@@ -104,7 +104,7 @@ apiInstance.botsBotIdDeploymentsDepIdGet(botId, depId, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to return | 
+ **deploymentId** | **String**| ID of deployment to return | 
 
 ### Return type
 
@@ -119,9 +119,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="botsBotIdDeploymentsDepIdPut"></a>
-# **botsBotIdDeploymentsDepIdPut**
-> Object botsBotIdDeploymentsDepIdPut(botId, depId, body)
+<a name="botsBotIdDeploymentsDeploymentIdPut"></a>
+# **botsBotIdDeploymentsDeploymentIdPut**
+> Object botsBotIdDeploymentsDeploymentIdPut(botId, deploymentId, body)
 
 Update deployment by ID
 
@@ -140,7 +140,7 @@ var apiInstance = new Zaun.DeploymentApi();
 
 var botId = "botId_example"; // String | ID of bot
 
-var depId = "depId_example"; // String | ID of deployment to update
+var deploymentId = "deploymentId_example"; // String | ID of deployment to update
 
 var body = new Zaun.Deployment(); // Deployment | Deployment
 
@@ -152,7 +152,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.botsBotIdDeploymentsDepIdPut(botId, depId, body, callback);
+apiInstance.botsBotIdDeploymentsDeploymentIdPut(botId, deploymentId, body, callback);
 ```
 
 ### Parameters
@@ -160,7 +160,7 @@ apiInstance.botsBotIdDeploymentsDepIdPut(botId, depId, body, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **botId** | **String**| ID of bot | 
- **depId** | **String**| ID of deployment to update | 
+ **deploymentId** | **String**| ID of deployment to update | 
  **body** | [**Deployment**](Deployment.md)| Deployment | 
 
 ### Return type

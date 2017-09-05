@@ -39,7 +39,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new Zaun.InlineResponse2005();
+    instance = new Zaun.InlineResponse2006();
   });
 
   var getProperty = function(object, getter, property) {
@@ -58,40 +58,22 @@
       object[property] = value;
   }
 
-  describe('InlineResponse2005', function() {
-    it('should create an instance of InlineResponse2005', function() {
-      // uncomment below and update the code to test InlineResponse2005
-      //var instane = new Zaun.InlineResponse2005();
-      //expect(instance).to.be.a(Zaun.InlineResponse2005);
+  describe('InlineResponse2006', function() {
+    it('should create an instance of InlineResponse2006', function() {
+      // uncomment below and update the code to test InlineResponse2006
+      //var instane = new Zaun.InlineResponse2006();
+      //expect(instance).to.be.a(Zaun.InlineResponse2006);
     });
 
-    it('should have the property page (base name: "page")', function() {
-      // uncomment below and update the code to test the property page
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property team (base name: "team")', function() {
+      // uncomment below and update the code to test the property team
+      //var instane = new Zaun.InlineResponse2006();
       //expect(instance).to.be();
     });
 
-    it('should have the property limit (base name: "limit")', function() {
-      // uncomment below and update the code to test the property limit
-      //var instane = new Zaun.InlineResponse2005();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property count (base name: "count")', function() {
-      // uncomment below and update the code to test the property count
-      //var instane = new Zaun.InlineResponse2005();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property total (base name: "total")', function() {
-      // uncomment below and update the code to test the property total
-      //var instane = new Zaun.InlineResponse2005();
-      //expect(instance).to.be();
-    });
-
-    it('should have the property items (base name: "items")', function() {
-      // uncomment below and update the code to test the property items
-      //var instane = new Zaun.InlineResponse2005();
+    it('should have the property members (base name: "members")', function() {
+      // uncomment below and update the code to test the property members
+      //var instane = new Zaun.InlineResponse2006();
       //expect(instance).to.be();
     });
 

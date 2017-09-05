@@ -39,7 +39,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new Zaun.InlineResponse2005Members();
+    instance = new Zaun.InlineResponse2006Members();
   });
 
   var getProperty = function(object, getter, property) {
@@ -58,22 +58,22 @@
       object[property] = value;
   }
 
-  describe('InlineResponse2005Members', function() {
-    it('should create an instance of InlineResponse2005Members', function() {
-      // uncomment below and update the code to test InlineResponse2005Members
-      //var instane = new Zaun.InlineResponse2005Members();
-      //expect(instance).to.be.a(Zaun.InlineResponse2005Members);
+  describe('InlineResponse2006Members', function() {
+    it('should create an instance of InlineResponse2006Members', function() {
+      // uncomment below and update the code to test InlineResponse2006Members
+      //var instane = new Zaun.InlineResponse2006Members();
+      //expect(instance).to.be.a(Zaun.InlineResponse2006Members);
     });
 
     it('should have the property userId (base name: "userId")', function() {
       // uncomment below and update the code to test the property userId
-      //var instane = new Zaun.InlineResponse2005Members();
+      //var instane = new Zaun.InlineResponse2006Members();
       //expect(instance).to.be();
     });
 
     it('should have the property role (base name: "role")', function() {
       // uncomment below and update the code to test the property role
-      //var instane = new Zaun.InlineResponse2005Members();
+      //var instane = new Zaun.InlineResponse2006Members();
       //expect(instance).to.be();
     });
 

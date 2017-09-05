@@ -1,6 +1,6 @@
 # Zaun.TeamApi
 
-All URIs are relative to *http://zaun.katalabs.io/*
+All URIs are relative to *https://virtserver.swaggerhub.com/ikmals/zaun/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 <a name="teamsPost"></a>
 # **teamsPost**
-> InlineResponse2005 teamsPost(body)
+> InlineResponse2006 teamsPost(body)
 
 Create a team
 
@@ -50,7 +50,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2005**](InlineResponse2005.md)
+[**InlineResponse2006**](InlineResponse2006.md)
 
 ### Authorization
 
@@ -63,7 +63,7 @@ Name | Type | Description  | Notes
 
 <a name="teamsTeamIdUsersGet"></a>
 # **teamsTeamIdUsersGet**
-> InlineResponse2005 teamsTeamIdUsersGet(teamId)
+> InlineResponse2006 teamsTeamIdUsersGet(teamId)
 
 Find users in a team
 
@@ -101,7 +101,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2005**](InlineResponse2005.md)
+[**InlineResponse2006**](InlineResponse2006.md)
 
 ### Authorization
 
@@ -114,7 +114,7 @@ Name | Type | Description  | Notes
 
 <a name="teamsTeamIdUsersPost"></a>
 # **teamsTeamIdUsersPost**
-> InlineResponse2005 teamsTeamIdUsersPost(teamId, userId, roleId)
+> InlineResponse2006 teamsTeamIdUsersPost(teamId, userId, roleId)
 
 Add user to team
 
@@ -158,7 +158,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2005**](InlineResponse2005.md)
+[**InlineResponse2006**](InlineResponse2006.md)
 
 ### Authorization
 
@@ -171,7 +171,7 @@ Name | Type | Description  | Notes
 
 <a name="teamsTeamIdUsersUserIdDelete"></a>
 # **teamsTeamIdUsersUserIdDelete**
-> InlineResponse2005 teamsTeamIdUsersUserIdDelete(teamId, userId)
+> InlineResponse2006 teamsTeamIdUsersUserIdDelete(teamId, userId)
 
 Delete user from team
 
@@ -212,7 +212,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2005**](InlineResponse2005.md)
+[**InlineResponse2006**](InlineResponse2006.md)
 
 ### Authorization
 

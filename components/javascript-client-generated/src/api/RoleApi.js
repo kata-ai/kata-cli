@@ -25,18 +25,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/InlineResponse2003', 'model/Role'], factory);
+    define(['ApiClient', 'model/InlineResponse2004', 'model/Role'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2003'), require('../model/Role'));
+    module.exports = factory(require('../ApiClient'), require('../model/InlineResponse2004'), require('../model/Role'));
   } else {
     // Browser globals (root is window)
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.RoleApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2003, root.Zaun.Role);
+    root.Zaun.RoleApi = factory(root.Zaun.ApiClient, root.Zaun.InlineResponse2004, root.Zaun.Role);
   }
-}(this, function(ApiClient, InlineResponse2003, Role) {
+}(this, function(ApiClient, InlineResponse2004, Role) {
   'use strict';
 
   /**
@@ -60,7 +60,7 @@
      * Callback function to receive the result of the rolesGet operation.
      * @callback module:api/RoleApi~rolesGetCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/InlineResponse2003} data The data returned by the service call.
+     * @param {module:model/InlineResponse2004} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -70,7 +70,7 @@
      * @param {Number} opts.limit Limit returned roles in a page
      * @param {Number} opts.page A number representing page
      * @param {module:api/RoleApi~rolesGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/InlineResponse2003}
+     * data is of type: {@link module:model/InlineResponse2004}
      */
     this.rolesGet = function(opts, callback) {
       opts = opts || {};
@@ -91,7 +91,7 @@
       var authNames = ['Bearer'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = InlineResponse2003;
+      var returnType = InlineResponse2004;
 
       return this.apiClient.callApi(
         '/roles', 'GET',

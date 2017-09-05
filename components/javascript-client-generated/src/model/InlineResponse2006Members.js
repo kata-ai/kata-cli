@@ -34,7 +34,7 @@
     if (!root.Zaun) {
       root.Zaun = {};
     }
-    root.Zaun.Deployment = factory(root.Zaun.ApiClient);
+    root.Zaun.InlineResponse2006Members = factory(root.Zaun.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -43,14 +43,14 @@
 
 
   /**
-   * The Deployment model module.
-   * @module model/Deployment
+   * The InlineResponse2006Members model module.
+   * @module model/InlineResponse2006Members
    * @version 1.0.0
    */
 
   /**
-   * Constructs a new <code>Deployment</code>.
-   * @alias module:model/Deployment
+   * Constructs a new <code>InlineResponse2006Members</code>.
+   * @alias module:model/InlineResponse2006Members
    * @class
    */
   var exports = function() {
@@ -58,70 +58,55 @@
 
 
 
-
-
-
-
   };
 
   /**
-   * Constructs a <code>Deployment</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>InlineResponse2006Members</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/Deployment} obj Optional instance to populate.
-   * @return {module:model/Deployment} The populated <code>Deployment</code> instance.
+   * @param {module:model/InlineResponse2006Members} obj Optional instance to populate.
+   * @return {module:model/InlineResponse2006Members} The populated <code>InlineResponse2006Members</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('id')) {
-        obj['id'] = ApiClient.convertToType(data['id'], 'String');
+      if (data.hasOwnProperty('userId')) {
+        obj['userId'] = ApiClient.convertToType(data['userId'], 'String');
       }
-      if (data.hasOwnProperty('dashboard')) {
-        obj['dashboard'] = ApiClient.convertToType(data['dashboard'], 'Boolean');
-      }
-      if (data.hasOwnProperty('name')) {
-        obj['name'] = ApiClient.convertToType(data['name'], 'String');
-      }
-      if (data.hasOwnProperty('botId')) {
-        obj['botId'] = ApiClient.convertToType(data['botId'], 'String');
-      }
-      if (data.hasOwnProperty('botVersion')) {
-        obj['botVersion'] = ApiClient.convertToType(data['botVersion'], 'String');
-      }
-      if (data.hasOwnProperty('channels')) {
-        obj['channels'] = ApiClient.convertToType(data['channels'], Object);
+      if (data.hasOwnProperty('role')) {
+        obj['role'] = ApiClient.convertToType(data['role'], 'String');
       }
     }
     return obj;
   }
 
   /**
-   * @member {String} id
+   * @member {String} userId
    */
-  exports.prototype['id'] = undefined;
+  exports.prototype['userId'] = undefined;
   /**
-   * @member {Boolean} dashboard
+   * @member {module:model/InlineResponse2006Members.RoleEnum} role
    */
-  exports.prototype['dashboard'] = undefined;
-  /**
-   * @member {String} name
-   */
-  exports.prototype['name'] = undefined;
-  /**
-   * @member {String} botId
-   */
-  exports.prototype['botId'] = undefined;
-  /**
-   * @member {String} botVersion
-   */
-  exports.prototype['botVersion'] = undefined;
-  /**
-   * @member {Object} channels
-   */
-  exports.prototype['channels'] = undefined;
+  exports.prototype['role'] = undefined;
 
+
+  /**
+   * Allowed values for the <code>role</code> property.
+   * @enum {String}
+   * @readonly
+   */
+  exports.RoleEnum = {
+    /**
+     * value: "admin"
+     * @const
+     */
+    "admin": "admin",
+    /**
+     * value: "member"
+     * @const
+     */
+    "member": "member"  };
 
 
   return exports;
