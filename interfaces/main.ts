@@ -283,7 +283,7 @@ export interface ICompile {
     execDirective(name: string, directive: any, dict: IHash<any>, basepath: string) : void
 }
 
-export interface IUtils {
+export interface IHelper {
     getFiles(dir: string, ending: string) : string[];
     loadYaml(file: string) : JsonObject;
     dumpYaml(file: string, object: JsonObject) : void;

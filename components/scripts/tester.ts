@@ -1,10 +1,10 @@
 import { Component, IConfig, JsonObject, IHash } from "merapi";
-import { IUtils } from "interfaces/main";
+import { IHelper } from "interfaces/main";
 
 let colors = require("colors/safe");
 
 export default class Tester extends Component {
-    constructor(private config: IConfig, private utils: IUtils) {
+    constructor(private config: IConfig, private helper: IHelper) {
         super();
     }
 
@@ -31,8 +31,8 @@ export default class Tester extends Component {
                 "data": testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "intent", body);
-            result[name] = this.utils.compareTestResult(execResult.data, test.expect);
+            let execResult = await this.helper.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "intent", body);
+            result[name] = this.helper.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length  ? colors.green("passed") : colors.red("not passing")));
         }
 
@@ -63,8 +63,8 @@ export default class Tester extends Component {
                 data: testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "state-mapper", body);
-            result[name] = this.utils.compareTestResult(execResult.data, test.expect);
+            let execResult = await this.helper.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "state-mapper", body);
+            result[name] = this.helper.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
         }
 
@@ -95,8 +95,8 @@ export default class Tester extends Component {
                 data: testData
             };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "action", body);
-            result[name] = this.utils.compareTestResult(execResult.data, test.expect);
+            let execResult = await this.helper.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "action", body);
+            result[name] = this.helper.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
         }
 
@@ -119,8 +119,8 @@ export default class Tester extends Component {
 
             let body = { flow, state, message, context, data };
 
-            let execResult = await this.utils.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "flow", body);
-            result[name] = this.utils.compareTestResult(execResult.data, test.expect);
+            let execResult = await this.helper.toPromise(botApi, botApi.botsBotIdExecObjectPost, botId, "flow", body);
+            result[name] = this.helper.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
             if (!execResult) break;
             state = execResult.state;

@@ -1,6 +1,6 @@
 
 import { JsonObject, Component } from "merapi";
-import { IUtils } from "interfaces/main";
+import { IHelper } from "interfaces/main";
 
 const zaun = require("../../components/javascript-client-generated/src/index.js");
 
@@ -15,16 +15,16 @@ export default class Api extends Component {
     private sessionApi: any;
     private cachesApi: any;
 
-    constructor(private utils: IUtils) {
+    constructor(private helper: IHelper) {
         super();
         
         this.apiClient = zaun.ApiClient.instance;
-        let basePath = this.utils.getProp("zaunUrl") || "http://zaun.katalabs.io";
+        let basePath = this.helper.getProp("zaunUrl") || "http://zaun.katalabs.io";
         
         this.apiClient.basePath = basePath;
         this.bearer = this.apiClient.authentications['Bearer'];
-        let currentLogin = <string> this.utils.getProp("current_login") || "user";
-        let tokenObj = <JsonObject> this.utils.getProp("token") || {};
+        let currentLogin = <string> this.helper.getProp("current_login") || "user";
+        let tokenObj = <JsonObject> this.helper.getProp("token") || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
         
         this.botApi = new zaun.BotApi();

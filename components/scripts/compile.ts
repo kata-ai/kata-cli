@@ -1,6 +1,6 @@
 
 import { IConfig, IHash, Component } from "merapi";
-import { ICompile, IUtils } from "interfaces/main";
+import { ICompile, IHelper } from "interfaces/main";
 
 const { Config } = require("merapi");
 const path = require("path");
@@ -9,10 +9,10 @@ const yaml = require("js-yaml");
 
 export default class Compile extends Component implements ICompile {
     private directives : any = {
-        include(file: string, basepath: string, utils: IUtils) {
+        include(file: string, basepath: string, helper: IHelper) {
             let ext = path.extname(file);
             if (ext === ".yml" || ext === ".yaml")
-                return utils.loadYaml(path.resolve(basepath, file));
+                return helper.loadYaml(path.resolve(basepath, file));
             else if(ext === ".json")
                 return require(path.resolve(basepath, file));
             else
@@ -20,7 +20,7 @@ export default class Compile extends Component implements ICompile {
         }
     };
 
-    constructor(private utils: IUtils) {
+    constructor(private helper: IHelper) {
         super();
     }
 
@@ -30,7 +30,7 @@ export default class Compile extends Component implements ICompile {
                 continue;
             let val = dict[i].trim();
             if (val.indexOf("$"+name+"(") === 0 && val.charAt(val.length-1) === ")") {
-                dict[i] = directive(dict[i].substring(2+name.length, dict[i].length-1), basepath, this.utils);
+                dict[i] = directive(dict[i].substring(2+name.length, dict[i].length-1), basepath, this.helper);
             }
         }
     }

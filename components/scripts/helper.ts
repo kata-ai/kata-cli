@@ -6,7 +6,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-export default class Utils extends Component {
+export default class Helper extends Component {
 
     constructor(private config: IConfig) {
         super();

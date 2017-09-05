@@ -9,7 +9,7 @@ components:
     deployment: Deployment
     session: Session
     compile: scripts/Compile
-    utils: scripts/Utils
+    helper: scripts/Helper
     tester: scripts/Tester
     api: Api
 
@@ -135,7 +135,7 @@ commands:
         type: command
         desc: Command for set property value
         args: "<prop> <value>"
-        handler: utils.setProp
+        handler: helper.setProp
     
     login:
         type: command
