@@ -6,7 +6,7 @@ const colors = require("colors");
 const inquirer = require("inquirer");
 
 export default class Deployment extends Component {
-    constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any) {
+    constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any, private config : Config) {
         super();
     }
 
@@ -107,7 +107,7 @@ export default class Deployment extends Component {
             let channelData = <JsonObject> JSON.parse(<string>options.data);
             channelData.name = channelName;
             channelData = await this.getRequiredChannelData(channelData);
-
+            
             result = await this.utils.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDepIdChannelsPost, channelData, bot, name);
             let channel = result.data;
 
@@ -174,8 +174,8 @@ export default class Deployment extends Component {
     }
 
     private async getRequiredChannelData(data: JsonObject) : Promise<JsonObject> {
-        let { id, name, type, token, refreshToken, secret, url, partnerChannelId } = data;
-
+        let { id, name, type, token, refreshToken, secret, url } = data;
+        let channelType = this.config.default("config.channels.type", []);
         let answer = await inquirer.prompt([
             {
                 type: "input",
@@ -192,13 +192,13 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "type",
-                message: "channel type (line, fbmessenger, slack): ",
+                message: `channel type (${channelType.join(", ")}): `,
                 when: function() { return !type; },
                 validate: function (type: string) {
                     if (!type)
                         return "Channel type cannot be empty";
-                    
-                    if (type.toLowerCase() !== "line" && type.toLowerCase() !== "fbmessenger" && type.toLowerCase() !== "slack" && type.toLowerCase() !== "generic")
+
+                    if (channelType.indexOf(type.toLowerCase()) == -1)
                         return "Invalid type for channel";
 
                     return true;
@@ -209,7 +209,7 @@ export default class Deployment extends Component {
             },
             {
                 type: "input",
-                name: "token",
+                name: "options.token",
                 message: "channel token: ",
                 when: function() { return !token; },
                 filter: function(token: string) {
@@ -221,7 +221,7 @@ export default class Deployment extends Component {
             },
             {
                 type: "input",
-                name: "refreshToken",
+                name: "options.refreshToken",
                 message: "channel refresh token: ",
                 when: function() { return !refreshToken },
                 filter: function(refreshToken: string) {
@@ -233,7 +233,7 @@ export default class Deployment extends Component {
             },
             {
                 type: "input",
-                name: "secret",
+                name: "options.secret",
                 message: "channel secret key: ",
                 when: function() { return !secret },
                 filter: function(secret: string) {
@@ -257,7 +257,8 @@ export default class Deployment extends Component {
             }
         ]);
 
-        let res = { id, name, type, token, refreshToken, secret, url, partnerChannelId };
+        let options = {};
+        let res = { id, name, type, options, url };
 
         return { ...res, ...answer };
     }
