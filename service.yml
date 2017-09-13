@@ -13,6 +13,15 @@ components:
     tester: scripts/Tester
     api: Api
 
+config:
+    channels:
+        type: 
+            - line
+            - slack
+            - generic
+            - fbmessenger
+            - telegram
+
 commands:
     bot:
         type: group
