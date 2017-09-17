@@ -257,8 +257,8 @@ export default class Bot extends Component {
                 this.setToken(name, teamToken.id);
             }
             else if (type === "user") {
-                let user = options.user ? options.user : "";
-                let pass = options.password ? options.password : "";
+                let user = <string> (options.user ? options.user : "");
+                let pass = <string> (options.password ? options.password : "");
 
                 let answer = await inquirer.prompt([
                     {
@@ -306,7 +306,7 @@ export default class Bot extends Component {
                 let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, body);
                 let userObj = result.data;
 
-                this.setToken("user", userObj.id);
+                this.setToken(user, userObj.id);
             }
             else {
                 throw new Error("Type can only be \"team\" or \"user\"");
@@ -604,6 +604,12 @@ export default class Bot extends Component {
                     return e.message;
             }
         }.bind(this);
+    }
+
+    whoami(options: JsonObject) {
+        let currentLogin = <string> this.utils.getProp("current_login");
+        
+        console.log(currentLogin);
     }
 
     private setToken(user: string, token: string) {
