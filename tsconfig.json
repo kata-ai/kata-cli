@@ -15,8 +15,6 @@
     "include": [
         "components/**/*.ts",
         "components/*.ts",
-        "test/**/*.ts",
-        "test/*.ts",
         "interfaces/*.ts"
     ],
 

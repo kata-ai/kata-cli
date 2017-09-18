@@ -7,7 +7,9 @@ const inquirer = require("inquirer");
 const path = require("path");
 
 export default class Session extends Component {
-    constructor(private compile : ICompile, private helper: IHelper, private tester: ITester, private api: any) {
+    private defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
+
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
@@ -15,10 +17,10 @@ export default class Session extends Component {
         let botId = this.helper.getBotId();
         
         try {
-            deploymentId = deploymentId || "depId";
-            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, deploymentId, id);
+            deploymentId = deploymentId || this.defaultDeploymentId;
+            let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, deploymentId, id, "");
 
-            console.log(data);
+            console.dir(data, { depth: null });
         } catch (e) {
             let errorMessage;
 
@@ -47,7 +49,7 @@ export default class Session extends Component {
             if (id && !session.id)
                 session.id = id;
             
-            deploymentId = deploymentId || "depId";
+            deploymentId = deploymentId || this.defaultDeploymentId;
 
             let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsPost, botId, deploymentId, session);
 
@@ -81,7 +83,7 @@ export default class Session extends Component {
             if (!session.id)
                 session.id = id;
             
-            deploymentId = deploymentId || "depId";
+            deploymentId = deploymentId || this.defaultDeploymentId;
 
             let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, deploymentId, id, session);
 
@@ -103,9 +105,10 @@ export default class Session extends Component {
         let botId = this.helper.getBotId();
         
         try {
+            deploymentId = deploymentId || this.defaultDeploymentId;
             let {data} = await this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, deploymentId, id);
 
-            console.log(data);
+            console.dir(data, { depth: null });
             console.log("Session deleted successfully");
         } catch (e) {
             let errorMessage;

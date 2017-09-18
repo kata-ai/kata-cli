@@ -295,6 +295,7 @@ export interface IHelper {
     createDirectory(path: string, mode?: number) : void;
     getCurrentToken() : JsonObject;
     loadYamlOrJsonFile(filePath: string) : JsonObject;
+    inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
 }
 
 export interface ITester {

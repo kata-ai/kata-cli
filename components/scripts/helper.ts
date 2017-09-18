@@ -5,6 +5,7 @@ const yaml = require("js-yaml");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const inquirer = require("inquirer");
 
 export default class Helper extends Component {
 
@@ -124,5 +125,9 @@ export default class Helper extends Component {
         }
         else
             return new Error("UNSUPPORTED FILE TYPE");
+    }
+
+    async inquirerPrompt(questions: JsonObject[]): Promise<JsonObject> {
+        return inquirer.prompt(questions);
     }
 };

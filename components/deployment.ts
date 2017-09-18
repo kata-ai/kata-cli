@@ -257,7 +257,7 @@ export default class Deployment extends Component {
             }
         ]);
 
-        let options = {};
+        let options = { token, refreshToken, secret };
         let res = { id, name, type, options, url };
 
         return { ...res, ...answer };

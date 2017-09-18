@@ -12,6 +12,7 @@ components:
     helper: scripts/Helper
     tester: scripts/Tester
     api: Api
+    zaun: zaun-client/Zaun
 
 config:
     channels:

@@ -57,7 +57,9 @@
     "merapi": "^0.17.1",
     "merapi-proxy": "^0.1.3",
     "node-uuid": "^1.4.8",
-    "superagent": "^3.5.2"
+    "superagent": "^3.5.2",
+    "zaun": "git+ssh://git@bitbucket.org/yesboss/zaun-swagger.git",
+    "zaun-swagger": "git+ssh://git@bitbucket.org/yesboss/zaun-swagger.git"
   },
   "devDependencies": {
     "@types/js-yaml": "^3.9.0",

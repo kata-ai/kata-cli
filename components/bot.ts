@@ -253,7 +253,7 @@ export default class Bot extends Component {
 
                 result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, body);
                 let teamToken = result.data;
-
+                
                 this.setToken(name, teamToken.id);
             }
             else if (type === "user") {
@@ -424,7 +424,7 @@ export default class Bot extends Component {
     }
 
     async delete(options: JsonObject) {
-        let answer = await inquirer.prompt([
+        let answer = await this.helper.inquirerPrompt([
             {
                 type: "confirm",
                 name: "confirmation",
@@ -607,7 +607,7 @@ export default class Bot extends Component {
     }
 
     whoami(options: JsonObject) {
-        let currentLogin = <string> this.utils.getProp("current_login");
+        let currentLogin = <string> this.helper.getProp("current_login");
         
         console.log(currentLogin);
     }

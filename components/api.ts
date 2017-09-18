@@ -2,8 +2,6 @@
 import { JsonObject, Component } from "merapi";
 import { IHelper } from "interfaces/main";
 
-const zaun = require("../../components/javascript-client-generated/src/index.js");
-
 export default class Api extends Component {
     private apiClient: any;
     private bearer: any;
@@ -15,10 +13,10 @@ export default class Api extends Component {
     private sessionApi: any;
     private cachesApi: any;
 
-    constructor(private helper: IHelper) {
+    constructor(private helper: IHelper, private zaun: any) {
         super();
-        
-        this.apiClient = zaun.ApiClient.instance;
+
+        this.apiClient = this.zaun.ApiClient.instance;
         let basePath = this.helper.getProp("zaunUrl") || "http://zaun.katalabs.io";
         
         this.apiClient.basePath = basePath;
@@ -27,12 +25,12 @@ export default class Api extends Component {
         let tokenObj = <JsonObject> this.helper.getProp("token") || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
         
-        this.botApi = new zaun.BotApi();
-        this.authApi = new zaun.AuthApi();
-        this.userApi = new zaun.UserApi();
-        this.deploymentApi = new zaun.DeploymentApi();
-        this.channelApi = new zaun.ChannelApi();
-        this.sessionApi = new zaun.SessionApi();
-        this.cachesApi = new zaun.CachesApi();
+        this.botApi = new this.zaun.BotApi();
+        this.authApi = new this.zaun.AuthApi();
+        this.userApi = new this.zaun.UserApi();
+        this.deploymentApi = new this.zaun.DeploymentApi();
+        this.channelApi = new this.zaun.ChannelApi();
+        this.sessionApi = new this.zaun.SessionApi();
+        this.cachesApi = new this.zaun.CachesApi();
     }
 }
