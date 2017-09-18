@@ -297,7 +297,42 @@ import Zaun from "../components/zaun-client/zaun";
 
     // TODO
     @test async "function test should call intents, states, actions, and flow test api"() {
+        let getFileStub = stub(this.helper, "getFiles").returns(["data1"]);
+        let loadYamlStub = stub(this.helper, "loadYaml").returns({schema: "kata.ai/schema/kata-ml/1.0/test/intents"});
+        let getBotIdStub = stub(this.helper, "getBotId").returns("testBotId");
+        
+        let execIntentTestStub = stub(this.tester, "execIntentTest").returns({results: {intents: {field: "intentsA", expect: "true", result: "true"}}});
+        await this.bot.test();
+        
+        loadYamlStub.restore();
+        loadYamlStub = stub(this.helper, "loadYaml").returns({schema: "kata.ai/schema/kata-ml/1.0/test/states"});
+        let execStateTestStub = stub(this.tester, "execStateTest").returns({results: {intents: {field: "statesA", expect: "true", result: "true"}}});
+        await this.bot.test();
 
+        loadYamlStub.restore();
+        loadYamlStub = stub(this.helper, "loadYaml").returns({schema: "kata.ai/schema/kata-ml/1.0/test/actions"});
+        let execActionsTestStub = stub(this.tester, "execActionsTest").returns({results: {intents: {field: "actionsA", expect: "true", result: "true"}}});
+        await this.bot.test();
+
+        loadYamlStub.restore();
+        loadYamlStub = stub(this.helper, "loadYaml").returns({schema: "kata.ai/schema/kata-ml/1.0/test/flow"});
+        let execFlowTestStub = stub(this.tester, "execFlowTest").returns({results: {intents: {field: "flowsA", expect: "true", result: "true"}}});
+        await this.bot.test();
+
+        getBotIdStub.restore();
+        getFileStub.restore();
+        loadYamlStub.restore();
+        execIntentTestStub.restore();
+        execStateTestStub.restore();
+        execActionsTestStub.restore();
+        execFlowTestStub.restore();
+
+
+        assert.calledWith(getFileStub, "./test", ".spec.yml");
+        assert.calledOnce(execIntentTestStub);
+        assert.calledOnce(execStateTestStub);
+        assert.calledOnce(execActionsTestStub);
+        assert.calledOnce(execFlowTestStub);
     }
 
     @test async "function login should call login api successfully with user token"() {
@@ -316,6 +351,26 @@ import Zaun from "../components/zaun-client/zaun";
         getPropStub.restore();
         assert.calledWith(setPropStub, "current_login", "user");
         assert.calledWith(setPropStub, "token", { user: "userToken" });
+    }
+
+    @test async "function whoami should print current user login"() {
+        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
+        let getTokenInfoStub = stub(this.api.authApi, "tokensTokenIdGet").callsFake((tokenId, callback) => {
+            callback(null, this.userTokenObj);
+        });
+        let setPropStub = stub(this.helper, "setProp");
+        let getPropStub = stub(this.helper, "getProp").returns({});
+        let consoleLogStub = stub(console, "log");
+
+        await this.bot.login("user", null, { token: "userToken" });
+        this.bot.whoami({});
+        consoleLogStub.restore();
+        getTokenStub.restore();
+        getTokenInfoStub.restore();
+        setPropStub.restore();
+        getPropStub.restore();
+
+        assert.calledWith(consoleLogStub, {user: "userToken"});
     }
 
     @test async "function login should call login api successfully with team token"() {
