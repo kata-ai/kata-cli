@@ -10,6 +10,7 @@
     "test": "test"
   },
   "scripts": {
+    "prepare": "sh bin/dependencies.sh",
     "postinstall": "tsc",
     "clean": "rm -rf ./lib",
     "build": "tsc",
