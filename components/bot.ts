@@ -1,7 +1,7 @@
 
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
 import {v4 as uuid} from "node-uuid";
-import { ICompile, IUtils, ITester } from "interfaces/main";
+import { ICompile, IHelper, ITester } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
 const repl = require("repl");
@@ -9,7 +9,7 @@ const util = require("util");
 const deasync = require("deasync");
 
 export default class Bot extends Component {
-    constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any) {
+    constructor(private compile : ICompile, private helper: IHelper, private tester: ITester, private api: any) {
         super();
     }
 
@@ -110,23 +110,23 @@ export default class Bot extends Component {
             }
         }
 
-        this.utils.createDirectory("./flows", 0o755);
-        this.utils.dumpYaml("./bot.yml", botDesc);
-        this.utils.dumpYaml("./flows/fallback.yml", fallbackFlow);
-        this.utils.dumpYaml("./messages.yml", messages);
-        this.utils.dumpYaml("./nlu.yml", nlus);
+        this.helper.createDirectory("./flows", 0o755);
+        this.helper.dumpYaml("./bot.yml", botDesc);
+        this.helper.dumpYaml("./flows/fallback.yml", fallbackFlow);
+        this.helper.dumpYaml("./messages.yml", messages);
+        this.helper.dumpYaml("./nlu.yml", nlus);
 
         console.log("INIT BOT SUCCESSFULLY");
     }
 
     async versions(options: JsonObject) {
-        let botId = this.utils.getBotId();
+        let botId = this.helper.getBotId();
 
         if (!botId)
             throw new Error("BOT ID HAS NOT DEFINED");
 
         try {
-            let {data, response} = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
+            let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
             console.log("VERSIONS");
 
             data.versions.forEach((botVersion: string) => {
@@ -145,8 +145,8 @@ export default class Bot extends Component {
     }
 
     async test(file: string, options: JsonObject) {
-        let testFiles = file ? [file] : this.utils.getFiles("./test", ".spec.yml");
-        let botId = this.utils.getBotId();
+        let testFiles = file ? [file] : this.helper.getFiles("./test", ".spec.yml");
+        let botId = this.helper.getBotId();
 
         if (!botId)
             throw new Error("BOT ID HAS NOT DEFINED");
@@ -154,7 +154,7 @@ export default class Bot extends Component {
         let results : JsonObject = {};
 
         for (let i=0; i<testFiles.length; i++) {
-            let yaml = this.utils.loadYaml(testFiles[i]);
+            let yaml = this.helper.loadYaml(testFiles[i]);
             let res;
 
             switch(yaml.schema) {
@@ -213,21 +213,21 @@ export default class Bot extends Component {
 
     async login(type: string, name: string, options: JsonObject) {
         try {
-            let currToken = this.utils.getCurrentToken()["token"];
+            let currToken = this.helper.getCurrentToken()["token"];
             
             if (options.token) {
                 if (!currToken)
                     currToken = <string>options.token;
 
                 this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
-                let result = await this.utils.toPromise(this.api.authApi, this.api.authApi.tokensTokenIdGet, options.token);
+                let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensTokenIdGet, options.token);
                 let tokenObj = result.data;
 
                 if (tokenObj.type === "user") {
                     this.setToken("user", <string> options.token);
                 }
                 else if (tokenObj.type === "team") {
-                    result = await this.utils.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, tokenObj.teamId);
+                    result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, tokenObj.teamId);
                     let team = result.data;
 
                     this.setToken(team.username, <string> options.token);
@@ -243,7 +243,7 @@ export default class Bot extends Component {
                 if (!currToken)
                     throw new Error("You need to login your user before login to team");
 
-                let result = await this.utils.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, name);
+                let result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, name);
                 let team = result.data;
 
                 let body = {
@@ -251,14 +251,14 @@ export default class Bot extends Component {
                     teamId: team.id
                 };
 
-                result = await this.utils.toPromise(this.api.authApi, this.api.authApi.tokensPost, body);
+                result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, body);
                 let teamToken = result.data;
-
+                
                 this.setToken(name, teamToken.id);
             }
             else if (type === "user") {
-                let user = options.user ? options.user : "";
-                let pass = options.password ? options.password : "";
+                let user = <string> (options.user ? options.user : "");
+                let pass = <string> (options.password ? options.password : "");
 
                 let answer = await inquirer.prompt([
                     {
@@ -303,10 +303,10 @@ export default class Bot extends Component {
                     password: pass
                 }
 
-                let result = await this.utils.toPromise(this.api.authApi, this.api.authApi.loginPost, body);
+                let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, body);
                 let userObj = result.data;
 
-                this.setToken("user", userObj.id);
+                this.setToken(user, userObj.id);
             }
             else {
                 throw new Error("Type can only be \"team\" or \"user\"");
@@ -325,7 +325,7 @@ export default class Bot extends Component {
 
     async list(options: JsonObject) {
         try {
-            let {data, response} = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
+            let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
 
             console.log("LIST BOT");
 
@@ -345,7 +345,7 @@ export default class Bot extends Component {
     }
 
     async update(options: JsonObject) {
-        let desc = this.utils.loadYaml("./bot.yml");
+        let desc = this.helper.loadYaml("./bot.yml");
 
         let [major, minor, patch] = (<string>desc.version).split(".").map((val: string) => parseInt(val));
 
@@ -379,7 +379,7 @@ export default class Bot extends Component {
             desc.id = id;
 
             try {
-                let result = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
+                let result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
                 console.log("BOT CREATED");
             }
             catch (e) {
@@ -395,7 +395,7 @@ export default class Bot extends Component {
         }
         else {
             try {
-                let result = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdPut, botDesc.id, botDesc, {});
+                let result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdPut, botDesc.id, botDesc, {});
                 
                 desc.version = result.data.version;
 
@@ -409,7 +409,7 @@ export default class Bot extends Component {
                     errorMessage = e.message;
 
                 if (errorMessage === "Bot not found.") {
-                    let result = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
+                    let result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
 
                     desc.version = result.data.version;
                     console.log("CREATED BOT SUCCESSFULLY");
@@ -420,11 +420,11 @@ export default class Bot extends Component {
             }
         }
 
-        this.utils.dumpYaml("./bot.yml", desc);
+        this.helper.dumpYaml("./bot.yml", desc);
     }
 
     async delete(options: JsonObject) {
-        let answer = await inquirer.prompt([
+        let answer = await this.helper.inquirerPrompt([
             {
                 type: "confirm",
                 name: "confirmation",
@@ -436,10 +436,10 @@ export default class Bot extends Component {
         if (!answer.confirmation)
             return;
 
-        let botId = this.utils.getBotId();
+        let botId = this.helper.getBotId();
 
         try {
-            let {data} = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdDelete, botId);
+            let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdDelete, botId);
 
             console.log("REMOVE BOT SUCCESSFULLY");
         } catch (e) {
@@ -456,7 +456,7 @@ export default class Bot extends Component {
 
     console(options: JsonObject) {
         let currentSession = <string> (options.session ? options.session : uuid());
-        let botDesc = this.utils.loadYaml("./bot.yml");
+        let botDesc = this.helper.loadYaml("./bot.yml");
         let botId = botDesc.id;
         let defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
@@ -478,7 +478,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -501,7 +501,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -524,7 +524,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -545,17 +545,17 @@ export default class Bot extends Component {
         con.context.session = function session(name: string, update: JsonObject) {
             try {
                 if (!arguments.length) {
-                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
+                    let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
 
                     return res.data;
                 } else if (arguments.length == 1) {
-                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+                    let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
 
                     return res.data;
                 } else {
-                    let res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
+                    let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
                     let session = res.data;
-                    res = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
+                    res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
 
                     return res.data;
                 }
@@ -571,11 +571,11 @@ export default class Bot extends Component {
             name = name || currentSession;
 
             try {
-                let { data } = this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+                let { data } = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
                 let session = { ...data };
 
                 if (session)
-                    this.sync(this.utils.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDepIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
+                    this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
             } catch (e) {
                 let errorMessage;
                 
@@ -595,7 +595,7 @@ export default class Bot extends Component {
         con.context.clearCaches = function clearCaches(num: number = 20) {
             try {
                 for(let i=0; i<num; i++) {
-                    this.sync(this.utils.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
+                    this.sync(this.helper.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
                 }
             } catch (e) {
                 if (e.response && e.response.body && e.response.body.message)
@@ -606,11 +606,17 @@ export default class Bot extends Component {
         }.bind(this);
     }
 
+    whoami(options: JsonObject) {
+        let currentLogin = <string> this.helper.getProp("current_login");
+        
+        console.log(currentLogin);
+    }
+
     private setToken(user: string, token: string) {
-        this.utils.setProp("current_login", user);
-        let tokenProp = <JsonObject>(this.utils.getProp("token") || {});
+        this.helper.setProp("current_login", user);
+        let tokenProp = <JsonObject>(this.helper.getProp("token") || {});
         tokenProp[user] = token;
-        this.utils.setProp("token", tokenProp);
+        this.helper.setProp("token", tokenProp);
     }
 
     private sync(promise: any) {

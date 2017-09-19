@@ -283,7 +283,7 @@ export interface ICompile {
     execDirective(name: string, directive: any, dict: IHash<any>, basepath: string) : void
 }
 
-export interface IUtils {
+export interface IHelper {
     getFiles(dir: string, ending: string) : string[];
     loadYaml(file: string) : JsonObject;
     dumpYaml(file: string, object: JsonObject) : void;
@@ -295,6 +295,7 @@ export interface IUtils {
     createDirectory(path: string, mode?: number) : void;
     getCurrentToken() : JsonObject;
     loadYamlOrJsonFile(filePath: string) : JsonObject;
+    inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
 }
 
 export interface ITester {

@@ -1,21 +1,21 @@
 
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
 import {v4 as uuid} from "node-uuid";
-import { ICompile, IUtils, ITester } from "interfaces/main";
+import { IHelper } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
 
 export default class Deployment extends Component {
-    constructor(private compile : ICompile, private utils: IUtils, private tester: ITester, private api: any, private config : Config) {
+    constructor(private helper: IHelper, private api: any, private config : Config) {
         super();
     }
 
     async deploy(name: string, version: string, options: JsonObject) {
         let deployment;
-        let bot = this.utils.getBotId();
+        let bot = this.helper.getBotId();
 
         try {
-            let {data} = await this.utils.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
+            let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
             if (!version)
                 version = data.latest;
@@ -36,7 +36,7 @@ export default class Deployment extends Component {
         }
 
         try {
-            let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
+            let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
 
             deployment = data;
         } catch (e) {
@@ -64,7 +64,7 @@ export default class Deployment extends Component {
                     }
                 }
 
-                let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
+                let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
 
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
                 console.dir(data, {depth: null});
@@ -75,7 +75,7 @@ export default class Deployment extends Component {
                     botVersion: version
                 };
 
-                let {data} = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdPut, bot, name, body);
+                let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
 
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
                 console.dir(data, {depth: null});
@@ -94,8 +94,8 @@ export default class Deployment extends Component {
 
     async addChannel(name: string, channelName: string, options: JsonObject) {
         try {
-            let bot = this.utils.getBotId();
-            let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
+            let bot = this.helper.getBotId();
+            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
             let deployment = result.data;
 
             if (deployment.channels[channelName])
@@ -107,8 +107,8 @@ export default class Deployment extends Component {
             let channelData = <JsonObject> JSON.parse(<string>options.data);
             channelData.name = channelName;
             channelData = await this.getRequiredChannelData(channelData);
-            
-            result = await this.utils.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDepIdChannelsPost, channelData, bot, name);
+
+            result = await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsPost, channelData, bot, name);
             let channel = result.data;
 
             deployment.channels[channelName] = channel.id;
@@ -128,16 +128,16 @@ export default class Deployment extends Component {
     }
 
     async removeChannel(name: string, channelName: string, options: JsonObject) {
-        let bot = this.utils.getBotId();
+        let bot = this.helper.getBotId();
 
         try {
-            let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdGet, bot, name);
+            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
             let deployment = result.data;
 
             if (!deployment.channels[channelName])
                 throw new Error("CHANNEL NOT FOUND");
 
-            await this.utils.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDepIdChannelsChannelIdDelete, bot, name, deployment.channels[channelName]);
+            await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete, bot, name, deployment.channels[channelName]);
 
             console.log("CHANNEL REMOVED SUCCESSFULLY");
         } catch (e) {
@@ -153,10 +153,10 @@ export default class Deployment extends Component {
     }
 
     async drop(name: string, options: JsonObject) {
-        let bot = this.utils.getBotId();
+        let bot = this.helper.getBotId();
 
         try {
-            let result = await this.utils.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDepIdDelete, bot, name);
+            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdDelete, bot, name);
             let deployment = result.data;
 
             console.log(deployment);
@@ -257,7 +257,7 @@ export default class Deployment extends Component {
             }
         ]);
 
-        let options = {};
+        let options = { token, refreshToken, secret };
         let res = { id, name, type, options, url };
 
         return { ...res, ...answer };
