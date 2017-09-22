@@ -54,6 +54,9 @@ commands:
                             - major
                             - minor
                             - patch
+                    tag:
+                        type: string
+                        desc: tag version for deployment
                 handler: bot.update
                 alias: push
             delete:

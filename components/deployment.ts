@@ -13,15 +13,31 @@ export default class Deployment extends Component {
     async deploy(name: string, version: string, options: JsonObject) {
         let deployment;
         let bot = this.helper.getBotId();
+        let tagVersionRegex = /^([a-z])\w+\-\d+\.\d+\.\d+$/g;
+        let versionRegex = /^\d+\.\d+\.\d+$/g;
 
         try {
             let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
+            if (version && !tagVersionRegex.test(version) && !versionRegex.test(version)) {
+                let regexPattern = new RegExp(`${version}\-`, "g");
+                let latestTag = data.versions.filter((x : any) => {
+                    return regexPattern.test(x);
+                });
+
+                if (latestTag.length > 0) 
+                    version = latestTag[latestTag.length - 1];
+                else 
+                    throw new Error("INVALID TAG");
+            }
+            
             if (!version)
                 version = data.latest;
             
             if (!data.versions.some((v: string) => v === version))
                 throw new Error("INVALID_VERSION");
+
+
         } catch (e) {
             let errorMessage;
 
@@ -55,6 +71,9 @@ export default class Deployment extends Component {
         }
 
         try {
+            let splittedVersion = version.split("-");
+            version = splittedVersion.length === 2 ? splittedVersion[1] : version;
+            
             if (!deployment) {
                 let opts = {
                     body: {
@@ -65,6 +84,7 @@ export default class Deployment extends Component {
                 }
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
+                data = splittedVersion.length === 2 ? {...data, tag: splittedVersion[0]} : data;
 
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
                 console.dir(data, {depth: null});
@@ -76,6 +96,7 @@ export default class Deployment extends Component {
                 };
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
+                data = splittedVersion.length === 2 ? {...data, tag: splittedVersion[0]} : data;
 
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
                 console.dir(data, {depth: null});

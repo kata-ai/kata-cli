@@ -22,6 +22,7 @@ export default class Bot extends Component {
             name,
             desc: "Bot Description",
             version,
+            tag: "latest",
             flows: {
                 "fallback": "$include(./flows/fallback.yml)"
             },
@@ -130,7 +131,7 @@ export default class Bot extends Component {
             console.log("VERSIONS");
 
             data.versions.forEach((botVersion: string) => {
-                console.log(`- ${botVersion}${botVersion === data.latest ? " (LATEST)" : ""}`);
+                console.log(`- ${botVersion}`);
             });
         } catch (e) {
             let errorMessage;
@@ -365,7 +366,8 @@ export default class Bot extends Component {
         }
 
         desc.version = `${major}.${minor}.${patch}`;
-        
+        desc.tag = options.tag || "latest";
+
         let bot = Config.create(desc, {left:"${", right:"}"});
         bot = this.compile.execDirectives(bot, process.cwd());
         bot.resolve();
