@@ -9,7 +9,7 @@ const deasync = require("deasync");
 
 export default class User extends Component {
 
-    constructor(private compile : ICompile, private helper: IHelper, private tester: ITester, private api: any) {
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
@@ -74,11 +74,11 @@ export default class User extends Component {
                 
                 user = answer.user || user;
                 pass = answer.password || pass;
-            
+                
                 let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, { username: user, password: pass });
                 let info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, user);
                 let token = result.data.id;
-
+                
                 if (info && info.data.type === "team") {
                     result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: info.data.id });
                     token = result.data.id;

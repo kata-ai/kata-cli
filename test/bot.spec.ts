@@ -174,46 +174,6 @@ import Zaun from "../components/zaun-client/zaun";
         },
         id: "botId"
     };
-    private userTokenObj = {
-        id: '84330d2b-f2f8-499c-adee-99d2c533e7d5',
-        type: 'user',
-        label: 'dashboard',
-        userId: '5c0a78c2-3a2c-447a-80d2-069761be3ef9',
-        teamId: <string>null,
-        botId: <string>null,
-        roleId: 'ccd9b640-93c4-43b6-8523-f324f89faad6',
-        expire: 1503789662
-    };
-    private teamTokenObj = {
-        id: 'ea43b3b6-3c7f-4bd8-98f3-e58ee699b5b3',
-        type: 'team',
-        label: <string>null,
-        userId: '8a62686d-695c-44f0-a57c-4ca19f5bf78b',
-        teamId: 'e563ec87-dae9-45f0-a2b3-515a069fb2b0',
-        botId: <string>null,
-        roleId: '81b179bc-fa56-4c27-92db-a1602abe48c2',
-        expire: 1506907823
-    };
-    private userObj = {
-        id: '9ad603b7-5c33-432c-9752-2f4816b6bd9f',
-        type: 'user',
-        label: 'dashboard',
-        userId: '05c7f7a7-fba6-437a-8e6d-72c9f71c6352',
-        roleId: 'b3941608-1494-4983-9b64-af746b601190',
-        expire: 1506915325
-    }
-    private teamObj = {
-        id: 'e563ec87-dae9-45f0-a2b3-515a069fb2b0',
-        username: 'user1',
-        password: 'password',
-        type: 'team',
-        email: <string> null,
-        profile: <string> null,
-        roleId: '55f7d797-a938-4f59-9c6a-cf6cd8a01d08',
-        created_at: '2017-06-18T01:46:13.000Z',
-        updated_at: '2017-06-18T01:46:13.000Z',
-        teams: <string[]> []
-    }
 
     constructor() {
         let configJson = safeLoad(readFileSync("./service.yml", "utf8"));
@@ -239,7 +199,23 @@ import Zaun from "../components/zaun-client/zaun";
         assert.calledOnce(createDirStub);
         assert.callCount(dumpYamlStub, 4);
         assert.calledWith(createDirStub, "./flows", 0o755);
-        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
+        assert.calledWith(dumpYamlStub, "./bot.yml", {
+            config: { maxRecursion: 10, messages: "$include(./messages.yml)" },
+            desc: "Bot Description",
+            flows: { fallback: "$include(./flows/fallback.yml)" },
+            id: "botId",
+            methods: {
+                'confidenceLevel(message,context,data,options,config)': {
+                code: 'function confidenceLevel(message, context, data, options, config) { if (message.content === "hi") return 1; return 0; }',
+                entry: "confidenceLevel"
+                }
+            },
+            name: "Bot Name",
+            nlus: "$include(./nlu.yml)",
+            schema: "kata.ai/schema/kata-ml/1.0",
+            tag: "latest",
+            version: "1.0.0"
+            });
         assert.calledWith(dumpYamlStub, "./flows/fallback.yml", this.fallbackFlow);
         assert.calledWith(dumpYamlStub, "./messages.yml", this.messages);
         assert.calledWith(dumpYamlStub, "./nlu.yml", this.nlus);
@@ -259,7 +235,23 @@ import Zaun from "../components/zaun-client/zaun";
         assert.calledOnce(createDirStub);
         assert.callCount(dumpYamlStub, 4);
         assert.calledWith(createDirStub, "./flows", 0o755);
-        assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: "0.0.1" });
+        assert.calledWith(dumpYamlStub, "./bot.yml", {
+            config: { maxRecursion: 10, messages: "$include(./messages.yml)" },
+            desc: "Bot Description",
+            flows: { fallback: "$include(./flows/fallback.yml)" },
+            id: "botId",
+            methods: {
+                'confidenceLevel(message,context,data,options,config)': {
+                code: 'function confidenceLevel(message, context, data, options, config) { if (message.content === "hi") return 1; return 0; }',
+                entry: "confidenceLevel"
+                }
+            },
+            name: "Bot Name",
+            nlus: "$include(./nlu.yml)",
+            schema: "kata.ai/schema/kata-ml/1.0",
+            tag: "latest",
+            version: "0.0.1"
+            });
         assert.calledWith(dumpYamlStub, "./flows/fallback.yml", this.fallbackFlow);
         assert.calledWith(dumpYamlStub, "./messages.yml", this.messages);
         assert.calledWith(dumpYamlStub, "./nlu.yml", this.nlus);
@@ -333,157 +325,6 @@ import Zaun from "../components/zaun-client/zaun";
         assert.calledOnce(execStateTestStub);
         assert.calledOnce(execActionsTestStub);
         assert.calledOnce(execFlowTestStub);
-    }
-
-    @test async "function login should call login api successfully with user token"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getTokenInfoStub = stub(this.api.authApi, "tokensTokenIdGet").callsFake((tokenId, callback) => {
-            callback(null, this.userTokenObj);
-        });
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp").returns({});
-
-        await this.bot.login("user", null, { token: "userToken" });
-
-        getTokenStub.restore();
-        getTokenInfoStub.restore();
-        setPropStub.restore();
-        getPropStub.restore();
-        assert.calledWith(setPropStub, "current_login", "user");
-        assert.calledWith(setPropStub, "token", { user: "userToken" });
-    }
-
-    @test async "function whoami should print current user login"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getTokenInfoStub = stub(this.api.authApi, "tokensTokenIdGet").callsFake((tokenId, callback) => {
-            callback(null, this.userTokenObj);
-        });
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp").returns({});
-        let consoleLogStub = stub(console, "log");
-
-        await this.bot.login("user", null, { token: "userToken" });
-        this.bot.whoami({});
-        consoleLogStub.restore();
-        getTokenStub.restore();
-        getTokenInfoStub.restore();
-        setPropStub.restore();
-        getPropStub.restore();
-
-        assert.calledWith(consoleLogStub, {user: "userToken"});
-    }
-
-    @test async "function login should call login api successfully with team token"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getTokenInfoStub = stub(this.api.authApi, "tokensTokenIdGet").callsFake((tokenId, callback) => {
-            callback(null, this.teamTokenObj);
-        });
-        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
-        });
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp").returns({});
-
-        await this.bot.login("team", null, { token: "teamToken" });
-
-        getTokenStub.restore();
-        getTokenInfoStub.restore();
-        setPropStub.restore();
-        getPropStub.restore();
-        assert.calledWith(setPropStub, "current_login", this.teamObj.username);
-        assert.calledWith(setPropStub, "token", { "user1": "teamToken" });
-    }
-
-    @test async "function login should throw error if token type not user and not team"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getTokenInfoStub = stub(this.api.authApi, "tokensTokenIdGet").callsFake((tokenId, callback) => {
-            callback(null, {});
-        });
-        let consoleLogStub = stub(console, "log");
-
-        await this.bot.login("user", null, { token: "userToken" });
-
-        getTokenStub.restore();
-        getTokenInfoStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "Invalid token");
-    }
-
-    @test async "function login should call login api successfully with username & password"() {
-        let authObj = {
-            user: "user1",
-            password: "pass1"
-        };
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let loginStub = stub(this.api.authApi, "loginPost").callsFake((body, callback) => {
-            callback(null, this.userObj);
-        });
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp").returns({});
-
-        await this.bot.login("user", null, { "user": "user1", "password": "pass1" });
-
-        getTokenStub.restore();
-        loginStub.restore();
-        setPropStub.restore();
-        getPropStub.restore();
-        assert.calledWith(setPropStub, "current_login", authObj.user);
-        assert.calledWith(setPropStub, "token", { "user1": this.userObj.id });
-    }
-
-    @test async "function login should switch team successfully with team name"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
-        });
-        let createTokenTeamStub = stub(this.api.authApi, "tokensPost").callsFake((body, callback) => {
-            callback(null, this.teamTokenObj);
-        })
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp").returns({});
-
-        await this.bot.login("team", "team1", {});
-
-        getTokenStub.restore();
-        getUserInfoStub.restore();
-        createTokenTeamStub.restore();
-        setPropStub.restore();
-        getPropStub.restore();
-        assert.calledWith(setPropStub, "current_login", "team1");
-        assert.calledWith(setPropStub, "token", { "team1": this.teamTokenObj.id });
-    }
-
-    @test async "function login should throw error when user not defined team name to switch"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let consoleLogStub = stub(console, "log");
-
-        await this.bot.login("team", null, {});
-
-        getTokenStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "You need to provide teamname to login to team");
-    }
-
-    @test async "function login should throw error when user not login before switch team"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let consoleLogStub = stub(console, "log");
-
-        await this.bot.login("team", null, {});
-
-        getTokenStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "You need to provide teamname to login to team");
-    }
-
-    @test async "function login should throw error when type is not team or user"() {
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({});
-        let consoleLogStub = stub(console, "log");
-
-        await this.bot.login("team", "team1", {});
-
-        getTokenStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "You need to login your user before login to team");
     }
 
     @test async "should call list bots"() {
