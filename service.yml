@@ -13,6 +13,7 @@ components:
     tester: scripts/Tester
     api: Api
     zaun: zaun-client/Zaun
+    user: User
 
 config:
     channels:
@@ -150,28 +151,40 @@ commands:
         args: "<prop> <value>"
         handler: helper.setProp
     
-    login:
-        type: command
-        desc: login to kata
-        args: "<type> [name]"
-        params:
-            user:
-                type: string
-                desc: username login
-                short: u
-            password:
-                type: string
-                desc: password login
-                short: p
-            token:
-                type: string
-                desc: token login
-                short: t
-        handler: bot.login
-    
-    whoami:
-        type: command
-        desc: identify current user
-        handler: bot.whoami
+    user:
+        type: group
+        desc: user management
+        subcommands:
+            switch:
+                desc: switch between team and user
+                args: <type> [name]
+                handler: user.switch
+                alias: switch
+            login:
+                desc: login to kata
+                params:
+                    user:
+                        type: string
+                        desc: username login
+                        short: u
+                    password:
+                        type: string
+                        desc: password login
+                        short: p
+                    token:
+                        type: string
+                        desc: token login
+                        short: t
+                handler: user.login
+                alias: login
+            logout:
+                desc: logout from kata
+                handler: user.logout
+                alias: logout
+            whoami:
+                desc: identify current user
+                handler: user.whoami
+                alias: whoami
+        
 # entry point
 main: main
