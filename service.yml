@@ -185,6 +185,11 @@ commands:
                 desc: identify current user
                 handler: user.whoami
                 alias: whoami
+            changePassword:
+                desc: change current user password
+                handler: user.changePassword
+                alias: change-password
+                
         
 # entry point
 main: main

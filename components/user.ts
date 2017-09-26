@@ -156,6 +156,26 @@ export default class User extends Component {
         }   
     }
 
+    async changePassword() {
+        try {
+            let passObj = await this.getNewPasswordData();
+            if (passObj.newPass !== passObj.rePass)
+                throw new Error("Invalid retype password");
+
+                let currentUser = <string> this.helper.getProp("current_login");
+                let { data } = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, { username: currentUser, password: passObj.oldPass});
+                if (data) {
+                    let result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdPut, data.userId, { password: passObj.newPass });
+                    console.log("Password changed");
+                    } else {
+                    console.log("Invalid password");
+                }
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
+
+
     whoami(options: JsonObject) {
         let currentLogin = <string> this.helper.getProp("current_login");
         let currentType = <string> this.helper.getProp("current_user_type");
@@ -168,5 +188,60 @@ export default class User extends Component {
         let tokenProp = <JsonObject>(this.helper.getProp("token") || {});
         tokenProp[<string> userInfo.name] = token;
         this.helper.setProp("token", tokenProp);
+    }
+
+    private async getNewPasswordData() : Promise<JsonObject>{
+        let oldPass : string;
+        let newPass : string;
+        let rePass : string;
+        
+        let answer = await inquirer.prompt([
+                 {
+                     type: "password",
+                     name: "oldPass",
+                     message: "current password: ",
+                     mask: "*",
+                     when: function() {
+                         return !oldPass;
+                     },
+                     validate: function (user : string) {
+                         if (!user)
+                             return "Password cannot be empty";
+                         return true;
+                     }
+                 },
+                 {
+                     type: "password",
+                     name: "newPass",
+                     message: "new password: ",
+                     mask: "*",
+                     when: function() {
+                         return !newPass;
+                     },
+                     validate: function (password: string) {
+                         if (!password)
+                             return "Password cannot be empty";
+                        
+                         return true;
+                     }
+                 },
+                 {
+                     type: "password",
+                     name: "rePass",
+                     message: "retype new password: ",
+                     mask: "*",
+                     when: function() {
+                         return !rePass;
+                     },
+                     validate: function (password: string) {
+                         if (!password)
+                             return "Password cannot be empty";
+                        
+                         return true;
+                     }
+                 },
+             ]);
+    
+        return answer;
     }
 }
