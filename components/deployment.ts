@@ -10,33 +10,45 @@ export default class Deployment extends Component {
         super();
     }
 
-    async deploy(name: string, version: string, options: JsonObject) {
+    async deploy(name: string, label: string, options: JsonObject) {
         let deployment;
         let bot = this.helper.getBotId();
-        let tagVersionRegex = /^([a-z])\w+\-\d+\.\d+\.\d+$/g;
         let versionRegex = /^\d+\.\d+\.\d+$/g;
+        let tag : string = "";
+        let version : string = "";
 
         try {
             let { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
-            if (version && !tagVersionRegex.test(version) && !versionRegex.test(version)) {
-                let regexPattern = new RegExp(`${version}\-`, "g");
+            if (label) {
+                let isVersion = versionRegex.test(label);
                 let latestTag = data.versions.filter((x : any) => {
-                    return regexPattern.test(x);
+                    let splited = x.split("-");
+                    let cond = isVersion ? splited[0] : splited[1];
+                    
+                    return label === cond;
                 });
 
-                if (latestTag.length > 0) 
-                    version = latestTag[latestTag.length - 1];
+                if (latestTag.length > 0) {
+                    let splited = latestTag[latestTag.length - 1].split("-");
+                    version = splited[0];
+                    tag = isVersion ? splited[1] : label;
+                }
+                    
                 else 
                     throw new Error("INVALID TAG");
             }
             
-            if (!version)
-                version = data.latest;
-            
-            if (!data.versions.some((v: string) => v === version))
-                throw new Error("INVALID_VERSION");
 
+            if (!label) {
+                version = data.latest;
+                tag = "latest";
+            }
+                
+            
+            if (!data.versions.some((v: string) => v.split("-")[0] === version))
+                throw new Error("INVALID_VERSION");
+            
 
         } catch (e) {
             this.helper.wrapError(e);
@@ -63,9 +75,6 @@ export default class Deployment extends Component {
         }
 
         try {
-            let splittedVersion = version.split("-");
-            version = splittedVersion.length === 2 ? splittedVersion[1] : version;
-            
             if (!deployment) {
                 let opts = {
                     body: {
@@ -76,10 +85,9 @@ export default class Deployment extends Component {
                 }
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
-                data = splittedVersion.length === 2 ? {...data, tag: splittedVersion[0]} : data;
 
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
-                console.dir(data, {depth: null});
+                console.dir({...data, tag: tag}, {depth: null});
             }
             else {
                 let body = {
@@ -88,10 +96,9 @@ export default class Deployment extends Component {
                 };
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
-                data = splittedVersion.length === 2 ? {...data, tag: splittedVersion[0]} : data;
 
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
-                console.dir(data, {depth: null});
+                console.dir({...data, tag: tag}, {depth: null});
             }
         } catch (e) {
             this.helper.wrapError(e);

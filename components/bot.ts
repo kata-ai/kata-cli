@@ -128,11 +128,19 @@ export default class Bot extends Component {
 
         try {
             let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
-            console.log("VERSIONS");
-
-            data.versions.forEach((botVersion: string) => {
-                console.log(`- ${botVersion}`);
-            });
+            if (data) {
+                console.log("Bot Versions : ");
+                data.versions.forEach((bot: string) => {
+                    let msg = bot.split("-");
+                    if (msg.length > 1) 
+                        console.log(`- ${msg[0]} (${msg[1]})`);
+                    else
+                        console.log(`- ${msg[0]}`);
+                });
+            } else {
+                console.log("You must push at least 1 bot to acquire version");
+            }
+            
         } catch (e) {
             this.helper.wrapError(e);
         }
