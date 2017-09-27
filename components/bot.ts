@@ -134,14 +134,7 @@ export default class Bot extends Component {
                 console.log(`- ${botVersion}`);
             });
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -222,14 +215,7 @@ export default class Bot extends Component {
                 console.log(bot);
             });
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -333,14 +319,7 @@ export default class Bot extends Component {
 
             console.log("REMOVE BOT SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 

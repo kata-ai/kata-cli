@@ -17,7 +17,7 @@ export default class Deployment extends Component {
         let versionRegex = /^\d+\.\d+\.\d+$/g;
 
         try {
-            let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
+            let { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
             if (version && !tagVersionRegex.test(version) && !versionRegex.test(version)) {
                 let regexPattern = new RegExp(`${version}\-`, "g");
@@ -39,15 +39,7 @@ export default class Deployment extends Component {
 
 
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
-
+            this.helper.wrapError(e);
             return;
         }
 
@@ -102,14 +94,7 @@ export default class Deployment extends Component {
                 console.dir(data, {depth: null});
             }
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -137,14 +122,7 @@ export default class Deployment extends Component {
             console.log("CHANNEL ADDED SUCCESSFULLY");
             console.log(deployment);
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -162,14 +140,7 @@ export default class Deployment extends Component {
 
             console.log("CHANNEL REMOVED SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -183,14 +154,7 @@ export default class Deployment extends Component {
             console.log(deployment);
             console.log("DEPLOYMENT DELETED SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
