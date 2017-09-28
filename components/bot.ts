@@ -22,7 +22,6 @@ export default class Bot extends Component {
             name,
             desc: "Bot Description",
             version,
-            tag: "latest",
             flows: {
                 "fallback": "$include(./flows/fallback.yml)"
             },
@@ -248,7 +247,7 @@ export default class Bot extends Component {
         }
 
         desc.version = `${major}.${minor}.${patch}`;
-        desc.tag = options.tag || "latest";
+        desc.tag = options.tag || null;
 
         let bot = Config.create(desc, {left:"${", right:"}"});
         bot = this.compile.execDirectives(bot, process.cwd());
