@@ -20,7 +20,7 @@ export default class Deployment extends Component {
             if (!version)
                 version = data.latest;
             
-            if (!data.versions.some((v: string) => v === version))
+            if (!data.versions.some((v: string) => v.split("-")[0] === version))
                 throw new Error("INVALID_VERSION");
         } catch (e) {
             let errorMessage;
