@@ -32,15 +32,12 @@ export default class Deployment extends Component {
                 if (latestTag.length > 0) {
                     let splited = latestTag[latestTag.length - 1].split("-");
                     version = splited[0];
-                    tag = isVersion ? splited[1] : label;
+                    tag = isVersion ? splited[1] ? splited[1] : "latest" : label;
                 }
                     
                 else 
                     throw new Error("INVALID TAG");
-            }
-            
-
-            if (!label) {
+            } else {
                 version = data.latest;
                 tag = "latest";
             }
@@ -69,11 +66,11 @@ export default class Deployment extends Component {
             
             if (errorMessage !== "Deployment not found.") {
                 console.log(errorMessage);
-
+                
                 return;
             }
         }
-
+        
         try {
             if (!deployment) {
                 let opts = {
@@ -85,7 +82,7 @@ export default class Deployment extends Component {
                 }
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
-
+                
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
                 console.dir({...data, tag: tag}, {depth: null});
             }
@@ -96,7 +93,7 @@ export default class Deployment extends Component {
                 };
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
-
+                
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
                 console.dir({...data, tag: tag}, {depth: null});
             }

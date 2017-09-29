@@ -76,18 +76,12 @@ export default class User extends Component {
                 pass = answer.password || pass;
                 
                 let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, { username: user, password: pass });
-                let info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, user);
                 let token = result.data.id;
-                
-                if (info && info.data.type === "team") {
-                    result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: info.data.id });
-                    token = result.data.id;
-                }
 
-                this.helper.setProp("first_login", { type: info.data.type, username: user });
-                this.setToken({ name: user, type: info.data.type  }, token);
+                this.helper.setProp("first_login", { type: "user", username: user });
+                this.setToken({ name: user, type: "user"  }, token);
 
-                console.log(`Logged in as ${user}, login type : ${info.data.type}`);
+                console.log(`Logged in as ${user}`);
             }
         } catch (e) {
             this.helper.wrapError(e);
@@ -124,13 +118,9 @@ export default class User extends Component {
         try {
             let firstLogin = <JsonObject> this.helper.getProp("first_login");
             let currentType = this.helper.getProp("current_user_type");
-            let flag = type === "team" ? firstLogin.type !== type : firstLogin.type === type;
             
             if (currentType === type)
                 throw new Error(`Unable to switch : already on ${type}`)
-
-            if (!flag)
-                throw new Error("Unable to switch : Invalid type");
 
             if (type === "team") {
                 let info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.username);
