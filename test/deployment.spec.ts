@@ -88,7 +88,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(getDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(createDeploymentStub, this.deploymentObj.botId, optsCreateDeployment);
         assert.calledWith(consoleLogStub, "DEPLOYMENT CREATED SUCCESSFULLY");
-        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId, tag: "latest" });;
+        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId, tag: null });;
     }
 
     @test async "function deploy should update deployment successfully if deployment has been created"() {

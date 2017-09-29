@@ -32,7 +32,7 @@ export default class Deployment extends Component {
                 if (latestTag.length > 0) {
                     let splited = latestTag[latestTag.length - 1].split("-");
                     version = splited[0];
-                    tag = isVersion ? splited[1] ? splited[1] : "latest" : label;
+                    tag = isVersion ? splited[1] ? splited[1] : null : label;
                 }
                     
                 else 
@@ -70,7 +70,7 @@ export default class Deployment extends Component {
                 return;
             }
         }
-        
+
         try {
             if (!deployment) {
                 let opts = {
