@@ -199,23 +199,7 @@ import Zaun from "../components/zaun-client/zaun";
         assert.calledOnce(createDirStub);
         assert.callCount(dumpYamlStub, 4);
         assert.calledWith(createDirStub, "./flows", 0o755);
-        assert.calledWith(dumpYamlStub, "./bot.yml", {
-            config: { maxRecursion: 10, messages: "$include(./messages.yml)" },
-            desc: "Bot Description",
-            flows: { fallback: "$include(./flows/fallback.yml)" },
-            id: "botId",
-            methods: {
-                'confidenceLevel(message,context,data,options,config)': {
-                code: 'function confidenceLevel(message, context, data, options, config) { if (message.content === "hi") return 1; return 0; }',
-                entry: "confidenceLevel"
-                }
-            },
-            name: "Bot Name",
-            nlus: "$include(./nlu.yml)",
-            schema: "kata.ai/schema/kata-ml/1.0",
-            tag: "latest",
-            version: "1.0.0"
-            });
+        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
         assert.calledWith(dumpYamlStub, "./flows/fallback.yml", this.fallbackFlow);
         assert.calledWith(dumpYamlStub, "./messages.yml", this.messages);
         assert.calledWith(dumpYamlStub, "./nlu.yml", this.nlus);
@@ -235,23 +219,7 @@ import Zaun from "../components/zaun-client/zaun";
         assert.calledOnce(createDirStub);
         assert.callCount(dumpYamlStub, 4);
         assert.calledWith(createDirStub, "./flows", 0o755);
-        assert.calledWith(dumpYamlStub, "./bot.yml", {
-            config: { maxRecursion: 10, messages: "$include(./messages.yml)" },
-            desc: "Bot Description",
-            flows: { fallback: "$include(./flows/fallback.yml)" },
-            id: "botId",
-            methods: {
-                'confidenceLevel(message,context,data,options,config)': {
-                code: 'function confidenceLevel(message, context, data, options, config) { if (message.content === "hi") return 1; return 0; }',
-                entry: "confidenceLevel"
-                }
-            },
-            name: "Bot Name",
-            nlus: "$include(./nlu.yml)",
-            schema: "kata.ai/schema/kata-ml/1.0",
-            tag: "latest",
-            version: "0.0.1"
-            });
+        assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: "0.0.1" });
         assert.calledWith(dumpYamlStub, "./flows/fallback.yml", this.fallbackFlow);
         assert.calledWith(dumpYamlStub, "./messages.yml", this.messages);
         assert.calledWith(dumpYamlStub, "./nlu.yml", this.nlus);

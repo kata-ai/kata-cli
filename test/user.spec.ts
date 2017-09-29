@@ -232,23 +232,6 @@ import User from "../components/user";
         assert.calledWith(consoleLogStub, "Unable to switch : already on user");
     }
 
-    @test async "function switch should throw error when switch to user from team first login"() {
-        let consoleLogStub = stub(console, "log");
-        
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp");
-
-        getPropStub.withArgs("first_login").returns({user: "user1", type: "team"});
-        getPropStub.withArgs("current_user_type").returns("team");
-
-        await this.user.switch("user");
-
-        setPropStub.restore();
-        getPropStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "Unable to switch : Invalid type");
-    }
-
     @test async "function logout should logout successfully"() {
         let consoleLogStub = stub(console, "log");
         let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true })

@@ -88,7 +88,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(getDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(createDeploymentStub, this.deploymentObj.botId, optsCreateDeployment);
         assert.calledWith(consoleLogStub, "DEPLOYMENT CREATED SUCCESSFULLY");
-        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId });
+        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId, tag: "latest" });;
     }
 
     @test async "function deploy should update deployment successfully if deployment has been created"() {
@@ -127,7 +127,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(getDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(updateDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name, body);
         assert.calledWith(consoleLogStub, "DEPLOYMENT UPDATED SUCCESSFULLY");
-        assert.calledWith(consoleDirStub, { ...this.deploymentObj, id: createdDeploymentId });
+        assert.calledWith(consoleDirStub, { ...this.deploymentObj, id: createdDeploymentId, tag: "latest" });
     }
 
     @test async "function deploy throw error if bot with botVersion is undefined"() {
@@ -153,7 +153,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledOnce(getBotVersionStub);
         assert.calledOnce(consoleLogStub);
         assert.calledWith(getBotVersionStub, this.deploymentObj.botId);
-        assert.calledWith(consoleLogStub, "INVALID_VERSION");
+        assert.calledWith(consoleLogStub, "INVALID TAG");
     }
 
     @test async "function add channel should add channel to deployment successfully"() {
