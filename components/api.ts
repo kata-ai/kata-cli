@@ -31,6 +31,6 @@ export default class Api extends Component {
         this.deploymentApi = new this.zaun.DeploymentApi();
         this.channelApi = new this.zaun.ChannelApi();
         this.sessionApi = new this.zaun.SessionApi();
-        this.cachesApi = new this.zaun.CachesApi();
+        this.cachesApi = new this.zaun.CacheApi();
     }
 }

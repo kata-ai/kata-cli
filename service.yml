@@ -87,6 +87,10 @@ commands:
                 args: <name> [version]
                 handler: deployment.deploy
                 alias: deploy
+            list:
+                desc: list all deployment by bot id
+                handler: deployment.list
+                alias: list-deployment
             addChannel:
                 args: <name> <channelName>
                 params:
@@ -188,7 +192,7 @@ commands:
             changePassword:
                 desc: change current user password
                 handler: user.changePassword
-                alias: change-password
+                alias: pwd
                 
         
 # entry point

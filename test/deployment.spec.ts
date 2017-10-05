@@ -263,4 +263,22 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(consoleStub, this.deploymentObj);
         assert.calledWith(consoleStub, "DEPLOYMENT DELETED SUCCESSFULLY");
     }
+
+    @test async "should call zaun api to list deployment"() {
+        let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
+        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, {}, callback) => {
+            callback(null, null, {body: [this.deploymentObj]});
+        });
+        let consoleStub = stub(console, "log");
+        await this.deployment.list();
+
+        consoleStub.restore();
+        getBotIdStub.restore();
+        deploymentApiDeleteStub.restore();
+        assert.calledOnce(deploymentApiDeleteStub);
+        assert.calledWith(consoleStub, "List Deployment");
+        assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
+        assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
+        
+    }
 }

@@ -102,6 +102,23 @@ export default class Deployment extends Component {
         }
     }
 
+    async list(options: JsonObject) {
+        try {
+            let botId = this.helper.getBotId();
+            let {response} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
+            
+            if (response && response.body) {
+                console.log("List Deployment");
+                response.body.forEach((deployment : JsonObject) => {
+                    console.log(`- Name : ${deployment.name}`);
+                    console.log(`  Bot version : ${deployment.botVersion}`);
+                });
+            }
+        } catch (e) {
+            this.helper.wrapError(e);
+        }
+    }
+
     async addChannel(name: string, channelName: string, options: JsonObject) {
         try {
             let bot = this.helper.getBotId();
