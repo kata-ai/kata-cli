@@ -93,4 +93,10 @@ export default class Session extends Component {
             this.helper.wrapError(e);
         }
     }
+
+    async timestamp() {
+        let { response } = await this.helper.toPromise(this.api.utilApi, this.api.utilApi.timestampGet);
+
+        console.log(`Current server timestamp: ${response.text}`);
+    }
 }

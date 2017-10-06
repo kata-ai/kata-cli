@@ -154,6 +154,11 @@ commands:
         desc: Command for set property value
         args: "<prop> <value>"
         handler: helper.setProp
+
+    timestamp:
+        type: command
+        desc: Command for get timestamp
+        handler: session.timestamp
     
     user:
         type: group

@@ -12,6 +12,7 @@ export default class Api extends Component {
     private channelApi: any;
     private sessionApi: any;
     private cachesApi: any;
+    private utilApi: any;
 
     constructor(private helper: IHelper, private zaun: any) {
         super();
@@ -32,5 +33,6 @@ export default class Api extends Component {
         this.channelApi = new this.zaun.ChannelApi();
         this.sessionApi = new this.zaun.SessionApi();
         this.cachesApi = new this.zaun.CacheApi();
+        this.utilApi = new this.zaun.UtilApi();
     }
 }

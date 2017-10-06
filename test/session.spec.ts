@@ -120,4 +120,18 @@ import Session from "../components/session";
         assert.calledWith(consoleDirStub, this.sessionObj);
         assert.calledWith(consoleLogStub, "Session deleted successfully");
     }
+
+      @test async "function timestamp should get timestamp"() {
+        let consoleLogStub = stub(console, "log");
+        let currDate = Date.now().toString();
+        let getTimestampSub = stub(this.api.utilApi, "timestampGet").callsFake((callback) => {
+            callback(null, null, {text: currDate});
+        });
+
+        await this.session.timestamp();
+
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, `Current server timestamp: ${currDate}`);
+    }
+
 }
