@@ -33,6 +33,18 @@ export default class Team extends Component {
     }
     
     async removeMember(username : string) {
+        let answer = await this.helper.inquirerPrompt([
+            {
+                type: "confirm",
+                name: "confirmation",
+                message: `Do you want to remove ${username} ?`,
+                default: false
+            }
+        ]);
+
+        if (!answer.confirmation)
+            return;
+
         try {
             let { userInfo, teamInfo, teamMember, currentLogin } = await this.getInfo(username);
              if (userInfo && userInfo.id) {
