@@ -1,13 +1,13 @@
 import { IConfigReader, IConfig, Config } from "merapi";
 import { suite, test } from "mocha-typescript";
 import { spy, stub, assert } from "sinon";
-import { IHelper } from "../interfaces/main";
+import { IHelper } from "../../interfaces/main";
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../components/scripts/helper";
-import Zaun from "../components/zaun-client/zaun";
-import Api from "../components/api";
-import Session from "../components/session";
+import Helper from "../../components/scripts/helper";
+import Zaun from "../../components/api/zaun";
+import Api from "../../components/api/api";
+import Session from "../../components/bots/session";
 
 @suite class SessionTest {
     private config: IConfig;
@@ -120,4 +120,18 @@ import Session from "../components/session";
         assert.calledWith(consoleDirStub, this.sessionObj);
         assert.calledWith(consoleLogStub, "Session deleted successfully");
     }
+
+      @test async "function timestamp should get timestamp"() {
+        let consoleLogStub = stub(console, "log");
+        let currDate = Date.now().toString();
+        let getTimestampSub = stub(this.api.utilApi, "timestampGet").callsFake((callback) => {
+            callback(null, null, {text: currDate});
+        });
+
+        await this.session.timestamp();
+
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, `Current server timestamp: ${currDate}`);
+    }
+
 }

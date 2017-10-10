@@ -4,15 +4,27 @@ name: ${package.name}
 version: ${package.version}
 
 components:
+    # main
     main: Main
-    bot: Bot
-    deployment: Deployment
-    session: Session
+
+    # bot management
+    bot: bots/Bot
+    deployment: bots/Deployment
+    session: bots/Session
+
+    # user management
+    user: users/User
+    team: users/Team
+
+    # helper
     compile: scripts/Compile
     helper: scripts/Helper
     tester: scripts/Tester
-    api: Api
-    zaun: zaun-client/Zaun
+
+    # api
+    api: api/Api
+    zaun: api/Zaun
+    
 
 config:
     channels:
@@ -54,6 +66,9 @@ commands:
                             - major
                             - minor
                             - patch
+                    tag:
+                        type: string
+                        desc: tag version for deployment
                 handler: bot.update
                 alias: push
             delete:
@@ -83,6 +98,10 @@ commands:
                 args: <name> [version]
                 handler: deployment.deploy
                 alias: deploy
+            list:
+                desc: list all deployment by bot id
+                handler: deployment.list
+                alias: list-deployment
             addChannel:
                 args: <name> <channelName>
                 params:
@@ -146,29 +165,66 @@ commands:
         desc: Command for set property value
         args: "<prop> <value>"
         handler: helper.setProp
-    
-    login:
+
+    timestamp:
         type: command
-        desc: login to kata
-        args: "<type> [name]"
-        params:
-            user:
-                type: string
-                desc: username login
-                short: u
-            password:
-                type: string
-                desc: password login
-                short: p
-            token:
-                type: string
-                desc: token login
-                short: t
-        handler: bot.login
+        desc: Command for get timestamp
+        handler: session.timestamp
     
-    whoami:
-        type: command
-        desc: identify current user
-        handler: bot.whoami
+    user:
+        type: group
+        desc: user management
+        subcommands:
+            switch:
+                desc: switch between team and user
+                args: <type> [name]
+                handler: user.switch
+                alias: switch
+            login:
+                desc: login to kata
+                params:
+                    user:
+                        type: string
+                        desc: username login
+                        short: u
+                    password:
+                        type: string
+                        desc: password login
+                        short: p
+                    token:
+                        type: string
+                        desc: token login
+                        short: t
+                handler: user.login
+                alias: login
+            logout:
+                desc: logout from kata
+                handler: user.logout
+                alias: logout
+            whoami:
+                desc: identify current user
+                handler: user.whoami
+                alias: whoami
+            changePassword:
+                desc: change current user password
+                handler: user.changePassword
+                alias: pwd
+            createTeam:
+                desc: create team
+                args: <name> <roleId>
+                handler: user.createTeam
+                alias: create-team
+            addMember:
+                desc: add member to team
+                args: <username> <roleId>
+                handler: team.addMember
+                alias: add-member
+            removeMember:
+                desc: remove member from team
+                args: <username>
+                handler: team.removeMember
+                alias: remove-member
+                
+        
 # entry point
 main: main

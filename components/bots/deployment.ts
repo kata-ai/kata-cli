@@ -10,28 +10,45 @@ export default class Deployment extends Component {
         super();
     }
 
-    async deploy(name: string, version: string, options: JsonObject) {
+    async deploy(name: string, label: string, options: JsonObject) {
         let deployment;
         let bot = this.helper.getBotId();
+        let versionRegex = /^\d+\.\d+\.\d+$/g;
+        let tag : string = "";
+        let version : string = "";
 
         try {
-            let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
+            let { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
-            if (!version)
+            if (label) {
+                let isVersion = versionRegex.test(label);
+                let latestTag = data.versions.filter((x : any) => {
+                    let splited = x.split("-");
+                    let cond = isVersion ? splited[0] : splited[1];
+                    
+                    return label === cond;
+                });
+
+                if (latestTag.length > 0) {
+                    let splited = latestTag[latestTag.length - 1].split("-");
+                    version = splited[0];
+                    tag = isVersion ? splited[1] ? splited[1] : null : label;
+                }
+                    
+                else 
+                    throw new Error("INVALID TAG");
+            } else {
                 version = data.latest;
+                tag = "latest";
+            }
+                
             
             if (!data.versions.some((v: string) => v.split("-")[0] === version))
                 throw new Error("INVALID_VERSION");
-        } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
             
-            console.log(errorMessage);
 
+        } catch (e) {
+            this.helper.wrapError(e);
             return;
         }
 
@@ -49,7 +66,7 @@ export default class Deployment extends Component {
             
             if (errorMessage !== "Deployment not found.") {
                 console.log(errorMessage);
-
+                
                 return;
             }
         }
@@ -65,9 +82,9 @@ export default class Deployment extends Component {
                 }
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
-
+                
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
-                console.dir(data, {depth: null});
+                console.dir({...data, tag: tag}, {depth: null});
             }
             else {
                 let body = {
@@ -76,19 +93,29 @@ export default class Deployment extends Component {
                 };
 
                 let {data} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
-
+                
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
-                console.dir(data, {depth: null});
+                console.dir({...data, tag: tag}, {depth: null});
             }
         } catch (e) {
-            let errorMessage;
+            this.helper.wrapError(e);
+        }
+    }
 
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
+    async list(options: JsonObject) {
+        try {
+            let botId = this.helper.getBotId();
+            let {response} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
             
-            console.log(errorMessage);
+            if (response && response.body) {
+                console.log("Deployment List");
+                response.body.forEach((deployment : JsonObject) => {
+                    console.log(`- Name : ${deployment.name}`);
+                    console.log(`  Bot version : ${deployment.botVersion}`);
+                });
+            }
+        } catch (e) {
+            this.helper.wrapError(e);
         }
     }
 
@@ -116,14 +143,7 @@ export default class Deployment extends Component {
             console.log("CHANNEL ADDED SUCCESSFULLY");
             console.log(deployment);
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -141,14 +161,7 @@ export default class Deployment extends Component {
 
             console.log("CHANNEL REMOVED SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -162,14 +175,7 @@ export default class Deployment extends Component {
             console.log(deployment);
             console.log("DEPLOYMENT DELETED SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 

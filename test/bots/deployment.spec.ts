@@ -1,13 +1,13 @@
 import { IConfigReader, ILogger, Config, IConfig } from "merapi";
 import { suite, test } from "mocha-typescript";
 import { stub, spy, assert } from "sinon";
-import { IHelper } from "../interfaces/main";
+import { IHelper } from "../../interfaces/main";
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../components/scripts/helper";
-import Api from "../components/api";
-import Deployment from "../components/deployment";
-import Zaun from "../components/zaun-client/zaun";
+import Helper from "../../components/scripts/helper";
+import Api from "../../components/api/api";
+import Deployment from "../../components/bots/deployment";
+import Zaun from "../../components/api/zaun";
 import { v4 as uuid } from "node-uuid";
 
 @suite class DeploymentTest {
@@ -88,7 +88,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(getDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(createDeploymentStub, this.deploymentObj.botId, optsCreateDeployment);
         assert.calledWith(consoleLogStub, "DEPLOYMENT CREATED SUCCESSFULLY");
-        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId });
+        assert.calledWith(consoleDirStub, { ...this.deploymentObj, channels: {}, id: createdDeploymentId, tag: null });;
     }
 
     @test async "function deploy should update deployment successfully if deployment has been created"() {
@@ -127,7 +127,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(getDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(updateDeploymentStub, this.deploymentObj.botId, this.deploymentObj.name, body);
         assert.calledWith(consoleLogStub, "DEPLOYMENT UPDATED SUCCESSFULLY");
-        assert.calledWith(consoleDirStub, { ...this.deploymentObj, id: createdDeploymentId });
+        assert.calledWith(consoleDirStub, { ...this.deploymentObj, id: createdDeploymentId, tag: "latest" });
     }
 
     @test async "function deploy throw error if bot with botVersion is undefined"() {
@@ -153,7 +153,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledOnce(getBotVersionStub);
         assert.calledOnce(consoleLogStub);
         assert.calledWith(getBotVersionStub, this.deploymentObj.botId);
-        assert.calledWith(consoleLogStub, "INVALID_VERSION");
+        assert.calledWith(consoleLogStub, "INVALID TAG");
     }
 
     @test async "function add channel should add channel to deployment successfully"() {
@@ -262,5 +262,23 @@ import { v4 as uuid } from "node-uuid";
         assert.calledOnce(deploymentApiDeleteStub);
         assert.calledWith(consoleStub, this.deploymentObj);
         assert.calledWith(consoleStub, "DEPLOYMENT DELETED SUCCESSFULLY");
+    }
+
+    @test async "should call zaun api to list deployment"() {
+        let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
+        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, {}, callback) => {
+            callback(null, null, {body: [this.deploymentObj]});
+        });
+        let consoleStub = stub(console, "log");
+        await this.deployment.list();
+
+        consoleStub.restore();
+        getBotIdStub.restore();
+        deploymentApiDeleteStub.restore();
+        assert.calledOnce(deploymentApiDeleteStub);
+        assert.calledWith(consoleStub, "Deployment List");
+        assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
+        assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
+        
     }
 }

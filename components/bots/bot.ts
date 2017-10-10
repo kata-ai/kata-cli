@@ -127,20 +127,21 @@ export default class Bot extends Component {
 
         try {
             let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
-            console.log("VERSIONS");
-
-            data.versions.forEach((botVersion: string) => {
-                console.log(`- ${botVersion}${botVersion === data.latest ? " (LATEST)" : ""}`);
-            });
+            if (data) {
+                console.log("Bot Versions : ");
+                data.versions.forEach((bot: string) => {
+                    let msg = bot.split("-");
+                    if (msg.length > 1) 
+                        console.log(`- ${msg[0]} (${msg[1]})`);
+                    else
+                        console.log(`- ${msg[0]}`);
+                });
+            } else {
+                console.log("You must push at least 1 bot to acquire version");
+            }
+            
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -211,136 +212,17 @@ export default class Bot extends Component {
         }
     }
 
-    async login(type: string, name: string, options: JsonObject) {
-        try {
-            let currToken = this.helper.getCurrentToken()["token"];
-            
-            if (options.token) {
-                if (!currToken)
-                    currToken = <string>options.token;
-
-                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
-                let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensTokenIdGet, options.token);
-                let tokenObj = result.data;
-
-                if (tokenObj.type === "user") {
-                    this.setToken("user", <string> options.token);
-                }
-                else if (tokenObj.type === "team") {
-                    result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, tokenObj.teamId);
-                    let team = result.data;
-
-                    this.setToken(team.username, <string> options.token);
-                }
-                else {
-                    throw new Error("Invalid token");
-                }
-            }
-            else if (type === "team") {
-                if (!name)
-                    throw new Error("You need to provide teamname to login to team");
-
-                if (!currToken)
-                    throw new Error("You need to login your user before login to team");
-
-                let result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, name);
-                let team = result.data;
-
-                let body = {
-                    type: "team",
-                    teamId: team.id
-                };
-
-                result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, body);
-                let teamToken = result.data;
-                
-                this.setToken(name, teamToken.id);
-            }
-            else if (type === "user") {
-                let user = <string> (options.user ? options.user : "");
-                let pass = <string> (options.password ? options.password : "");
-
-                let answer = await inquirer.prompt([
-                    {
-                        type: "input",
-                        name: "user",
-                        message: "username: ",
-                        when: function() {
-                            return !user;
-                        },
-                        validate: function (user : string) {
-                            if (!user)
-                                return "Username cannot be empty";
-                            
-                            return true;
-                        }
-                    },
-                    {
-                        type: "password",
-                        name: "password",
-                        message: "password: ",
-                        mask: "*",
-                        when: function() {
-                            return !pass;
-                        },
-                        validate: function (password: string) {
-                            if (!password)
-                                return "Password cannot be empty";
-                            
-                            return true;
-                        }
-                    }
-                ]);
-
-                if (answer.user)
-                    user = answer.user;
-                
-                if (answer.password)
-                    pass = answer.password;
-                
-                let body = {
-                    username: user,
-                    password: pass
-                }
-
-                let result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, body);
-                let userObj = result.data;
-
-                this.setToken(user, userObj.id);
-            }
-            else {
-                throw new Error("Type can only be \"team\" or \"user\"");
-            }
-        } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
-        }
-    }
-
     async list(options: JsonObject) {
         try {
             let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
 
-            console.log("LIST BOT");
+            console.log("Bot List : ");
 
             data.items.forEach((bot: {id: string, name: string, version: string, desc: string}) => {
                 console.log(bot);
             });
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -365,7 +247,8 @@ export default class Bot extends Component {
         }
 
         desc.version = `${major}.${minor}.${patch}`;
-        
+        desc.tag = options.tag || null;
+
         let bot = Config.create(desc, {left:"${", right:"}"});
         bot = this.compile.execDirectives(bot, process.cwd());
         bot.resolve();
@@ -443,14 +326,7 @@ export default class Bot extends Component {
 
             console.log("REMOVE BOT SUCCESSFULLY");
         } catch (e) {
-            let errorMessage;
-            
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -604,19 +480,6 @@ export default class Bot extends Component {
                     return e.message;
             }
         }.bind(this);
-    }
-
-    whoami(options: JsonObject) {
-        let currentLogin = <string> this.helper.getProp("current_login");
-        
-        console.log(currentLogin);
-    }
-
-    private setToken(user: string, token: string) {
-        this.helper.setProp("current_login", user);
-        let tokenProp = <JsonObject>(this.helper.getProp("token") || {});
-        tokenProp[user] = token;
-        this.helper.setProp("token", tokenProp);
     }
 
     private sync(promise: any) {

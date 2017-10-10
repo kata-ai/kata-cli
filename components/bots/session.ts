@@ -22,14 +22,7 @@ export default class Session extends Component {
 
             console.dir(data, { depth: null });
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -56,14 +49,7 @@ export default class Session extends Component {
             console.log(data);
             console.log("Session created successfully");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -90,14 +76,7 @@ export default class Session extends Component {
             console.log(data);
             console.log("Session updated successfully");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
     }
 
@@ -111,14 +90,13 @@ export default class Session extends Component {
             console.dir(data, { depth: null });
             console.log("Session deleted successfully");
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
-            
-            console.log(errorMessage);
+            this.helper.wrapError(e);
         }
+    }
+
+    async timestamp() {
+        let { response } = await this.helper.toPromise(this.api.utilApi, this.api.utilApi.timestampGet);
+
+        console.log(`Current server timestamp: ${response.text}`);
     }
 }

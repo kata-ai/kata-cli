@@ -77,6 +77,17 @@ export default class Helper extends Component {
         return jsonProp[prop];
     }
 
+    delete() : Boolean {
+        let jsonPath = `${os.homedir()}/.katajson`;
+
+        if (fs.existsSync(jsonPath)) {
+            fs.unlinkSync(jsonPath);
+            return true;
+        }
+
+        return false;
+    }
+
     toPromise(ctx: any, func: any, ...args: any[]): Promise<any> {
         return new Promise((resolve, reject) => {
             args.push((error: Error, data: any, response: Response) => {
@@ -129,5 +140,16 @@ export default class Helper extends Component {
 
     async inquirerPrompt(questions: JsonObject[]): Promise<JsonObject> {
         return inquirer.prompt(questions);
+    }
+
+    wrapError(error : any) {
+        let errorMessage;
+        
+        if (error.response && error.response.body && error.response.body.message)
+            errorMessage = error.response.body.message;
+        else
+            errorMessage = error.message;
+        
+        console.log(errorMessage);
     }
 };

@@ -8,10 +8,12 @@ export default class Api extends Component {
     private botApi: any;
     private authApi: any;
     private userApi: any;
+    private teamApi: any;
     private deploymentApi: any;
     private channelApi: any;
     private sessionApi: any;
     private cachesApi: any;
+    private utilApi: any;
 
     constructor(private helper: IHelper, private zaun: any) {
         super();
@@ -28,9 +30,11 @@ export default class Api extends Component {
         this.botApi = new this.zaun.BotApi();
         this.authApi = new this.zaun.AuthApi();
         this.userApi = new this.zaun.UserApi();
+        this.teamApi = new this.zaun.TeamApi();
         this.deploymentApi = new this.zaun.DeploymentApi();
         this.channelApi = new this.zaun.ChannelApi();
         this.sessionApi = new this.zaun.SessionApi();
-        this.cachesApi = new this.zaun.CachesApi();
+        this.cachesApi = new this.zaun.CacheApi();
+        this.utilApi = new this.zaun.UtilApi();
     }
 }
