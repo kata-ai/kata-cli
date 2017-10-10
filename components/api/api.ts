@@ -8,6 +8,7 @@ export default class Api extends Component {
     private botApi: any;
     private authApi: any;
     private userApi: any;
+    private teamApi: any;
     private deploymentApi: any;
     private channelApi: any;
     private sessionApi: any;
@@ -18,7 +19,9 @@ export default class Api extends Component {
         super();
 
         this.apiClient = this.zaun.ApiClient.instance;
-        let basePath = this.helper.getProp("zaunUrl") || "http://zaun.katalabs.io";
+        // let basePath = this.helper.getProp("zaunUrl") || "http://zaun.katalabs.io";
+        // let basePath = "http://zaun-platform.kata.ai";
+        let basePath = "http://localhost:8001"
         
         this.apiClient.basePath = basePath;
         this.bearer = this.apiClient.authentications['Bearer'];
@@ -29,6 +32,7 @@ export default class Api extends Component {
         this.botApi = new this.zaun.BotApi();
         this.authApi = new this.zaun.AuthApi();
         this.userApi = new this.zaun.UserApi();
+        this.teamApi = new this.zaun.TeamApi();
         this.deploymentApi = new this.zaun.DeploymentApi();
         this.channelApi = new this.zaun.ChannelApi();
         this.sessionApi = new this.zaun.SessionApi();

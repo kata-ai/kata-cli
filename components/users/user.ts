@@ -171,7 +171,33 @@ export default class User extends Component {
         let currentType = <string> this.helper.getProp("current_user_type");
         console.log(`Current login: ${currentLogin}, login type: ${currentType}`);
     }
+    
+    async createTeam(name : string, roleId? : string) {
+        try {
+            let role = roleId ? roleId : "";
+            let currentLogin = <string> this.helper.getProp("current_login");
+            let currentUserType = <string> this.helper.getProp("current_user_type");
 
+            if (currentUserType !== "user")
+                throw new Error("Must be on user to do this operation");
+            
+            let { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: role });
+
+            if (response && response.body.id) {
+                let { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
+                let result = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, response.body.id, data.id,  { roleId: role } );
+                if (!result.response.body) 
+                    throw new Error("Error creating team: invalid roleId");
+                    
+                console.log(`Team ${name} created !`);
+            } else {
+                console.log(`Team ${name} exist !`);
+            }
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
+ 
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
         this.helper.setProp("current_user_type", userInfo.type);

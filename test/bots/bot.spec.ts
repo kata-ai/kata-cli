@@ -3,15 +3,15 @@ import { suite, test } from "mocha-typescript";
 import { safeLoad } from "js-yaml";
 import { readFileSync } from "fs";
 import { execSync } from "child_process";
-import { IHelper, ICompile, ITester } from "../interfaces/main";
+import { IHelper, ICompile, ITester } from "../../interfaces/main";
 import { stub, SinonStub, assert } from "sinon";
 import { deepEqual } from "assert";
-import Api from "../components/api";
-import Bot from "../components/bot";
-import Helper from "../components/scripts/helper";
-import Compile from "../components/scripts/compile";
-import Tester from "../components/scripts/tester";
-import Zaun from "../components/zaun-client/zaun";
+import Api from "../../components/api/api";
+import Bot from "../../components/bots/bot";
+import Helper from "../../components/scripts/helper";
+import Compile from "../../components/scripts/compile";
+import Tester from "../../components/scripts/tester";
+import Zaun from "../../components/api/zaun";
 
 @suite class BotTest {
     private config: IConfig;

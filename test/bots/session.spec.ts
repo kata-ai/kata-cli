@@ -1,13 +1,13 @@
 import { IConfigReader, IConfig, Config } from "merapi";
 import { suite, test } from "mocha-typescript";
 import { spy, stub, assert } from "sinon";
-import { IHelper } from "../interfaces/main";
+import { IHelper } from "../../interfaces/main";
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../components/scripts/helper";
-import Zaun from "../components/zaun-client/zaun";
-import Api from "../components/api";
-import Session from "../components/session";
+import Helper from "../../components/scripts/helper";
+import Zaun from "../../components/api/zaun";
+import Api from "../../components/api/api";
+import Session from "../../components/bots/session";
 
 @suite class SessionTest {
     private config: IConfig;

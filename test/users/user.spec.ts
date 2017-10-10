@@ -1,13 +1,13 @@
 import { IConfigReader, IConfig, Config } from "merapi";
 import { suite, test } from "mocha-typescript";
 import { spy, stub, assert } from "sinon";
-import { IHelper } from "../interfaces/main";
+import { IHelper } from "../../interfaces/main";
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../components/scripts/helper";
-import Zaun from "../components/zaun-client/zaun";
-import Api from "../components/api";
-import User from "../components/user";
+import Helper from "../../components/scripts/helper";
+import Zaun from "../../components/api/zaun";
+import Api from "../../components/api/api";
+import User from "../../components/users/user";
 
 @suite class UserTest {
     private config: IConfig;
@@ -243,6 +243,82 @@ import User from "../components/user";
         inquirerPromptStub.restore();
         sDeleteStub.restore();
         assert.called(sDeleteStub);
+    }
+
+    @test async "function create team should create team successfully"() {
+        let consoleLogStub = stub(console, "log");
+        let setPropStub = stub(this.helper, "setProp");
+        let getPropStub = stub(this.helper, "getProp");
+        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet");
+        let createTeamStub = stub(this.api.teamApi, "teamsPost");
+        let teamPostStub = stub(this.api.teamApi, "teamsTeamIdUsersUserIdPost");
+
+        getPropStub.withArgs("current_login").returns("user1");
+        getPropStub.withArgs("current_user_type").returns("user"); 
+        createTeamStub.callsFake((teamObj, callback) => {
+            callback(null, null, {body: {id: "team1"}})
+        })
+        getUserInfoStub.callsFake((userId, callback) => {
+            callback(null, this.userObj);
+        });
+        teamPostStub.callsFake((teamId, userId, roleId, callback) => {
+            callback(null, null, {body: {team: this.teamObj}});
+        });
+
+        await this.user.createTeam("team1");
+
+        setPropStub.restore();
+        getPropStub.restore();
+        getUserInfoStub.restore();
+        teamPostStub.restore();
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, "Team team1 created !");
+    }
+
+    @test async "function create team should throw error when current login is team"() {
+        let consoleLogStub = stub(console, "log");
+        let setPropStub = stub(this.helper, "setProp");
+        let getPropStub = stub(this.helper, "getProp");
+
+        getPropStub.withArgs("current_login").returns("team1");
+        getPropStub.withArgs("current_user_type").returns("team");
+
+        await this.user.createTeam("team1");
+
+        setPropStub.restore();
+        getPropStub.restore();
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, "Must be on user to do this operation");
+    }
+
+    @test async "function create team should throw error when team name exist"() {
+        let consoleLogStub = stub(console, "log");
+        let setPropStub = stub(this.helper, "setProp");
+        let getPropStub = stub(this.helper, "getProp");
+        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet");
+        let createTeamStub = stub(this.api.teamApi, "teamsPost");
+        let teamPostStub = stub(this.api.teamApi, "teamsTeamIdUsersUserIdPost");
+
+        getPropStub.withArgs("current_login").returns("user1");
+        getPropStub.withArgs("current_user_type").returns("user"); 
+        createTeamStub.callsFake((teamObj, callback) => {
+            callback(null, null, false);
+        })
+        getUserInfoStub.callsFake((userId, callback) => {
+            callback(null, this.userObj);
+        });
+        teamPostStub.callsFake((teamId, userId, roleId, callback) => {
+            callback(null, null, {body: {team: this.teamObj}});
+        });
+
+        await this.user.createTeam("team1");
+
+        setPropStub.restore();
+        getPropStub.restore();
+        getUserInfoStub.restore();
+        teamPostStub.restore();
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, "Team team1 exist !");
     }
 
     

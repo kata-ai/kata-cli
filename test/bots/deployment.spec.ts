@@ -1,13 +1,13 @@
 import { IConfigReader, ILogger, Config, IConfig } from "merapi";
 import { suite, test } from "mocha-typescript";
 import { stub, spy, assert } from "sinon";
-import { IHelper } from "../interfaces/main";
+import { IHelper } from "../../interfaces/main";
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../components/scripts/helper";
-import Api from "../components/api";
-import Deployment from "../components/deployment";
-import Zaun from "../components/zaun-client/zaun";
+import Helper from "../../components/scripts/helper";
+import Api from "../../components/api/api";
+import Deployment from "../../components/bots/deployment";
+import Zaun from "../../components/api/zaun";
 import { v4 as uuid } from "node-uuid";
 
 @suite class DeploymentTest {

@@ -4,16 +4,27 @@ name: ${package.name}
 version: ${package.version}
 
 components:
+    # main
     main: Main
-    bot: Bot
-    deployment: Deployment
-    session: Session
+
+    # bot management
+    bot: bots/Bot
+    deployment: bots/Deployment
+    session: bots/Session
+
+    # user management
+    user: users/User
+    team: users/Team
+
+    # helper
     compile: scripts/Compile
     helper: scripts/Helper
     tester: scripts/Tester
-    api: Api
-    zaun: zaun-client/Zaun
-    user: User
+
+    # api
+    api: api/Api
+    zaun: api/Zaun
+    
 
 config:
     channels:
@@ -198,6 +209,21 @@ commands:
                 desc: change current user password
                 handler: user.changePassword
                 alias: pwd
+            createTeam:
+                desc: create team
+                args: <name> <roleId>
+                handler: user.createTeam
+                alias: create-team
+            addMember:
+                desc: add member to team
+                args: <username> <roleId>
+                handler: team.addMember
+                alias: add-member
+            removeMember:
+                desc: remove member from team
+                args: <username>
+                handler: team.removeMember
+                alias: remove-member
                 
         
 # entry point
