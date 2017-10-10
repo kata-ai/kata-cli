@@ -102,7 +102,7 @@ export default class User extends Component {
             return;
 
         try {
-            let result = await this.helper.softDelete();
+            let result = await this.helper.delete();
             if (result) {
                 console.log("Logged out");
             } else {

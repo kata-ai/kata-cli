@@ -77,11 +77,11 @@ export default class Helper extends Component {
         return jsonProp[prop];
     }
 
-    softDelete() : Boolean {
+    delete() : Boolean {
         let jsonPath = `${os.homedir()}/.katajson`;
 
         if (fs.existsSync(jsonPath)) {
-            fs.renameSync(jsonPath, `${jsonPath}.deleted`);
+            fs.unlinkSync(jsonPath);
             return true;
         }
 

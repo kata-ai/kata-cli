@@ -235,7 +235,7 @@ import User from "../../components/users/user";
     @test async "function logout should logout successfully"() {
         let consoleLogStub = stub(console, "log");
         let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true })
-        let sDeleteStub = stub(this.helper, "softDelete").returns(true);
+        let sDeleteStub = stub(this.helper, "delete").returns(true);
 
         await this.user.logout();
 

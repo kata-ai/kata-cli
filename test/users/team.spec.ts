@@ -151,6 +151,7 @@ import Team from "../../components/users/team";
         let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet");
         let teamDeleteStub = stub(this.api.teamApi, "teamsTeamIdUsersUserIdDelete");
         let teamGetStub = stub(this.api.teamApi, "teamsTeamIdUsersGet");
+        let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true })
 
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
@@ -175,6 +176,7 @@ import Team from "../../components/users/team";
         teamGetStub.restore();
         teamDeleteStub.restore();
         consoleLogStub.restore();
+        inquirerPromptStub.restore();
         assert.calledWith(consoleLogStub, "Success remove user2 from team1");
     }
 
@@ -182,6 +184,7 @@ import Team from "../../components/users/team";
         let consoleLogStub = stub(console, "log");
         let setPropStub = stub(this.helper, "setProp");
         let getPropStub = stub(this.helper, "getProp");
+        let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true })
 
         getPropStub.withArgs("current_login").returns("user1");
         getPropStub.withArgs("current_user_type").returns("user"); 
@@ -191,6 +194,7 @@ import Team from "../../components/users/team";
         setPropStub.restore();
         getPropStub.restore();
         consoleLogStub.restore();
+        inquirerPromptStub.restore();
         assert.calledWith(consoleLogStub, "Must be on team to do this operation");
     }
 
@@ -200,6 +204,7 @@ import Team from "../../components/users/team";
         let getPropStub = stub(this.helper, "getProp");
         let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet");
         let teamGetStub = stub(this.api.teamApi, "teamsTeamIdUsersGet");
+        let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true })
 
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
@@ -220,6 +225,7 @@ import Team from "../../components/users/team";
         getUserInfoStub.restore();
         teamGetStub.restore();
         consoleLogStub.restore();
+        inquirerPromptStub.restore();
         assert.calledWith(consoleLogStub, "User user2 not a member of this team");
     }
     

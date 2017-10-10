@@ -296,7 +296,7 @@ export interface IHelper {
     getCurrentToken() : JsonObject;
     loadYamlOrJsonFile(filePath: string) : JsonObject;
     inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
-    softDelete() : Boolean;
+    delete() : Boolean;
     wrapError(error : any) : void;
 }
 
