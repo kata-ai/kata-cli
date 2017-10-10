@@ -216,7 +216,7 @@ export default class Bot extends Component {
         try {
             let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
 
-            console.log("LIST BOT");
+            console.log("Bot List : ");
 
             data.items.forEach((bot: {id: string, name: string, version: string, desc: string}) => {
                 console.log(bot);

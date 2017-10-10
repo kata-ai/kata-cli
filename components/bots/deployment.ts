@@ -108,7 +108,7 @@ export default class Deployment extends Component {
             let {response} = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
             
             if (response && response.body) {
-                console.log("List Deployment");
+                console.log("Deployment List");
                 response.body.forEach((deployment : JsonObject) => {
                     console.log(`- Name : ${deployment.name}`);
                     console.log(`  Bot version : ${deployment.botVersion}`);

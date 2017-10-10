@@ -276,7 +276,7 @@ import { v4 as uuid } from "node-uuid";
         getBotIdStub.restore();
         deploymentApiDeleteStub.restore();
         assert.calledOnce(deploymentApiDeleteStub);
-        assert.calledWith(consoleStub, "List Deployment");
+        assert.calledWith(consoleStub, "Deployment List");
         assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
         assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
         
