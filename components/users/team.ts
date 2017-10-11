@@ -10,9 +10,9 @@ export default class Team extends Component {
         super();
     }
 
-    async addMember(username : string, roleId : string) {
+    async addMember(username : string, options? : JsonObject) {
         try {
-            let role = roleId ? roleId : "";
+            let role = options.admin ? "teamAdmin" : "teamMember";
             let { userInfo, teamInfo, teamMember, currentLogin } = await this.getInfo(username);
 
             if (userInfo && userInfo.id) {
