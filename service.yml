@@ -175,6 +175,16 @@ commands:
         type: group
         desc: user management
         subcommands:
+            createUser:
+                desc: create new user
+                args: <username>
+                params:
+                    admin:
+                        type: boolean
+                        desc: label admin
+                        short: a
+                handler: user.createUser
+                alias: create-user
             switch:
                 desc: switch between team and user
                 args: <type> [name]
@@ -211,13 +221,18 @@ commands:
                 alias: pwd
             createTeam:
                 desc: create team
-                args: <name> <roleId>
+                args: <name>
                 handler: user.createTeam
                 alias: create-team
             addMember:
                 desc: add member to team
-                args: <username> <roleId>
+                args: <username>
                 handler: team.addMember
+                params:
+                    admin:
+                        type: boolean
+                        desc: admin label for new member
+                        short: a
                 alias: add-member
             removeMember:
                 desc: remove member from team

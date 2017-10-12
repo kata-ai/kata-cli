@@ -172,27 +172,62 @@ export default class User extends Component {
         console.log(`Current login: ${currentLogin}, login type: ${currentType}`);
     }
     
-    async createTeam(name : string, roleId? : string) {
+    async createTeam(name : string) {
         try {
-            let role = roleId ? roleId : "";
             let currentLogin = <string> this.helper.getProp("current_login");
             let currentUserType = <string> this.helper.getProp("current_user_type");
 
             if (currentUserType !== "user")
                 throw new Error("Must be on user to do this operation");
             
-            let { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: role });
+            let { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: "teamAdmin" });
 
             if (response && response.body.id) {
                 let { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
-                let result = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, response.body.id, data.id,  { roleId: role } );
-                if (!result.response.body) 
-                    throw new Error("Error creating team: invalid roleId");
+                let result = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, response.body.id, data.id, { roleId: "teamAdmin" });
                     
                 console.log(`Team ${name} created !`);
             } else {
                 console.log(`Team ${name} exist !`);
             }
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
+    
+    async createUser(username : string, options? : JsonObject) {
+        let password = await this.helper.inquirerPrompt([
+                    {
+                        type: "password",
+                        name: "answer",
+                        message: "password: ",
+                        mask: "*",
+                        default: null
+                    }]);
+                    
+        let confirmPassword = await this.helper.inquirerPrompt([
+                    {
+                        type: "password",
+                        name: "answer",
+                        message: "retype password: ",
+                        mask: "*",
+                        default: null
+                    }
+                ]);
+        try {
+
+            if (password.answer !== confirmPassword.answer)
+                throw new Error("Invalid retype password");
+                
+            let role = options.admin ? "admin" : "user";
+            let { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
+            
+            if (data.id)
+                throw new Error(`Username ${username} exist !`);
+            
+            let newUser = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersPost, { username: username, password: password.answer, roleId: role });
+            
+            console.log(`New user ${newUser.data.username} created !`);
         } catch (error) {
             this.helper.wrapError(error);
         }

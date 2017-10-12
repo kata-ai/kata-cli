@@ -245,6 +245,48 @@ import User from "../../components/users/user";
         assert.called(sDeleteStub);
     }
 
+    @test async "function create team should create user successfully"() {
+        let newUser = "newUser";
+        let consoleLogStub = stub(console, "log");
+        let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({answer: "password"});
+        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
+            callback(null, {teams: []});
+        });;
+        let createUserStub = stub(this.api.userApi, "usersPost");
+        createUserStub.callsFake((body, callback) => {
+            callback(null, {username: newUser});
+        });
+        
+
+        await this.user.createUser(newUser, {});
+
+        getUserInfoStub.restore();
+        createUserStub.restore();
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, `New user ${newUser} created !`);
+    }
+
+    @test async "function create team should throw error when user exists"() {
+        let newUser = "newUser";
+        let consoleLogStub = stub(console, "log");
+        let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({answer: "password"});
+        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
+            callback(null, {id: "test-id", teams: []});
+        });;
+        let createUserStub = stub(this.api.userApi, "usersPost");
+        createUserStub.callsFake((body, callback) => {
+            callback(null, {username: newUser});
+        });
+        
+
+        await this.user.createUser(newUser, {});
+
+        getUserInfoStub.restore();
+        createUserStub.restore();
+        consoleLogStub.restore();
+        assert.calledWith(consoleLogStub, `Username ${newUser} exist !`);
+    }
+
     @test async "function create team should create team successfully"() {
         let consoleLogStub = stub(console, "log");
         let setPropStub = stub(this.helper, "setProp");
