@@ -1,5 +1,5 @@
 {
-  "name": "katacli",
+  "name": "kata-cli",
   "version": "0.1.0",
   "description": "Command line tools for Diaenne",
   "main": "index.js",
