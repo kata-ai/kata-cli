@@ -194,6 +194,44 @@ export default class User extends Component {
             this.helper.wrapError(error);
         }
     }
+    
+    async createUser(username : string, options? : JsonObject) {
+        let password = await this.helper.inquirerPrompt([
+                    {
+                        type: "password",
+                        name: "answer",
+                        message: "password: ",
+                        mask: "*",
+                        default: null
+                    }]);
+                    
+        let confirmPassword = await this.helper.inquirerPrompt([
+                    {
+                        type: "password",
+                        name: "answer",
+                        message: "retype password: ",
+                        mask: "*",
+                        default: null
+                    }
+                ]);
+        try {
+
+            if (password.answer !== confirmPassword.answer)
+                throw new Error("Invalid retype password");
+                
+            let role = options.admin ? "admin" : "user";
+            let { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
+            
+            if (data.id)
+                throw new Error(`Username ${username} exist !`);
+            
+            let newUser = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersPost, { username: username, password: password.answer, roleId: role });
+            
+            console.log(`New user ${newUser.data.username} created !`);
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
  
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);

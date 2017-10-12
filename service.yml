@@ -175,6 +175,16 @@ commands:
         type: group
         desc: user management
         subcommands:
+            createUser:
+                desc: create new user
+                args: <username>
+                params:
+                    admin:
+                        type: boolean
+                        desc: label admin
+                        short: a
+                handler: user.createUser
+                alias: create-user
             switch:
                 desc: switch between team and user
                 args: <type> [name]
