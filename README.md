@@ -14,3 +14,41 @@ npm install -g kata-cli
 ```
 
 now you can use command kata globally
+
+# Commands
+
+Use `kata --help` to see commands list available
+
+Command as **user** and **team** : 
+
+* `kata init [options] <bot> <name> [version`] - Init the bot
+* `kata versions` - List versions of the bot
+* `kata list-bots` - List the bots
+* `kata push [options]` - Push the bot
+* `kata remove-bot` - Delete selected bot
+* `kata test [file]`
+* `kata console [options] <diaenneUrl>`
+* `kata deploy <name> [version]` - Deploy the bot
+* `kata add-channel [options] <name> <channelName>` - Add bot channel
+* `kata remove-channel <name> <channelName>` - Remove bot channel
+* `kata drop <name>`
+* `kata session-get <id> [deploymentId]`
+* `kata session-create [options] [id] [deploymentId]`
+* `kata session-update [options] <id> [deploymentId]`
+* `kata session-delete <id> [deploymentId]`
+* `kata set <prop> <value>`
+* `kata switch <type> [name]`
+
+Command as **user** : 
+
+* `kata login [options]`
+* `kata logout`
+* `kata whoami`
+* `kata change-password`
+* `kata create-team <teamName>`
+* `kata create-user`  - admin only
+
+Command as **team :**
+
+* `kata add-member <username> [options] --admin`
+* `kata remove-member <username>`
