@@ -1,6 +1,5 @@
 node_modules
 .vscode
 coverage
-lib
 typings
 .nyc_output

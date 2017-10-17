@@ -10,7 +10,6 @@
     "test": "test"
   },
   "scripts": {
-    "postinstall": "sh bin/dependencies.sh",
     "clean": "rm -rf ./lib",
     "build": "tsc",
     "test": "NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail",
