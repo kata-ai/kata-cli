@@ -24,16 +24,17 @@ components:
     # api
     api: api/Api
     zaun: api/Zaun
-    
+
 
 config:
     channels:
-        type: 
+        type:
             - line
             - slack
             - generic
             - fbmessenger
             - telegram
+            - qiscus
 
 commands:
     bot:
@@ -159,7 +160,7 @@ commands:
                 desc: delete session
                 args: "<id> [deploymentId]"
                 handler: session.delete
-            
+
     set:
         type: command
         desc: Command for set property value
@@ -170,7 +171,7 @@ commands:
         type: command
         desc: Command for get timestamp
         handler: session.timestamp
-    
+
     user:
         type: group
         desc: user management
@@ -239,7 +240,7 @@ commands:
                 args: <username>
                 handler: team.removeMember
                 alias: remove-member
-                
-        
+
+
 # entry point
 main: main

@@ -40,6 +40,17 @@ import { v4 as uuid } from "node-uuid";
         url: "http://url"
     }
 
+    private channelObjWithOptions = {
+        name: "fb",
+        id: this.deploymentObj.channels["fb"],
+        type: "messenger",
+        token: "tokenChannel",
+        refreshToken: "refreshToken",
+        secret: "secretKey",
+        url: "http://url",
+        additionalOptions: { "botEmail": 'test@test.com' }
+    }
+
     constructor() {
         let configJson = safeLoad(readFileSync("./service.yml", "utf8"));
         let zaun = Zaun();
@@ -60,7 +71,7 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(new Error("Deployment not found."));
@@ -99,7 +110,7 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ "1.0.0", "1.0.1", this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: ["1.0.0", "1.0.1", this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(null, this.deploymentObj);
@@ -141,12 +152,12 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let consoleLogStub = stub(console, "log");
 
         await this.deployment.deploy(this.deploymentObj.name, "1.0.6", {});
-        
+
         getBotIdStub.restore();
         getBotVersionStub.restore();
         consoleLogStub.restore();
@@ -156,30 +167,32 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(consoleLogStub, "INVALID TAG");
     }
 
-    @test async "function add channel should add channel to deployment successfully"() {
+    @test async "function add channel with additional options should add channel to deployment successfully"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(null, this.emptyDeploymentObj);
         });
         let createChannelStub = stub(this.api.channelApi, "botsBotIdDeploymentsDeploymentIdChannelsPost").callsFake((body, botId, deploymentId, callback) => {
-            callback(null, this.channelObj);
+            callback(null, this.channelObjWithOptions);
         })
         let consoleLogStub = stub(console, "log");
-        let channels: {[name: string]: string} = {};
-        channels[this.channelObj.name] = this.channelObj.id;
+        let channels: { [name: string]: string } = {};
+        channels[this.channelObjWithOptions.name] = this.channelObjWithOptions.id;
+
         let channelData = {
-            id: this.channelObj.id,
-            name: this.channelObj.name,
-            type: this.channelObj.type,
-            url: this.channelObj.url,
+            id: this.channelObjWithOptions.id,
+            name: this.channelObjWithOptions.name,
+            type: this.channelObjWithOptions.type,
+            url: this.channelObjWithOptions.url,
             options: {
-                token: this.channelObj.token,
-                refreshToken: this.channelObj.refreshToken,
-                secret: this.channelObj.secret
+                token: this.channelObjWithOptions.token,
+                refreshToken: this.channelObjWithOptions.refreshToken,
+                secret: this.channelObjWithOptions.secret,
+                botEmail: this.channelObjWithOptions.additionalOptions.botEmail
             }
         };
 
-        await this.deployment.addChannel(this.deploymentObj.name, "fb", { data: JSON.stringify(this.channelObj) });
+        await this.deployment.addChannel(this.deploymentObj.name, "fb", { data: JSON.stringify(this.channelObjWithOptions) });
 
         getBotIdStub.restore();
         getDeploymentStub.restore();
@@ -230,7 +243,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(removeChannelStub, this.deploymentObj.botId, this.deploymentObj.name, this.channelObj.id);
         assert.calledWith(consoleLogStub, "CHANNEL REMOVED SUCCESSFULLY");
     }
-    
+
     @test async "function remove channel should throw error if channel not found in deployment"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
@@ -266,8 +279,8 @@ import { v4 as uuid } from "node-uuid";
 
     @test async "should call zaun api to list deployment"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
-        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, {}, callback) => {
-            callback(null, null, {body: [this.deploymentObj]});
+        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, { }, callback) => {
+            callback(null, null, { body: [this.deploymentObj] });
         });
         let consoleStub = stub(console, "log");
         await this.deployment.list();
@@ -279,6 +292,6 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(consoleStub, "Deployment List");
         assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
         assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
-        
+
     }
 }
