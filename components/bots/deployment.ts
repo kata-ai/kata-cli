@@ -300,7 +300,7 @@ export default class Deployment extends Component {
             options = Object.assign(options, additionalOptions);
         let res = { id, name, type, options, url };
         try {
-            answer.options = Object.assign(answer.options, additionalOptions);
+            answer.options = Object.assign(answer.options, answer.additionalOptions);
             answer.additionalOptions = undefined;
         } catch (error) {
             //
