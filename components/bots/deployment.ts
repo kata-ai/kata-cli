@@ -186,30 +186,17 @@ export default class Deployment extends Component {
     private async getRequiredChannelData(data: JsonObject): Promise<JsonObject> {
         let { id, name, type, token, refreshToken, secret, url } = data;
         let channelType = this.config.default("config.channels.type", []);
+        let channelUrl = this.config.default("config.channels.url", []);
         let answer = await inquirer.prompt([
             {
-                type: "input",
-                name: "name",
-                message: "channel name: ",
-                when: function () { return !name; },
-                validate: function (name: string) {
-                    if (!name)
-                        return "Channel name cannot be empty";
-
-                    return true;
-                }
-            },
-            {
-                type: "input",
+                type: "list",
                 name: "type",
-                message: `channel type (${channelType.join(", ")}): `,
+                message: `channel type : `,
+                choices: channelType,
                 when: function () { return !type; },
                 validate: function (type: string) {
                     if (!type)
                         return "Channel type cannot be empty";
-
-                    if (channelType.indexOf(type.toLowerCase()) == -1)
-                        return "Invalid type for channel";
 
                     return true;
                 },
@@ -256,13 +243,21 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "url",
-                message: "channel api url: ",
+                message: function (answer: JsonObject) {
+                    if (answer.type !== "generic")
+                        return `channel api url (default: ${channelUrl[answer.type as any]}) :`;
+
+                    return "channel api url : ";
+                },
                 when: function () { return !url },
-                validate: function (url: string) {
-                    if (!url)
+                validate: function (url: string, answer: JsonObject) {
+                    if (!url && answer.type === "generic")
                         return "Channel api url cannot be empty";
 
                     return true;
+                },
+                default: function (answer: JsonObject) {
+                    return channelUrl[answer.type as any];
                 }
             }
         ]);

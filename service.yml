@@ -34,7 +34,12 @@ config:
             - generic
             - fbmessenger
             - telegram
-
+        url: 
+            line: https://api.line.me
+            telegram: https://api.telegram.org
+            fbmessenger: https://graph.facebook.com/v2.6/me/messages
+            slack: https://api.slack.com
+            
 commands:
     bot:
         type: group
