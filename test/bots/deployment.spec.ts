@@ -9,6 +9,7 @@ import Api from "../../components/api/api";
 import Deployment from "../../components/bots/deployment";
 import Zaun from "../../components/api/zaun";
 import { v4 as uuid } from "node-uuid";
+const Table = require("cli-table");
 
 @suite class DeploymentTest {
     private config: IConfig;
@@ -60,7 +61,7 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(new Error("Deployment not found."));
@@ -99,7 +100,7 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ "1.0.0", "1.0.1", this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: ["1.0.0", "1.0.1", this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(null, this.deploymentObj);
@@ -141,12 +142,12 @@ import { v4 as uuid } from "node-uuid";
         };
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [ this.deploymentObj.botVersion ], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
         });
         let consoleLogStub = stub(console, "log");
 
         await this.deployment.deploy(this.deploymentObj.name, "1.0.6", {});
-        
+
         getBotIdStub.restore();
         getBotVersionStub.restore();
         consoleLogStub.restore();
@@ -165,7 +166,7 @@ import { v4 as uuid } from "node-uuid";
             callback(null, this.channelObj);
         })
         let consoleLogStub = stub(console, "log");
-        let channels: {[name: string]: string} = {};
+        let channels: { [name: string]: string } = {};
         channels[this.channelObj.name] = this.channelObj.id;
         let channelData = {
             id: this.channelObj.id,
@@ -230,7 +231,7 @@ import { v4 as uuid } from "node-uuid";
         assert.calledWith(removeChannelStub, this.deploymentObj.botId, this.deploymentObj.name, this.channelObj.id);
         assert.calledWith(consoleLogStub, "CHANNEL REMOVED SUCCESSFULLY");
     }
-    
+
     @test async "function remove channel should throw error if channel not found in deployment"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
@@ -266,19 +267,22 @@ import { v4 as uuid } from "node-uuid";
 
     @test async "should call zaun api to list deployment"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
-        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, {}, callback) => {
-            callback(null, null, {body: [this.deploymentObj]});
+        let deploymentApiDeleteStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsGet").callsFake((botId, { }, callback) => {
+            callback(null, null, { body: [this.deploymentObj] });
         });
         let consoleStub = stub(console, "log");
         await this.deployment.list();
+
+        let table = new Table({
+            head: ['Deployment Name', 'Version'],
+            colWidths: [30, 10]
+        });
+        table.push([this.deploymentObj.name, this.deploymentObj.botVersion]);
 
         consoleStub.restore();
         getBotIdStub.restore();
         deploymentApiDeleteStub.restore();
         assert.calledOnce(deploymentApiDeleteStub);
-        assert.calledWith(consoleStub, "Deployment List");
-        assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
-        assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
-        
+        assert.calledWith(consoleStub, table.toString());
     }
 }
