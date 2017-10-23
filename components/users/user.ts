@@ -284,9 +284,12 @@ export default class User extends Component {
                      when: function() {
                          return !rePass;
                      },
-                     validate: function (password: string) {
+                     validate: function (password: string, answer : JsonObject) {
                          if (!password)
-                             return "Password cannot be empty";
+                            return "Password cannot be empty";
+                         
+                         if (password !== answer.newPass)
+                            return "Invalid retype password"
                         
                          return true;
                      }
