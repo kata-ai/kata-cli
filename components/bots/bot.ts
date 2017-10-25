@@ -1,15 +1,16 @@
 
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import {v4 as uuid} from "node-uuid";
+import { v4 as uuid } from "node-uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
 const repl = require("repl");
 const util = require("util");
 const deasync = require("deasync");
+const Table = require("cli-table");
 
 export default class Bot extends Component {
-    constructor(private compile : ICompile, private helper: IHelper, private tester: ITester, private api: any) {
+    constructor(private compile: ICompile, private helper: IHelper, private tester: ITester, private api: any) {
         super();
     }
 
@@ -73,7 +74,7 @@ export default class Bot extends Component {
                 },
                 sorry: {
                     end: true,
-                    action: [ { name: "saySorry" } ],
+                    action: [{ name: "saySorry" }],
                 }
             },
             actions: {
@@ -126,12 +127,12 @@ export default class Bot extends Component {
             throw new Error("BOT ID HAS NOT DEFINED");
 
         try {
-            let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
+            let { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
             if (data) {
                 console.log("Bot Versions : ");
                 data.versions.forEach((bot: string) => {
                     let msg = bot.split("-");
-                    if (msg.length > 1) 
+                    if (msg.length > 1)
                         console.log(`- ${msg[0]} (${msg[1]})`);
                     else
                         console.log(`- ${msg[0]}`);
@@ -139,7 +140,7 @@ export default class Bot extends Component {
             } else {
                 console.log("You must push at least 1 bot to acquire version");
             }
-            
+
         } catch (e) {
             this.helper.wrapError(e);
         }
@@ -152,13 +153,13 @@ export default class Bot extends Component {
         if (!botId)
             throw new Error("BOT ID HAS NOT DEFINED");
 
-        let results : JsonObject = {};
+        let results: JsonObject = {};
 
-        for (let i=0; i<testFiles.length; i++) {
+        for (let i = 0; i < testFiles.length; i++) {
             let yaml = this.helper.loadYaml(testFiles[i]);
             let res;
 
-            switch(yaml.schema) {
+            switch (yaml.schema) {
                 case "kata.ai/schema/kata-ml/1.0/test/intents":
                     res = await this.tester.execIntentTest(yaml, this.api.botApi, botId, console.log);
                     if (this.hasErrors(res))
@@ -182,26 +183,26 @@ export default class Bot extends Component {
             }
         }
 
-        this.printResult(<IHash<IHash<{field: string, expect: string, result: string}[]>>> results);
+        this.printResult(<IHash<IHash<{ field: string, expect: string, result: string }[]>>>results);
     }
 
     private hasErrors(res: any) {
         return Object.keys(res).some(key => (res[key] && res[key].length) || res[key] === null);
     }
 
-    private printResult(results : IHash<IHash<{field: string, expect: string, result: string}[]>> = {}) {
+    private printResult(results: IHash<IHash<{ field: string, expect: string, result: string }[]>> = {}) {
         if (Object.keys(results).length) {
             console.log(colors.red("Errors:"));
             for (let i in results) {
                 console.log(`    ${i}:`)
                 for (let j in results[i]) {
                     if (!results[i][j]) {
-                        console.log(`        ${colors.red(j+":")}`);
+                        console.log(`        ${colors.red(j + ":")}`);
                         console.log(`            diaenne returns ${colors.red("null")}`);
                         continue;
                     }
                     if (results[i][j].length) {
-                        console.log(`        ${colors.red(j+":")}`);
+                        console.log(`        ${colors.red(j + ":")}`);
 
                         results[i][j].forEach(res => {
                             console.log(`            expecting ${res.field} to be ${colors.green(res.expect)} but got ${colors.red(res.result)}`);
@@ -214,13 +215,15 @@ export default class Bot extends Component {
 
     async list(options: JsonObject) {
         try {
-            let {data, response} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
-
-            console.log("Bot List : ");
-
-            data.items.forEach((bot: {id: string, name: string, version: string, desc: string}) => {
-                console.log(bot);
+            let { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
+            let table = new Table({
+                head: ['Bot ID', 'Bot Name', 'Version', 'Description']
+                , colWidths: [20, 20, 10, 20]
             });
+            data.items.forEach((bot: { id: string, name: string, version: string, desc: string }) => {
+                table.push([bot.id, bot.name, bot.version, bot.desc]);
+            });
+            console.log(table.toString());
         } catch (e) {
             this.helper.wrapError(e);
         }
@@ -231,7 +234,7 @@ export default class Bot extends Component {
 
         let [major, minor, patch] = (<string>desc.version).split(".").map((val: string) => parseInt(val));
 
-        switch(options.rev) {
+        switch (options.rev) {
             case "major":
                 ++major;
                 minor = 0;
@@ -249,13 +252,13 @@ export default class Bot extends Component {
         desc.version = `${major}.${minor}.${patch}`;
         desc.tag = options.tag || null;
 
-        let bot = Config.create(desc, {left:"${", right:"}"});
+        let bot = Config.create(desc, { left: "${", right: "}" });
         bot = this.compile.execDirectives(bot, process.cwd());
         bot.resolve();
 
         let botDesc = bot.get();
         botDesc.name = botDesc.name || "bot";
-        
+
         if (!botDesc.id) {
             let id = uuid();
             botDesc.id = id;
@@ -267,7 +270,7 @@ export default class Bot extends Component {
             }
             catch (e) {
                 let errorMessage;
-                
+
                 if (e.response && e.response.body && e.response.body.message)
                     errorMessage = e.response.body.message;
                 else
@@ -279,13 +282,13 @@ export default class Bot extends Component {
         else {
             try {
                 let result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdPut, botDesc.id, botDesc, {});
-                
+
                 desc.version = result.data.version;
 
                 console.log("UPDATED BOT SUCCESSFULLY");
             } catch (e) {
                 let errorMessage;
-                
+
                 if (e.response && e.response.body && e.response.body.message)
                     errorMessage = e.response.body.message;
                 else
@@ -322,7 +325,7 @@ export default class Bot extends Component {
         let botId = this.helper.getBotId();
 
         try {
-            let {data} = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdDelete, botId);
+            let { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdDelete, botId);
 
             console.log("REMOVE BOT SUCCESSFULLY");
         } catch (e) {
@@ -331,19 +334,19 @@ export default class Bot extends Component {
     }
 
     console(options: JsonObject) {
-        let currentSession = <string> (options.session ? options.session : uuid());
+        let currentSession = <string>(options.session ? options.session : uuid());
         let botDesc = this.helper.loadYaml("./bot.yml");
         let botId = botDesc.id;
         let defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
         let con = repl.start({
             prompt: botDesc.name + ">",
-            writer: function(obj: any) {
+            writer: function (obj: any) {
                 return util.inspect(obj, false, null, true);
             }
         });
 
-        con.context.text = function text(str: string){
+        con.context.text = function text(str: string) {
             let message = {
                 type: "text",
                 content: str
@@ -354,7 +357,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -365,7 +368,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.button = function button(op: JsonObject, obj: JsonObject = {}){
+        con.context.button = function button(op: JsonObject, obj: JsonObject = {}) {
             obj.op = op;
             let message = {
                 type: "data",
@@ -377,7 +380,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -388,7 +391,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.command = function button(command: string, obj: JsonObject = {}){
+        con.context.command = function button(command: string, obj: JsonObject = {}) {
             let message = {
                 type: "command",
                 content: command,
@@ -400,7 +403,7 @@ export default class Bot extends Component {
             }
 
             try {
-                let {data} = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
+                let { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
 
                 return data;
             } catch (e) {
@@ -411,7 +414,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.current = function(session: string) {
+        con.context.current = function (session: string) {
             if (arguments.length)
                 currentSession = session;
             else
@@ -454,7 +457,7 @@ export default class Bot extends Component {
                     this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
             } catch (e) {
                 let errorMessage;
-                
+
                 if (e.response && e.response.body && e.response.body.message)
                     errorMessage = e.response.body.message;
                 else
@@ -470,7 +473,7 @@ export default class Bot extends Component {
 
         con.context.clearCaches = function clearCaches(num: number = 20) {
             try {
-                for(let i=0; i<num; i++) {
+                for (let i = 0; i < num; i++) {
                     this.sync(this.helper.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
                 }
             } catch (e) {
@@ -485,13 +488,13 @@ export default class Bot extends Component {
     private sync(promise: any) {
         if (promise && typeof promise.then == "function") {
             let done = false;
-            let error : Error = null;
+            let error: Error = null;
             let result;
 
-            promise.then((res : any) => {
+            promise.then((res: any) => {
                 done = true;
                 result = res;
-            }).catch((e : Error) => {
+            }).catch((e: Error) => {
                 error = e;
             });
 
@@ -504,7 +507,7 @@ export default class Bot extends Component {
 
             return result;
         }
-        
+
 
         throw new Error("Sync only accept promises");
     }
