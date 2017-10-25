@@ -218,7 +218,7 @@ export default class Bot extends Component {
             let { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
             let table = new Table({
                 head: ['Bot ID', 'Bot Name', 'Version', 'Description']
-                , colWidths: [30, 30, 10, 50]
+                , colWidths: [20, 20, 10, 20]
             });
             data.items.forEach((bot: { id: string, name: string, version: string, desc: string }) => {
                 table.push([bot.id, bot.name, bot.version, bot.desc]);
