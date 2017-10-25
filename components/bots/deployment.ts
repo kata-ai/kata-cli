@@ -141,11 +141,12 @@ export default class Deployment extends Component {
 
             result = await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsPost, channelData, bot, name);
             let channel = result.data;
+            let webhook = this.helper.getProp("zaunUrl") ? this.helper.getProp("zaunUrl").toString().replace("zaun", "kanal") : "https://kanal.katalabs.io";
 
             deployment.channels[channelName] = channel.id;
 
             console.log("CHANNEL ADDED SUCCESSFULLY");
-            console.log(deployment);
+            console.log(`Paste this url to ${channelData.type} webhook : ${webhook}/receive_message/${channel.id}`);
         } catch (e) {
             this.helper.wrapError(e);
         }
