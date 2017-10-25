@@ -38,7 +38,8 @@ const Table = require("cli-table");
         token: "tokenChannel",
         refreshToken: "refreshToken",
         secret: "secretKey",
-        url: "http://url"
+        url: "http://url",
+        webhook: "https://urlwebhook"
     }
 
     constructor() {
@@ -190,7 +191,7 @@ const Table = require("cli-table");
         assert.calledOnce(createChannelStub);
         assert.calledWith(createChannelStub, channelData, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(consoleLogStub, "CHANNEL ADDED SUCCESSFULLY");
-        assert.calledWith(consoleLogStub, { ...this.emptyDeploymentObj, channels });
+        assert.calledWith(consoleLogStub, `Paste this url to messenger webhook : ${this.channelObj.webhook}`);
     }
 
     @test async "function add channel should show error if channel name added has been used"() {
