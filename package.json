@@ -1,6 +1,6 @@
 {
   "name": "kata-cli",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "description": "Command line tools for Diaenne",
   "main": "index.js",
   "bin": {
@@ -43,7 +43,7 @@
     ],
     "all": true
   },
-  "author": "Febry Antonius",
+  "author": "Febry Antonius, Yoga Aliarham",
   "license": "ISC",
   "homepage": "https://github.com/kata-ai/kata-cli#readme",
   "dependencies": {
