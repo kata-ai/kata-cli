@@ -4,6 +4,7 @@ import { v4 as uuid } from "node-uuid";
 import { IHelper } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
+const Table = require("cli-table");
 
 export default class Deployment extends Component {
     constructor(private helper: IHelper, private api: any, private config: Config) {
@@ -108,11 +109,14 @@ export default class Deployment extends Component {
             let { response } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
 
             if (response && response.body) {
-                console.log("Deployment List");
-                response.body.forEach((deployment: JsonObject) => {
-                    console.log(`- Name : ${deployment.name}`);
-                    console.log(`  Bot version : ${deployment.botVersion}`);
+                let table = new Table({
+                    head: ['Deployment Name', 'Version'],
+                    colWidths: [30, 10]
                 });
+                response.body.forEach((deployment: JsonObject) => {
+                    table.push([deployment.name, deployment.botVersion]);
+                });
+                console.log(table.toString());
             }
         } catch (e) {
             this.helper.wrapError(e);
@@ -137,11 +141,12 @@ export default class Deployment extends Component {
 
             result = await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsPost, channelData, bot, name);
             let channel = result.data;
+            let webhook = this.helper.getProp("zaunUrl") ? this.helper.getProp("zaunUrl").toString().replace("zaun", "kanal") : "https://kanal.katalabs.io";
 
             deployment.channels[channelName] = channel.id;
 
             console.log("CHANNEL ADDED SUCCESSFULLY");
-            console.log(deployment);
+            console.log(`Paste this url to ${channelData.type} webhook : ${webhook}/receive_message/${channel.id}`);
         } catch (e) {
             this.helper.wrapError(e);
         }
@@ -182,30 +187,17 @@ export default class Deployment extends Component {
     private async getRequiredChannelData(data: JsonObject): Promise<JsonObject> {
         let { id, name, type, token, refreshToken, secret, url, additionalOptions } = data;
         let channelType = this.config.default("config.channels.type", []);
+        let channelUrl = this.config.default("config.channels.url", []);
         let answer = await inquirer.prompt([
             {
-                type: "input",
-                name: "name",
-                message: "channel name: ",
-                when: function () { return !name; },
-                validate: function (name: string) {
-                    if (!name)
-                        return "Channel name cannot be empty";
-
-                    return true;
-                }
-            },
-            {
-                type: "input",
+                type: "list",
                 name: "type",
-                message: `channel type (${channelType.join(", ")}): `,
+                message: `channel type : `,
+                choices: channelType,
                 when: function () { return !type; },
                 validate: function (type: string) {
                     if (!type)
                         return "Channel type cannot be empty";
-
-                    if (channelType.indexOf(type.toLowerCase()) == -1)
-                        return "Invalid type for channel";
 
                     return true;
                 },
@@ -282,13 +274,21 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "url",
-                message: "channel api url: ",
+                message: function (answer: JsonObject) {
+                    if (answer.type !== "generic")
+                        return `channel api url (default: ${channelUrl[answer.type as any]}) :`;
+
+                    return "channel api url : ";
+                },
                 when: function () { return !url },
-                validate: function (url: string) {
-                    if (!url)
+                validate: function (url: string, answer: JsonObject) {
+                    if (!url && answer.type === "generic")
                         return "Channel api url cannot be empty";
 
                     return true;
+                },
+                default: function (answer: JsonObject) {
+                    return channelUrl[answer.type as any];
                 }
             }
 

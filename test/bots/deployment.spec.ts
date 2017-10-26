@@ -9,6 +9,7 @@ import Api from "../../components/api/api";
 import Deployment from "../../components/bots/deployment";
 import Zaun from "../../components/api/zaun";
 import { v4 as uuid } from "node-uuid";
+const Table = require("cli-table");
 
 @suite class DeploymentTest {
     private config: IConfig;
@@ -285,13 +286,16 @@ import { v4 as uuid } from "node-uuid";
         let consoleStub = stub(console, "log");
         await this.deployment.list();
 
+        let table = new Table({
+            head: ['Deployment Name', 'Version'],
+            colWidths: [30, 10]
+        });
+        table.push([this.deploymentObj.name, this.deploymentObj.botVersion]);
+
         consoleStub.restore();
         getBotIdStub.restore();
         deploymentApiDeleteStub.restore();
         assert.calledOnce(deploymentApiDeleteStub);
-        assert.calledWith(consoleStub, "Deployment List");
-        assert.calledWith(consoleStub, `- Name : ${this.deploymentObj.name}`);
-        assert.calledWith(consoleStub, `  Bot version : ${this.deploymentObj.botVersion}`);
-
+        assert.calledWith(consoleStub, table.toString());
     }
 }
