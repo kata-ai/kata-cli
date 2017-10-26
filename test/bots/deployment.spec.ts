@@ -51,6 +51,7 @@ const Table = require("cli-table");
         url: "http://url",
         additionalOptions: { "botEmail": 'test@test.com' }
     }
+    private webhook = "https://kanal.katalabs.io";
 
     constructor() {
         let configJson = safeLoad(readFileSync("./service.yml", "utf8"));
@@ -203,7 +204,8 @@ const Table = require("cli-table");
         assert.calledOnce(createChannelStub);
         assert.calledWith(createChannelStub, channelData, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(consoleLogStub, "CHANNEL ADDED SUCCESSFULLY");
-        assert.calledWith(consoleLogStub, { ...this.emptyDeploymentObj, channels });
+        // assert.calledWith(consoleLogStub, { ...this.emptyDeploymentObj, channels });
+        assert.calledWith(consoleLogStub, `Paste this url to ${channelData.type} webhook : ${this.webhook}/receive_message/${channelData.id}`);
     }
 
     @test async "function add channel should show error if channel name added has been used"() {

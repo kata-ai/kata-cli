@@ -297,7 +297,7 @@ export default class Deployment extends Component {
         let options = { token, refreshToken, secret };
 
         if (additionalOptions)
-            options = Object.assign(options, additionalOptions);
+            options = { ...options, ...additionalOptions as JsonObject };
         let res = { id, name, type, options, url };
         try {
             answer.options = Object.assign(answer.options, answer.additionalOptions);
