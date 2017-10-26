@@ -185,7 +185,7 @@ export default class Deployment extends Component {
     }
 
     private async getRequiredChannelData(data: JsonObject): Promise<JsonObject> {
-        let { id, name, type, token, refreshToken, secret, url } = data;
+        let { id, name, type, token, refreshToken, secret, url, additionalOptions } = data;
         let channelType = this.config.default("config.channels.type", []);
         let channelUrl = this.config.default("config.channels.url", []);
         let answer = await inquirer.prompt([
@@ -243,6 +243,36 @@ export default class Deployment extends Component {
             },
             {
                 type: "input",
+                name: "additionalOptions",
+                message: "channel additional options: ",
+                when: function () { return !additionalOptions },
+                filter: function (additionalOptions: string): JsonObject {
+                    if (!additionalOptions || additionalOptions.length === 0)
+                        return null;
+                    try {
+                        let result = JSON.parse(additionalOptions);
+                        if (typeof result === "object")
+                            return result;
+                        else {
+                            return { error: true };
+                        }
+                    } catch (error) {
+                        return { error: error };
+                    }
+                },
+                validate: function (additionalOptions: JsonObject) {
+                    if (!additionalOptions) {
+                        return true;
+                    }
+                    if (additionalOptions.error) {
+                        return "Channel options must be a JSON Format"
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
                 name: "url",
                 message: function (answer: JsonObject) {
                     if (answer.type !== "generic")
@@ -261,11 +291,20 @@ export default class Deployment extends Component {
                     return channelUrl[answer.type as any];
                 }
             }
+
         ]);
 
         let options = { token, refreshToken, secret };
-        let res = { id, name, type, options, url };
 
+        if (additionalOptions)
+            options = { ...options, ...additionalOptions as JsonObject };
+        let res = { id, name, type, options, url };
+        try {
+            answer.options = Object.assign(answer.options, answer.additionalOptions);
+            answer.additionalOptions = undefined;
+        } catch (error) {
+            //
+        }
         return { ...res, ...answer };
     }
 }

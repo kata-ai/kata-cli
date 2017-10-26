@@ -41,6 +41,18 @@ const Table = require("cli-table");
         url: "http://url"
     }
 
+    private channelObjWithOptions = {
+        name: "fb",
+        id: this.deploymentObj.channels["fb"],
+        type: "messenger",
+        token: "tokenChannel",
+        refreshToken: "refreshToken",
+        secret: "secretKey",
+        url: "http://url",
+        additionalOptions: { "botEmail": 'test@test.com' }
+    }
+    private webhook = "https://kanal.katalabs.io";
+
     constructor() {
         let configJson = safeLoad(readFileSync("./service.yml", "utf8"));
         let zaun = Zaun();
@@ -157,30 +169,32 @@ const Table = require("cli-table");
         assert.calledWith(consoleLogStub, "INVALID TAG");
     }
 
-    @test async "function add channel should add channel to deployment successfully"() {
+    @test async "function add channel with additional options should add channel to deployment successfully"() {
         let getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         let getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(null, this.emptyDeploymentObj);
         });
         let createChannelStub = stub(this.api.channelApi, "botsBotIdDeploymentsDeploymentIdChannelsPost").callsFake((body, botId, deploymentId, callback) => {
-            callback(null, this.channelObj);
+            callback(null, this.channelObjWithOptions);
         })
         let consoleLogStub = stub(console, "log");
         let channels: { [name: string]: string } = {};
-        channels[this.channelObj.name] = this.channelObj.id;
+        channels[this.channelObjWithOptions.name] = this.channelObjWithOptions.id;
+
         let channelData = {
-            id: this.channelObj.id,
-            name: this.channelObj.name,
-            type: this.channelObj.type,
-            url: this.channelObj.url,
+            id: this.channelObjWithOptions.id,
+            name: this.channelObjWithOptions.name,
+            type: this.channelObjWithOptions.type,
+            url: this.channelObjWithOptions.url,
             options: {
-                token: this.channelObj.token,
-                refreshToken: this.channelObj.refreshToken,
-                secret: this.channelObj.secret
+                token: this.channelObjWithOptions.token,
+                refreshToken: this.channelObjWithOptions.refreshToken,
+                secret: this.channelObjWithOptions.secret,
+                botEmail: this.channelObjWithOptions.additionalOptions.botEmail
             }
         };
 
-        await this.deployment.addChannel(this.deploymentObj.name, "fb", { data: JSON.stringify(this.channelObj) });
+        await this.deployment.addChannel(this.deploymentObj.name, "fb", { data: JSON.stringify(this.channelObjWithOptions) });
 
         getBotIdStub.restore();
         getDeploymentStub.restore();
@@ -190,7 +204,8 @@ const Table = require("cli-table");
         assert.calledOnce(createChannelStub);
         assert.calledWith(createChannelStub, channelData, this.deploymentObj.botId, this.deploymentObj.name);
         assert.calledWith(consoleLogStub, "CHANNEL ADDED SUCCESSFULLY");
-        assert.calledWith(consoleLogStub, { ...this.emptyDeploymentObj, channels });
+        // assert.calledWith(consoleLogStub, { ...this.emptyDeploymentObj, channels });
+        assert.calledWith(consoleLogStub, `Paste this url to ${channelData.type} webhook : ${this.webhook}/receive_message/${channelData.id}`);
     }
 
     @test async "function add channel should show error if channel name added has been used"() {
