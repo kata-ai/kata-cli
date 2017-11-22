@@ -298,6 +298,7 @@ export interface IHelper {
     inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
     delete() : Boolean;
     wrapError(error : any) : void;
+    difference(object: any, base: any): Object;
 }
 
 export interface ITester {

@@ -1,5 +1,6 @@
 
 import { Component, JsonObject, Json, IConfig } from "merapi";
+import * as _ from "lodash";
 
 const yaml = require("js-yaml");
 const fs = require("fs");
@@ -151,5 +152,17 @@ export default class Helper extends Component {
             errorMessage = error.message;
         
         console.log(errorMessage);
+    }
+
+    difference(object: any, base: any) {
+        function changes(object: any, base: any) {
+            return _.transform(object, function(result, value, key) {
+                if (!_.isEqual(value, base[key])) {
+                    result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+                }
+            });
+        }
+
+        return changes(object, base);
     }
 };

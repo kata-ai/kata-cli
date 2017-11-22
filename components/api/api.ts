@@ -14,6 +14,7 @@ export default class Api extends Component {
     private sessionApi: any;
     private cachesApi: any;
     private utilApi: any;
+    private nluApi: any;
 
     constructor(private helper: IHelper, private zaun: any) {
         super();
@@ -36,5 +37,6 @@ export default class Api extends Component {
         this.sessionApi = new this.zaun.SessionApi();
         this.cachesApi = new this.zaun.CacheApi();
         this.utilApi = new this.zaun.UtilApi();
+        this.nluApi = new this.zaun.NluApi();
     }
 }

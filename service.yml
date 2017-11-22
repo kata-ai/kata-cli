@@ -16,6 +16,9 @@ components:
     user: users/User
     team: users/Team
 
+    # nlu management
+    nlu: nlus/Nlu
+
     # helper
     compile: scripts/Compile
     helper: scripts/Helper
@@ -247,7 +250,24 @@ commands:
                 args: <username>
                 handler: team.removeMember
                 alias: remove-member
-
+    nlu:
+        type: group
+        desc: command for nlu management
+        subcommands:
+            push:
+                desc: create or update nlu
+                handler: nlu.push
+                alias: nlu-push
+            init:
+                desc: init nlu file
+                handler: nlu.init
+                args: "<name> [sandbox]"
+                alias: nlu-init
+            list:
+                desc: list nlu
+                handler: nlu.listNlus
+                args: "[page] [number]"
+                alias: list-nlus
 
 # entry point
 main: main
