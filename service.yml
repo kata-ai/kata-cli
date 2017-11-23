@@ -16,6 +16,9 @@ components:
     user: users/User
     team: users/Team
 
+    # nlu management
+    nlu: nlus/Nlu
+
     # helper
     compile: scripts/Compile
     helper: scripts/Helper
@@ -247,7 +250,54 @@ commands:
                 args: <username>
                 handler: team.removeMember
                 alias: remove-member
-
+    nlu:
+        type: group
+        desc: command for nlu management
+        subcommands:
+            push:
+                desc: create or update nlu
+                handler: nlu.push
+                alias: nl-push
+            init:
+                desc: init nlu file
+                handler: nlu.init
+                args: "<name> [sandbox]"
+                alias: nl-init
+            list:
+                desc: list nlu
+                handler: nlu.listNlus
+                args: "[page] [number]"
+                alias: list-nlus
+            train:
+                desc: train nlu
+                handler: nlu.train
+                params:
+                    file:
+                        type: string
+                        desc: file path contain data training
+                        short: f
+                    sentence:
+                        type: string
+                        desc: string to train
+                        short: s
+                alias: nl-train
+            predict:
+                desc: predict
+                handler: nlu.predict
+                params:
+                    file:
+                        type: string
+                        desc: file path contain data to predict
+                        short: f
+                    sentence:
+                        type: string
+                        desc: string to predict
+                        short: s
+                alias: nl-predict
+            listProfiles:
+                desc: list default profiles
+                handler: nlu.listProfiles
+                alias: list-profiles
 
 # entry point
 main: main

@@ -1,5 +1,6 @@
 
 import { Component, JsonObject, Json, IConfig } from "merapi";
+import * as _ from "lodash";
 
 const yaml = require("js-yaml");
 const fs = require("fs");
@@ -133,9 +134,12 @@ export default class Helper extends Component {
         }
         else if (fileExt === ".yml" || fileExt === ".yaml") {
             return this.loadYaml(filePath);
+        } else if (fileExt === ".txt") {
+            return fs.readFileSync(filePath, "utf8");
         }
-        else
+        else {
             return new Error("UNSUPPORTED FILE TYPE");
+        }
     }
 
     async inquirerPrompt(questions: JsonObject[]): Promise<JsonObject> {
@@ -151,5 +155,17 @@ export default class Helper extends Component {
             errorMessage = error.message;
         
         console.log(errorMessage);
+    }
+
+    difference(object: any, base: any) {
+        function changes(object: any, base: any) {
+            return _.transform(object, function(result, value, key) {
+                if (!_.isEqual(value, base[key])) {
+                    result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+                }
+            });
+        }
+
+        return changes(object, base);
     }
 };
