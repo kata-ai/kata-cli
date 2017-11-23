@@ -134,9 +134,12 @@ export default class Helper extends Component {
         }
         else if (fileExt === ".yml" || fileExt === ".yaml") {
             return this.loadYaml(filePath);
+        } else if (fileExt === ".txt") {
+            return fs.readFileSync(filePath, "utf8");
         }
-        else
+        else {
             return new Error("UNSUPPORTED FILE TYPE");
+        }
     }
 
     async inquirerPrompt(questions: JsonObject[]): Promise<JsonObject> {

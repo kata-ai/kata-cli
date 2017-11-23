@@ -1,8 +1,0 @@
-name: location_kata
-lang: id
-entities:
-  location:
-    type: phrase
-    profile: location
-    labels: ["common", "places", "city", "street", "country", "airport"]
-    resolver: location

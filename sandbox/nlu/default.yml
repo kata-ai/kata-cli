@@ -1,9 +1,0 @@
-name: kata
-lang: id
-entities:
-  LOCATION:
-    type: phrase
-    profile: location
-  PERSON:
-    type: phrase
-    profile: name

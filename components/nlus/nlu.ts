@@ -1,9 +1,91 @@
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
 import {v4 as uuid} from "node-uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
+
 const colors = require("colors");
 const inquirer = require("inquirer");
 const Table = require("cli-table");
+const fs = require("fs");
+const template: any = {
+    default: {
+        name: "kata",
+        lang: "id",
+        entities: {
+           LOCATION: {
+              type: "phrase",
+              profile: "location"
+           },
+           PERSON: {
+              type: "phrase",
+              profile: "name"
+           }
+        }
+     },
+     email: {
+        name: "email",
+        lang: "id",
+        entities: {
+           email: {
+              type: "phrase",
+              profile: "email"
+           }
+        }
+     },
+     locationlabel:{
+        name: "location_kata",
+        lang: "id",
+        entities: {
+           location: {
+              type: "phrase",
+              profile: "location",
+              labels: [
+                 "common",
+                 "places",
+                 "city",
+                 "street",
+                 "country",
+                 "airport"
+              ],
+              resolver: "location"
+           }
+        }
+     },
+     location: {
+        name: "location",
+        lang: "id",
+        entities: {
+           LOCATION: {
+              type: "phrase",
+              profile: "location"
+           }
+        }
+     },
+     name: {
+        name: "person",
+        lang: "id",
+        entities: {
+           PERSON: {
+              type: "phrase",
+              profile: "name"
+           }
+        }
+     },
+     sentiment: {
+        name: "sentiment",
+        lang: "id",
+        entities: {
+           sentiment: {
+              type: "trait",
+              profile: "sentiment",
+              labels: [
+                 "positive",
+                 "negative",
+                 "neutral"
+              ]
+           }
+        }
+    }
+}
 
 export default class Nlu extends Component {
 
@@ -13,8 +95,8 @@ export default class Nlu extends Component {
 
     async init(name: string, sandbox?: string) {
         try {
-            const sandboxName = sandbox || "default";
-            let nluDesc = this.helper.loadYaml(`./sandbox/nlu/${sandboxName}.yml`);
+            const sandboxName: any = sandbox || "default";
+            let nluDesc: any = template[sandboxName];
             
             nluDesc.name = name;
             this.helper.dumpYaml("./nlu.yml", nluDesc);
@@ -107,6 +189,71 @@ export default class Nlu extends Component {
             } else {
                 this.helper.wrapError(error);
             }
+        }
+    }
+
+    async train(options: JsonObject) {
+        try {
+            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            let opts = {};
+            if (options.file) {
+                console.log(`Training.. (input file: ${options.file})`);
+                opts = {
+                    file: fs.createReadStream(options.file)
+                }
+            } else if (options.sentence) {
+                console.log(`Training.. (input: ${options.sentence})`);
+                opts = {
+                    sentence: options.sentence
+                }
+            }
+
+            const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameTrainPost, nluDesc.name, opts);
+            console.log(`Success: ${trainResult.data.count} data trained !`);
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
+
+    async predict(options: JsonObject) {
+        try {
+            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            let opts = {};
+            if (options.file) {
+                console.log(`Predict.. (input file: ${options.file})`);
+                opts = {
+                    file: fs.createReadStream(options.file)
+                }
+            } else if (options.sentence) {
+                console.log(`Predict.. (input: ${options.sentence})`);
+                opts = {
+                    sentence: options.sentence
+                }
+            }
+
+            const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluDesc.name, opts);
+            console.log(`Success, result : `);
+            console.dir(predicResult.response.body.result, {depth:null});
+        } catch (error) {
+            this.helper.wrapError(error);
+        }
+    }
+
+    async listProfiles() {
+        try {
+            const profiles = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusProfilesGet);
+            if (profiles && profiles.data) {
+                let table = new Table({
+                    head: ['Type', 'Name', 'Desc']
+                    , colWidths: [20, 20, 20]
+                });
+                profiles.data.forEach((profile: { type: string, name: string, desc: string }) => {
+                    table.push([profile.type, profile.name, profile.type]);
+                });
+                console.log(table.toString());
+            }
+        } catch (error) {
+            this.helper.wrapError(error);
         }
     }
 

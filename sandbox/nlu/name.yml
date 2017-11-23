@@ -1,6 +1,0 @@
-name: person
-lang: id
-entities:
-  PERSON:
-    type: phrase
-    profile: name

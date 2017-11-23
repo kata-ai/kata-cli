@@ -1,8 +1,0 @@
-
-name: sentiment
-lang: id
-entities:
-  sentiment:
-    type: trait
-    profile: sentiment
-    labels: ["positive", "negative", "neutral"]

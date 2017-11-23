@@ -1,6 +1,0 @@
-name: email
-lang: id
-entities:
-  email:
-    type: phrase
-    profile: email
