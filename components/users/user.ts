@@ -84,7 +84,7 @@ export default class User extends Component {
                 console.log(`Logged in as ${user}`);
             }
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -110,7 +110,7 @@ export default class User extends Component {
             }
 
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -142,7 +142,7 @@ export default class User extends Component {
             }
 
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }   
     }
 
@@ -161,7 +161,7 @@ export default class User extends Component {
                     console.log("Invalid password");
                 }
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 
@@ -191,7 +191,7 @@ export default class User extends Component {
                 console.log(`Team ${name} exist !`);
             }
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
     
@@ -229,7 +229,7 @@ export default class User extends Component {
             
             console.log(`New user ${newUser.data.username} created !`);
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
  

@@ -102,7 +102,7 @@ export default class Nlu extends Component {
             this.helper.dumpYaml("./nlu.yml", nluDesc);
             console.log(`Init NLU ${name}`);
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 
@@ -170,24 +170,17 @@ export default class Nlu extends Component {
 
             console.log(`NLU ${nluDesc.name} Updated !`);
         } catch (error) {
-            let errorMessage;
-            
-            if (error.response && error.response.body && error.response.body.message) {
-                errorMessage = error.response.body.message;
-            }
-            else {
-                errorMessage = error.message;
-            }
+            let errorMessage = this.helper.wrapError(error);
 
             if (errorMessage === "You're not authorized to manage this Nlu.") {
                 try {
                     await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
                     console.log(`NLU ${nluDesc.name} Created !`);
                 } catch (error) {
-                    this.helper.wrapError(error);
+                    console.log(this.helper.wrapError(error));
                 }
             } else {
-                this.helper.wrapError(error);
+                console.log(this.helper.wrapError(error));
             }
         }
     }
@@ -211,7 +204,7 @@ export default class Nlu extends Component {
             const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameTrainPost, nluDesc.name, opts);
             console.log(`Success: ${trainResult.data.count} data trained !`);
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 
@@ -233,9 +226,14 @@ export default class Nlu extends Component {
 
             const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluDesc.name, opts);
             console.log(`Success, result : `);
-            console.dir(predicResult.response.body.result, {depth:null});
+            let i = 0;
+            predicResult.response.body.result.forEach((x: any) => {
+                console.log(`${++i}. Input: ${x.input}`);
+                console.log(`   Result: ${JSON.stringify(x.output)}`);
+                
+            });
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 
@@ -253,7 +251,7 @@ export default class Nlu extends Component {
                 console.log(table.toString());
             }
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 
@@ -273,7 +271,7 @@ export default class Nlu extends Component {
                 console.log(table.toString());
             }
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
     

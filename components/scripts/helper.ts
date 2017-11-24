@@ -154,7 +154,7 @@ export default class Helper extends Component {
         else
             errorMessage = error.message;
         
-        console.log(errorMessage);
+        return errorMessage;
     }
 
     difference(object: any, base: any) {
