@@ -21,10 +21,10 @@ export default class Bot extends Component {
 
         const botDesc = {
             schema: "kata.ai/schema/kata-ml/1.0",
-            name: "firstbot",
+            name: name,
             desc: "My First Bot",
-            id: "firstbot-<youruserid>",
-            version: "0.0.1",
+            id: bot,
+            version: version || "0.0.1",
             flows: {
               hello: {
                 fallback: true,
