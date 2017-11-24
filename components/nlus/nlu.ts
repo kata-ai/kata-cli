@@ -210,7 +210,7 @@ export default class Nlu extends Component {
 
     public async predict(options : JsonObject) {
         try {
-            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+            const nluDesc : any = !options.nlu ? this.helper.loadYaml("./nlu.yml") : { name: "" };
             let nluName = nluDesc.name;
             let opts = {};
             if (options.file) {
