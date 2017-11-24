@@ -297,6 +297,10 @@ commands:
                         type: string
                         desc: string to predict
                         short: s
+                    nlu:
+                        type: string
+                        desc: nlu to use
+                        short: nlu
                 alias: nl-predict
             listProfiles:
                 desc: list default profiles
