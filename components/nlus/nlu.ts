@@ -11,11 +11,11 @@ const template : any = {
         name: "kata",
         lang: "id",
         entities: {
-            LOCATION: {
+            location: {
                 type: "phrase",
                 profile: "location"
             },
-            PERSON: {
+            person: {
                 type: "phrase",
                 profile: "name"
             }
@@ -54,7 +54,7 @@ const template : any = {
         name: "location",
         lang: "id",
         entities: {
-            LOCATION: {
+            location: {
                 type: "phrase",
                 profile: "location"
             }
@@ -64,7 +64,7 @@ const template : any = {
         name: "person",
         lang: "id",
         entities: {
-            PERSON: {
+            person: {
                 type: "phrase",
                 profile: "name"
             }
