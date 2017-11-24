@@ -1,103 +1,103 @@
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import {v4 as uuid} from "node-uuid";
+import { v4 as uuid } from "node-uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
 
 const colors = require("colors");
 const inquirer = require("inquirer");
 const Table = require("cli-table");
 const fs = require("fs");
-const template: any = {
+const template : any = {
     default: {
         name: "kata",
         lang: "id",
         entities: {
-           LOCATION: {
-              type: "phrase",
-              profile: "location"
-           },
-           PERSON: {
-              type: "phrase",
-              profile: "name"
-           }
+            LOCATION: {
+                type: "phrase",
+                profile: "location"
+            },
+            PERSON: {
+                type: "phrase",
+                profile: "name"
+            }
         }
-     },
-     email: {
+    },
+    email: {
         name: "email",
         lang: "id",
         entities: {
-           email: {
-              type: "phrase",
-              profile: "email"
-           }
+            email: {
+                type: "phrase",
+                profile: "email"
+            }
         }
-     },
-     locationlabel:{
+    },
+    locationlabel: {
         name: "location_kata",
         lang: "id",
         entities: {
-           location: {
-              type: "phrase",
-              profile: "location",
-              labels: [
-                 "common",
-                 "places",
-                 "city",
-                 "street",
-                 "country",
-                 "airport"
-              ],
-              resolver: "location"
-           }
+            location: {
+                type: "phrase",
+                profile: "location",
+                labels: [
+                    "common",
+                    "places",
+                    "city",
+                    "street",
+                    "country",
+                    "airport"
+                ],
+                resolver: "location"
+            }
         }
-     },
-     location: {
+    },
+    location: {
         name: "location",
         lang: "id",
         entities: {
-           LOCATION: {
-              type: "phrase",
-              profile: "location"
-           }
+            LOCATION: {
+                type: "phrase",
+                profile: "location"
+            }
         }
-     },
-     name: {
+    },
+    name: {
         name: "person",
         lang: "id",
         entities: {
-           PERSON: {
-              type: "phrase",
-              profile: "name"
-           }
+            PERSON: {
+                type: "phrase",
+                profile: "name"
+            }
         }
-     },
-     sentiment: {
+    },
+    sentiment: {
         name: "sentiment",
         lang: "id",
         entities: {
-           sentiment: {
-              type: "trait",
-              profile: "sentiment",
-              labels: [
-                 "positive",
-                 "negative",
-                 "neutral"
-              ]
-           }
+            sentiment: {
+                type: "trait",
+                profile: "sentiment",
+                labels: [
+                    "positive",
+                    "negative",
+                    "neutral"
+                ]
+            }
         }
     }
-}
+};
 
 export default class Nlu extends Component {
 
-    constructor(private helper: IHelper, private api: any) {
+    constructor(private helper : IHelper, private api : any) {
         super();
     }
 
-    async init(name: string, sandbox?: string) {
+    public async init(name : string, sandbox? : string) {
         try {
-            const sandboxName: any = sandbox || "default";
-            let nluDesc: any = template[sandboxName];
-            
+            const sandboxName : any = sandbox || "default";
+            const nluDesc : any = template[sandboxName];
+
             nluDesc.name = name;
             this.helper.dumpYaml("./nlu.yml", nluDesc);
             console.log(`Init NLU ${name}`);
@@ -106,8 +106,8 @@ export default class Nlu extends Component {
         }
     }
 
-    async push() {
-        let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+    public async push() {
+        const nluDesc : any = this.helper.loadYaml("./nlu.yml");
 
         try {
             const nlu = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameGet, nluDesc.name);
@@ -135,7 +135,7 @@ export default class Nlu extends Component {
                             }
                         }
                     }
-    
+
                     const remoteDiff = this.helper.difference(entities.data, nluDesc.entities);
                     if (remoteDiff) {
                         for (const key in remoteDiff) {
@@ -170,7 +170,7 @@ export default class Nlu extends Component {
 
             console.log(`NLU ${nluDesc.name} Updated !`);
         } catch (error) {
-            let errorMessage = this.helper.wrapError(error);
+            const errorMessage = this.helper.wrapError(error);
 
             if (errorMessage === "You're not authorized to manage this Nlu.") {
                 try {
@@ -185,20 +185,20 @@ export default class Nlu extends Component {
         }
     }
 
-    async train(options: JsonObject) {
+    public async train(options : JsonObject) {
         try {
-            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
             let opts = {};
             if (options.file) {
                 console.log(`Training.. (input file: ${options.file})`);
                 opts = {
                     file: fs.createReadStream(options.file)
-                }
+                };
             } else if (options.sentence) {
                 console.log(`Training.. (input: ${options.sentence})`);
                 opts = {
                     sentence: options.sentence
-                }
+                };
             }
 
             const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameTrainPost, nluDesc.name, opts);
@@ -208,24 +208,24 @@ export default class Nlu extends Component {
         }
     }
 
-    async predict(options: JsonObject) {
+    public async predict(options : JsonObject) {
         try {
-            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
             let nluName = nluDesc.name;
             let opts = {};
             if (options.file) {
                 console.log(`Predict.. (input file: ${options.file})`);
                 opts = {
                     file: fs.createReadStream(options.file)
-                }
+                };
 
                 nluName = options.nlu || nluName;
             } else if (options.sentence) {
                 console.log(`Predict.. (input: ${options.sentence})`);
                 opts = {
                     sentence: options.sentence
-                }
-                
+                };
+
                 nluName = options.nlu || nluName;
             } else {
                 throw new Error("Please input sentence or file to predict");
@@ -234,25 +234,25 @@ export default class Nlu extends Component {
             const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluName, opts);
             console.log(`Success, result : `);
             let i = 0;
-            predicResult.response.body.result.forEach((x: any) => {
+            predicResult.response.body.result.forEach((x : any) => {
                 console.log(`${++i}. Input: ${x.input}`);
                 console.log(`   Result: ${JSON.stringify(x.output)}`);
-                
+
             });
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
     }
 
-    async listProfiles() {
+    public async listProfiles() {
         try {
             const profiles = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusProfilesGet);
             if (profiles && profiles.data) {
-                let table = new Table({
-                    head: ['Type', 'Name', 'Desc']
-                    , colWidths: [20, 20, 20]
+                const table = new Table({
+                    head: ["Type", "Name", "Desc"]
+                    , colWidths: [10, 10, 40]
                 });
-                profiles.data.forEach((profile: { type: string, name: string, desc: string }) => {
+                profiles.data.forEach((profile : { type : string, name : string, desc : string }) => {
                     table.push([profile.type, profile.name, profile.desc]);
                 });
                 console.log(table.toString());
@@ -262,17 +262,17 @@ export default class Nlu extends Component {
         }
     }
 
-    async listNlus(page?: number, limit?: number) {
+    public async listNlus(page? : number, limit? : number) {
         try {
             page = page || 1;
             limit = limit || 10;
-            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, { page , limit });
+            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, { page, limit });
             if (nlus && nlus.data) {
-                let table = new Table({
-                    head: ['Name', 'Languange', 'Visibility']
+                const table = new Table({
+                    head: ["Name", "Language", "Visibility"]
                     , colWidths: [20, 20, 20]
                 });
-                nlus.data.items.forEach((nlus: { name: string, lang: string, visibility: string }) => {
+                nlus.data.items.forEach((nlus : { name : string, lang : string, visibility : string }) => {
                     table.push([nlus.name, nlus.lang, nlus.visibility]);
                 });
                 console.log(table.toString());
@@ -282,14 +282,14 @@ export default class Nlu extends Component {
         }
     }
 
-    async snapshot() {
+    public async snapshot() {
         try {
-            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
             const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameSnapshotGet, nluDesc.name);
             console.log(`Snapshot captured!`);
         } catch (error) {
-            console.log(this.helper.wrapError(error));   
+            console.log(this.helper.wrapError(error));
         }
     }
-    
+
 }
