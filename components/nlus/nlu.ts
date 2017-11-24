@@ -211,20 +211,27 @@ export default class Nlu extends Component {
     public async predict(options : JsonObject) {
         try {
             const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+            let nluName = nluDesc.name;
             let opts = {};
             if (options.file) {
                 console.log(`Predict.. (input file: ${options.file})`);
                 opts = {
                     file: fs.createReadStream(options.file)
                 };
+
+                nluName = options.nlu || nluName;
             } else if (options.sentence) {
                 console.log(`Predict.. (input: ${options.sentence})`);
                 opts = {
                     sentence: options.sentence
                 };
+
+                nluName = options.nlu || nluName;
+            } else {
+                throw new Error("Please input sentence or file to predict");
             }
 
-            const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluDesc.name, opts);
+            const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluName, opts);
             console.log(`Success, result : `);
             let i = 0;
             predicResult.response.body.result.forEach((x : any) => {
@@ -251,7 +258,7 @@ export default class Nlu extends Component {
                 console.log(table.toString());
             }
         } catch (error) {
-            console.log(this.helper.wrapError(error));
+            console.log(error);
         }
     }
 
