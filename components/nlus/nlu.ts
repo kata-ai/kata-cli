@@ -274,5 +274,15 @@ export default class Nlu extends Component {
             console.log(this.helper.wrapError(error));
         }
     }
+
+    async snapshot() {
+        try {
+            let nluDesc: any = this.helper.loadYaml("./nlu.yml");
+            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameSnapshotGet, nluDesc.name);
+            console.log(`Snapshot captured!`);
+        } catch (error) {
+            console.log(this.helper.wrapError(error));   
+        }
+    }
     
 }

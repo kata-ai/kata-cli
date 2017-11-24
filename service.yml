@@ -302,6 +302,10 @@ commands:
                 desc: list default profiles
                 handler: nlu.listProfiles
                 alias: list-profiles
+            snapshot:
+                desc: snapshot profiles
+                handler: nlu.snapshot
+                alias: nl-snapshot
 
 # entry point
 main: main
