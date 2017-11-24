@@ -155,7 +155,7 @@ export default class User extends Component {
                 let currentUser = <string> this.helper.getProp("current_login");
                 let { data } = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, { username: currentUser, password: passObj.oldPass});
                 if (data) {
-                    let result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdPut, data.userId, { password: passObj.newPass });
+                    let result = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdPut, currentUser, { password: passObj.newPass });
                     console.log("Password changed");
                     } else {
                     console.log("Invalid password");
@@ -219,7 +219,15 @@ export default class User extends Component {
             if (password.answer !== confirmPassword.answer)
                 throw new Error("Invalid retype password");
                 
-            let role = options.admin ? "admin" : "user";
+            let role: string;
+            if (options.admin) {
+                role = "admin";
+            } else if (options.internal) {
+                role = "internalUser";
+            } else {
+                role = "user";
+            }
+
             let { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
             
             if (data.id)

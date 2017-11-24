@@ -194,6 +194,10 @@ commands:
                         type: boolean
                         desc: label admin
                         short: a
+                    internal:
+                        type: boolean
+                        desc: label internal
+                        short: i
                 handler: user.createUser
                 alias: create-user
             switch:
