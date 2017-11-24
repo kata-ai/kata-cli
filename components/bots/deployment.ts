@@ -49,7 +49,7 @@ export default class Deployment extends Component {
 
 
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
             return;
         }
 
@@ -58,12 +58,7 @@ export default class Deployment extends Component {
 
             deployment = data;
         } catch (e) {
-            let errorMessage;
-
-            if (e.response && e.response.body && e.response.body.message)
-                errorMessage = e.response.body.message;
-            else
-                errorMessage = e.message;
+            let errorMessage = this.helper.wrapError(e);
 
             if (errorMessage !== "Deployment not found.") {
                 console.log(errorMessage);
@@ -99,7 +94,7 @@ export default class Deployment extends Component {
                 console.dir({ ...data, tag: tag }, { depth: null });
             }
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -119,7 +114,7 @@ export default class Deployment extends Component {
                 console.log(table.toString());
             }
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -147,7 +142,7 @@ export default class Deployment extends Component {
             console.log("CHANNEL ADDED SUCCESSFULLY");
             console.log(`Paste this url to ${channelData.type} webhook : ${channel.webhook}`);
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -165,7 +160,7 @@ export default class Deployment extends Component {
 
             console.log("CHANNEL REMOVED SUCCESSFULLY");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -179,7 +174,7 @@ export default class Deployment extends Component {
             console.log(deployment);
             console.log("DEPLOYMENT DELETED SUCCESSFULLY");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 

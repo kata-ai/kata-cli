@@ -297,7 +297,8 @@ export interface IHelper {
     loadYamlOrJsonFile(filePath: string) : JsonObject;
     inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
     delete() : Boolean;
-    wrapError(error : any) : void;
+    wrapError(error : any) : string;
+    difference(object: any, base: any): Object;
 }
 
 export interface ITester {

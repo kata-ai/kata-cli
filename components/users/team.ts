@@ -28,7 +28,7 @@ export default class Team extends Component {
                 console.log(`User ${username} not found`);
             }    
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
     
@@ -59,7 +59,7 @@ export default class Team extends Component {
             }   
 
         } catch (error) {
-            this.helper.wrapError(error);
+            console.log(this.helper.wrapError(error));
         }
     }
 

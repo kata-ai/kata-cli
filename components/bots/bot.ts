@@ -142,7 +142,7 @@ export default class Bot extends Component {
             }
 
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -225,7 +225,7 @@ export default class Bot extends Component {
             });
             console.log(table.toString());
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -287,12 +287,7 @@ export default class Bot extends Component {
 
                 console.log("UPDATED BOT SUCCESSFULLY");
             } catch (e) {
-                let errorMessage;
-
-                if (e.response && e.response.body && e.response.body.message)
-                    errorMessage = e.response.body.message;
-                else
-                    errorMessage = e.message;
+                let errorMessage = this.helper.wrapError(e);
 
                 if (errorMessage === "Bot not found.") {
                     let result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
@@ -329,7 +324,7 @@ export default class Bot extends Component {
 
             console.log("REMOVE BOT SUCCESSFULLY");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -361,10 +356,7 @@ export default class Bot extends Component {
 
                 return data;
             } catch (e) {
-                if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
-                else
-                    return e.message;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
 
@@ -384,10 +376,7 @@ export default class Bot extends Component {
 
                 return data;
             } catch (e) {
-                if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
-                else
-                    return e.message;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
 
@@ -407,10 +396,7 @@ export default class Bot extends Component {
 
                 return data;
             } catch (e) {
-                if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
-                else
-                    return e.message;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
 
@@ -439,10 +425,7 @@ export default class Bot extends Component {
                     return res.data;
                 }
             } catch (e) {
-                if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
-                else
-                    return e.message;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
 
@@ -456,12 +439,7 @@ export default class Bot extends Component {
                 if (session)
                     this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
             } catch (e) {
-                let errorMessage;
-
-                if (e.response && e.response.body && e.response.body.message)
-                    errorMessage = e.response.body.message;
-                else
-                    errorMessage = e.message;
+                let errorMessage = this.helper.wrapError(e);
 
                 if (errorMessage == "Session not found.") {
                     return;
@@ -477,10 +455,7 @@ export default class Bot extends Component {
                     this.sync(this.helper.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
                 }
             } catch (e) {
-                if (e.response && e.response.body && e.response.body.message)
-                    return e.response.body.message;
-                else
-                    return e.message;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
     }

@@ -22,7 +22,7 @@ export default class Session extends Component {
 
             console.dir(data, { depth: null });
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -49,7 +49,7 @@ export default class Session extends Component {
             console.log(data);
             console.log("Session created successfully");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -76,7 +76,7 @@ export default class Session extends Component {
             console.log(data);
             console.log("Session updated successfully");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
@@ -90,7 +90,7 @@ export default class Session extends Component {
             console.dir(data, { depth: null });
             console.log("Session deleted successfully");
         } catch (e) {
-            this.helper.wrapError(e);
+            console.log(this.helper.wrapError(e));
         }
     }
 
