@@ -20,7 +20,7 @@ export default class Api extends Component {
         super();
 
         this.apiClient = this.zaun.ApiClient.instance;
-        let basePath = this.helper.getProp("zaunUrl") || "http://api.kata.ai";
+        let basePath = this.helper.getProp("zaunUrl") || "https://api.kata.ai";
         
         this.apiClient.basePath = basePath;
         this.bearer = this.apiClient.authentications['Bearer'];
