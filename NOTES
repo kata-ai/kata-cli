@@ -1,3 +1,9 @@
+[1.1.0]
+2017/11/28 14:45 +07:00
+- Handle NLU Management
+- Fix wrong username and password
+- Fix invalid user command input
+
 [1.0.0]
 2017/10/26 16:02 +07:00
 - Handle Bot Management
