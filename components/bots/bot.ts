@@ -197,7 +197,7 @@ export default class Bot extends Component {
         const desc = this.helper.loadYaml("./bot.yml");
 
         let [major, minor, patch] = (desc.version as string).split(".").map((val : string) => parseInt(val));
-
+            
         switch (options.rev) {
             case "major":
                 ++major;
@@ -211,6 +211,12 @@ export default class Bot extends Component {
             case "patch":
                 ++patch;
                 break;
+        }
+
+        if (major === undefined || minor === undefined || patch === undefined) {
+            major = major || 0;
+            minor = minor || 0;
+            patch = patch || 0;
         }
 
         desc.version = `${major}.${minor}.${patch}`;
@@ -232,15 +238,7 @@ export default class Bot extends Component {
                 const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
                 console.log("BOT CREATED");
             } catch (e) {
-                let errorMessage;
-
-                if (e.response && e.response.body && e.response.body.message) {
-                    errorMessage = e.response.body.message;
-                } else {
-                    errorMessage = e.message;
-                }
-
-                console.log(errorMessage);
+                console.log(this.helper.wrapError(e));
             }
         } else {
             try {
