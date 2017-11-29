@@ -222,6 +222,11 @@ export default class Bot extends Component {
 
         const botDesc = bot.get();
         botDesc.name = botDesc.name || "bot";
+        
+        if (options.draft) {
+            await this.updateDraft(botDesc, desc);
+            return;
+        }
 
         if (!botDesc.id) {
             const id = uuid();
@@ -245,7 +250,6 @@ export default class Bot extends Component {
         } else {
             try {
                 const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdPut, botDesc.id, botDesc, {});
-
                 desc.version = result.data.version;
 
                 console.log("UPDATED BOT SUCCESSFULLY");
@@ -261,6 +265,50 @@ export default class Bot extends Component {
                     console.log(errorMessage);
                 }
             }
+        }
+
+        this.helper.dumpYaml("./bot.yml", desc);
+    }
+
+    public async discardDraft(botDesc: JsonObject, desc: JsonObject): Promise<void> {
+        try {
+            desc.tag = null;
+            await this.helper.toPromise(this.api.draftApi, this.api.draftApi.botsBotIdDraftDelete, botDesc.id);
+            console.log("Draft discarded.");
+        }
+        catch (e) {
+            this.helper.printError(e);
+        }
+        this.helper.dumpYaml("./bot.yml", desc);
+    }
+
+    public async discard(options: JsonObject): Promise<void> {
+        let desc = this.helper.loadYaml("./bot.yml");
+        
+        let bot = Config.create(desc, {left:"${", right:"}"});
+        bot = this.compile.execDirectives(bot, process.cwd());
+        bot.resolve();
+
+        let botDesc = bot.get();
+        
+        if (options.draft) {
+            await this.discardDraft(botDesc, desc);
+            return;
+        }     
+        return;
+    }
+
+    public async updateDraft(botDesc: JsonObject, desc: JsonObject): Promise<void> {
+        botDesc.id = botDesc.id || uuid();
+
+        try {
+            await this.helper.toPromise(this.api.draftApi, this.api.draftApi.botsBotIdDraftPost, botDesc.id, botDesc);
+            desc.tag = "draft";
+            botDesc.tag = "draft";
+            console.log("Draft updated.");
+        }
+        catch (e) {
+            this.helper.printError(e);
         }
 
         this.helper.dumpYaml("./bot.yml", desc);
