@@ -21,56 +21,56 @@ export default class Bot extends Component {
 
         const botDesc = {
             schema: "kata.ai/schema/kata-ml/1.0",
-            name: name,
+            name,
             desc: "My First Bot",
             id: bot,
             version: version || "0.0.1",
             flows: {
-              hello: {
-                fallback: true,
-                intents: {
-                  greeting: {
-                    initial: true,
-                    condition: "content == 'hi'"
-                  },
-                  fallback: {
-                    fallback: true
-                  }
-                },
-                states: {
-                  init: {
-                    initial: true,
-                    transitions: {
-                      greet: {
-                        condition: "intent == \"greeting\""
-                      },
-                      other: {
-                        fallback: true
-                      }
+                hello: {
+                    fallback: true,
+                    intents: {
+                        greeting: {
+                            initial: true,
+                            condition: "content == 'hi'"
+                        },
+                        fallback: {
+                            fallback: true
+                        }
+                    },
+                    states: {
+                        init: {
+                            initial: true,
+                            transitions: {
+                                greet: {
+                                    condition: "intent == \"greeting\""
+                                },
+                                other: {
+                                    fallback: true
+                                }
+                            }
+                        },
+                        greet: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "hi!"
+                                }
+                            }
+                        },
+                        other: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "sorry!"
+                                }
+                            }
+                        }
                     }
-                  },
-                  greet: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "hi!"
-                      }
-                    }
-                  },
-                  other: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "sorry!"
-                      }
-                    }
-                  }
                 }
-              }
             }
-          };
+        };
 
         this.helper.dumpYaml("./bot.yml", botDesc);
 
@@ -197,7 +197,7 @@ export default class Bot extends Component {
         const desc = this.helper.loadYaml("./bot.yml");
 
         let [major, minor, patch] = (desc.version as string).split(".").map((val : string) => parseInt(val));
-            
+
         switch (options.rev) {
             case "major":
                 ++major;
@@ -236,7 +236,7 @@ export default class Bot extends Component {
 
             try {
                 const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
-                console.log("BOT CREATED");
+                console.log(`BOT CREATED SUCCESSFULLY WITH VERSION ${desc.version}`);
             } catch (e) {
                 console.log(this.helper.wrapError(e));
             }
@@ -246,7 +246,7 @@ export default class Bot extends Component {
 
                 desc.version = result.data.version;
 
-                console.log("UPDATED BOT SUCCESSFULLY");
+                console.log(`UPDATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
             } catch (e) {
                 const errorMessage = this.helper.wrapError(e);
 
@@ -254,7 +254,7 @@ export default class Bot extends Component {
                     const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
 
                     desc.version = result.data.version;
-                    console.log("CREATED BOT SUCCESSFULLY");
+                    console.log(`CREATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
                 } else {
                     console.log(errorMessage);
                 }
