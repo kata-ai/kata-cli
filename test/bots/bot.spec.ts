@@ -96,7 +96,7 @@ import Zaun from "../../components/api/zaun";
         consoleLogStub.restore();
         assert.callCount(dumpYamlStub, 1);
         assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
-        assert.calledWith(consoleLogStub, "INIT BOT SUCCESSFULLY");
+        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully with id botId");
     }
 
     @test public async "should call init bot successfully when user does not provide bot version"() {
@@ -111,7 +111,7 @@ import Zaun from "../../components/api/zaun";
         consoleLogStub.restore();
         assert.callCount(dumpYamlStub, 1);
         assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: "0.0.1" });
-        assert.calledWith(consoleLogStub, "INIT BOT SUCCESSFULLY");
+        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully with id botId");
     }
 
     @test public async "should throw error when botId is not defined"() {

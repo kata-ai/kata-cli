@@ -21,60 +21,60 @@ export default class Bot extends Component {
 
         const botDesc = {
             schema: "kata.ai/schema/kata-ml/1.0",
-            name: name,
+            name,
             desc: "My First Bot",
             id: bot,
             version: version || "0.0.1",
             flows: {
-              hello: {
-                fallback: true,
-                intents: {
-                  greeting: {
-                    initial: true,
-                    condition: "content == 'hi'"
-                  },
-                  fallback: {
-                    fallback: true
-                  }
-                },
-                states: {
-                  init: {
-                    initial: true,
-                    transitions: {
-                      greet: {
-                        condition: "intent == \"greeting\""
-                      },
-                      other: {
-                        fallback: true
-                      }
+                hello: {
+                    fallback: true,
+                    intents: {
+                        greeting: {
+                            initial: true,
+                            condition: "content == 'hi'"
+                        },
+                        fallback: {
+                            fallback: true
+                        }
+                    },
+                    states: {
+                        init: {
+                            initial: true,
+                            transitions: {
+                                greet: {
+                                    condition: "intent == \"greeting\""
+                                },
+                                other: {
+                                    fallback: true
+                                }
+                            }
+                        },
+                        greet: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "hi!"
+                                }
+                            }
+                        },
+                        other: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "sorry!"
+                                }
+                            }
+                        }
                     }
-                  },
-                  greet: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "hi!"
-                      }
-                    }
-                  },
-                  other: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "sorry!"
-                      }
-                    }
-                  }
                 }
-              }
             }
-          };
+        };
 
         this.helper.dumpYaml("./bot.yml", botDesc);
 
-        console.log("INIT BOT SUCCESSFULLY");
+        console.log(`Initialized ${name} successfully with id ${bot}`);
     }
 
     public async versions(options : JsonObject) {
@@ -197,7 +197,7 @@ export default class Bot extends Component {
         const desc = this.helper.loadYaml("./bot.yml");
 
         let [major, minor, patch] = (desc.version as string).split(".").map((val : string) => parseInt(val));
-            
+
         switch (options.rev) {
             case "major":
                 ++major;
