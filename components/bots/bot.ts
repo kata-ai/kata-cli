@@ -10,11 +10,11 @@ const deasync = require("deasync");
 const Table = require("cli-table");
 
 export default class Bot extends Component {
-    constructor(private compile : ICompile, private helper : IHelper, private tester : ITester, private api : any) {
+    constructor(private compile: ICompile, private helper: IHelper, private tester: ITester, private api: any) {
         super();
     }
 
-    public init(bot : string, name : string, version : string, options : JsonObject) {
+    public init(bot: string, name: string, version: string, options: JsonObject) {
         if (!version) {
             version = "0.0.1";
         }
@@ -26,69 +26,68 @@ export default class Bot extends Component {
             id: bot,
             version: version || "0.0.1",
             flows: {
-              hello: {
-                fallback: true,
-                intents: {
-                  greeting: {
-                    initial: true,
-                    condition: "content == 'hi'"
-                  },
-                  fallback: {
-                    fallback: true
-                  }
-                },
-                states: {
-                  init: {
-                    initial: true,
-                    transitions: {
-                      greet: {
-                        condition: "intent == \"greeting\""
-                      },
-                      other: {
-                        fallback: true
-                      }
+                hello: {
+                    fallback: true,
+                    intents: {
+                        greeting: {
+                            initial: true,
+                            condition: "content == 'hi'"
+                        },
+                        fallback: {
+                            fallback: true
+                        }
+                    },
+                    states: {
+                        init: {
+                            initial: true,
+                            transitions: {
+                                greet: {
+                                    condition: "intent == \"greeting\""
+                                },
+                                other: {
+                                    fallback: true
+                                }
+                            }
+                        },
+                        greet: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "hi!"
+                                }
+                            }
+                        },
+                        other: {
+                            end: true,
+                            action: {
+                                name: "text",
+                                options: {
+                                    text: "sorry!"
+                                }
+                            }
+                        }
                     }
-                  },
-                  greet: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "hi!"
-                      }
-                    }
-                  },
-                  other: {
-                    end: true,
-                    action: {
-                      name: "text",
-                      options: {
-                        text: "sorry!"
-                      }
-                    }
-                  }
                 }
-              }
             }
-          };
+        };
 
         this.helper.dumpYaml("./bot.yml", botDesc);
 
         console.log("INIT BOT SUCCESSFULLY");
     }
 
-    public async versions(options : JsonObject) {
-        const botId = this.helper.getBotId();
-
-        if (!botId) {
-            throw new Error("BOT ID HAS NOT DEFINED");
-        }
-
+    public async versions(options: JsonObject) {
         try {
+            const botId = this.helper.getBotId();
+
+            if (!botId) {
+                throw new Error("BOT ID HAS NOT DEFINED");
+            }
             const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
             if (data) {
                 console.log("Bot Versions : ");
-                data.versions.forEach((bot : string) => {
+                data.versions.forEach((bot: string) => {
                     const msg = bot.split("-");
                     if (msg.length > 1) {
                         console.log(`- ${msg[0]} (${msg[1]})`);
@@ -99,13 +98,16 @@ export default class Bot extends Component {
             } else {
                 console.log("You must push at least 1 bot to acquire version");
             }
-
         } catch (e) {
-            console.log(this.helper.wrapError(e));
+            if (e.code === "ENOENT") {
+                console.log("kata versions must be executed in bot directory with bot.yml");
+            } else {
+                console.log(this.helper.wrapError(e));
+            }
         }
     }
 
-    public async test(file : string, options : JsonObject) {
+    public async test(file: string, options: JsonObject) {
         const testFiles = file ? [file] : this.helper.getFiles("./test", ".spec.yml");
         const botId = this.helper.getBotId();
 
@@ -113,7 +115,7 @@ export default class Bot extends Component {
             throw new Error("BOT ID HAS NOT DEFINED");
         }
 
-        const results : JsonObject = {};
+        const results: JsonObject = {};
 
         for (let i = 0; i < testFiles.length; i++) {
             const yaml = this.helper.loadYaml(testFiles[i]);
@@ -147,14 +149,14 @@ export default class Bot extends Component {
             }
         }
 
-        this.printResult(results as IHash<IHash<{ field : string, expect : string, result : string }[]>>);
+        this.printResult(results as IHash<IHash<{ field: string, expect: string, result: string }[]>>);
     }
 
-    private hasErrors(res : any) {
+    private hasErrors(res: any) {
         return Object.keys(res).some((key) => (res[key] && res[key].length) || res[key] === null);
     }
 
-    private printResult(results : IHash<IHash<{ field : string, expect : string, result : string }[]>> = {}) {
+    private printResult(results: IHash<IHash<{ field: string, expect: string, result: string }[]>> = {}) {
         if (Object.keys(results).length) {
             console.log(colors.red("Errors:"));
             for (const i in results) {
@@ -177,14 +179,14 @@ export default class Bot extends Component {
         }
     }
 
-    public async list(options : JsonObject) {
+    public async list(options: JsonObject) {
         try {
             const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
             const table = new Table({
                 head: ["Bot ID", "Bot Name", "Version", "Description"]
                 , colWidths: [20, 20, 10, 20]
             });
-            data.items.forEach((bot : { id : string, name : string, version : string, desc : string }) => {
+            data.items.forEach((bot: { id: string, name: string, version: string, desc: string }) => {
                 table.push([bot.id, bot.name, bot.version, bot.desc]);
             });
             console.log(table.toString());
@@ -193,11 +195,11 @@ export default class Bot extends Component {
         }
     }
 
-    public async update(options : JsonObject) {
+    public async update(options: JsonObject) {
         const desc = this.helper.loadYaml("./bot.yml");
 
-        let [major, minor, patch] = (desc.version as string).split(".").map((val : string) => parseInt(val));
-            
+        let [major, minor, patch] = (desc.version as string).split(".").map((val: string) => parseInt(val));
+
         switch (options.rev) {
             case "major":
                 ++major;
@@ -264,7 +266,7 @@ export default class Bot extends Component {
         this.helper.dumpYaml("./bot.yml", desc);
     }
 
-    public async delete(options : JsonObject) {
+    public async delete(options: JsonObject) {
         const answer = await this.helper.inquirerPrompt([
             {
                 type: "confirm",
@@ -289,7 +291,7 @@ export default class Bot extends Component {
         }
     }
 
-    public console(options : JsonObject) {
+    public console(options: JsonObject) {
         let currentSession = (options.session ? options.session : uuid()) as string;
         const botDesc = this.helper.loadYaml("./bot.yml");
         const botId = botDesc.id;
@@ -297,12 +299,12 @@ export default class Bot extends Component {
 
         const con = repl.start({
             prompt: botDesc.name + ">",
-            writer(obj : any) {
+            writer(obj: any) {
                 return util.inspect(obj, false, null, true);
             }
         });
 
-        con.context.text = function text(str : string) {
+        con.context.text = function text(str: string) {
             const message = {
                 type: "text",
                 content: str
@@ -321,7 +323,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.button = function button(op : JsonObject, obj : JsonObject = {}) {
+        con.context.button = function button(op: JsonObject, obj: JsonObject = {}) {
             obj.op = op;
             const message = {
                 type: "data",
@@ -341,7 +343,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.command = function button(command : string, obj : JsonObject = {}) {
+        con.context.command = function button(command: string, obj: JsonObject = {}) {
             const message = {
                 type: "command",
                 content: command,
@@ -361,7 +363,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.current = function(session : string) {
+        con.context.current = function (session: string) {
             if (arguments.length) {
                 currentSession = session;
             } else {
@@ -369,7 +371,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.session = function session(name : string, update : JsonObject) {
+        con.context.session = function session(name: string, update: JsonObject) {
             try {
                 if (!arguments.length) {
                     const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
@@ -391,7 +393,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.clear = function clear(name : string) {
+        con.context.clear = function clear(name: string) {
             name = name || currentSession;
 
             try {
@@ -412,7 +414,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.clearCaches = function clearCaches(num : number = 20) {
+        con.context.clearCaches = function clearCaches(num: number = 20) {
             try {
                 for (let i = 0; i < num; i++) {
                     this.sync(this.helper.toPromise(this.api.cachesApi, this.api.cachesApi.cachesDelete));
@@ -423,16 +425,16 @@ export default class Bot extends Component {
         }.bind(this);
     }
 
-    private sync(promise : any) {
+    private sync(promise: any) {
         if (promise && typeof promise.then === "function") {
             let done = false;
-            let error : Error = null;
+            let error: Error = null;
             let result;
 
-            promise.then((res : any) => {
+            promise.then((res: any) => {
                 done = true;
                 result = res;
-            }).catch((e : Error) => {
+            }).catch((e: Error) => {
                 error = e;
             });
 
