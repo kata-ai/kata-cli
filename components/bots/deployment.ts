@@ -118,29 +118,45 @@ export default class Deployment extends Component {
         }
     }
 
-    async addChannel(name: string, channelName: string, options: JsonObject) {
+    public async addChannel(name : string, channelName : string, options : JsonObject) {
         try {
-            let bot = this.helper.getBotId();
-            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
-            let deployment = result.data;
+            const bot = this.helper.getBotId();
+            let result = await this.helper.toPromise(
+                this.api.deploymentApi, 
+                this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, 
+                bot, name);
+            const deployment = result.data;
 
-            if (deployment.channels[channelName])
+            if (deployment.channels[channelName]) {
                 throw new Error("CHANNEL NAME HAS BEEN USED");
+            }
 
-            if (!options.data)
+            if (!options.data) {
                 options.data = "{}";
+            }
 
-            let channelData = <JsonObject>JSON.parse(<string>options.data);
+            let channelData = JSON.parse(options.data as string) as JsonObject;
             channelData.name = channelName;
             channelData = await this.getRequiredChannelData(channelData);
-
-            result = await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsPost, channelData, bot, name);
-            let channel = result.data;
+        
+            result = await this.helper.toPromise(
+                this.api.channelApi, 
+                this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsPost, 
+                channelData, 
+                bot, 
+                name
+            );
+            const channel = result.data;
 
             deployment.channels[channelName] = channel.id;
             
             console.log("CHANNEL ADDED SUCCESSFULLY");
             console.log(`Paste this url to ${channelData.type} webhook : ${channel.webhook}`);
+            if (channelData.type === "fbmessenger") {
+                const channelOptions = JSON.parse(channel.options as string) as JsonObject;
+                console.log(`And also this token : ${channelOptions.challenge} to your FB Challenge token.`);
+            }
+            
         } catch (e) {
             console.log(this.helper.wrapError(e));
         }
@@ -178,7 +194,7 @@ export default class Deployment extends Component {
         }
     }
 
-    private async getRequiredChannelData(data: JsonObject): Promise<JsonObject> {
+    private async getRequiredChannelData(data : JsonObject) : Promise<JsonObject> {
         let { id, name, type, token, refreshToken, secret, url, additionalOptions } = data;
         let channelType = this.config.default("config.channels.type", []);
         let channelUrl = this.config.default("config.channels.url", []);
@@ -188,14 +204,14 @@ export default class Deployment extends Component {
                 name: "type",
                 message: `channel type : `,
                 choices: channelType,
-                when: function () { return !type; },
-                validate: function (type: string) {
-                    if (!type)
+                when: () => !type,
+                validate: (type : string) => {
+                    if (!type) {
                         return "Channel type cannot be empty";
-
+                    }
                     return true;
                 },
-                filter: function (type: string) {
+                filter: (type: string) => {
                     return type.toLowerCase();
                 }
             },
@@ -203,7 +219,7 @@ export default class Deployment extends Component {
                 type: "input",
                 name: "options.token",
                 message: "channel token: ",
-                when: function () { return !token; },
+                when: () => !token,
                 filter: function (token: string) {
                     if (!token || token.length === 0)
                         return null;
@@ -215,7 +231,7 @@ export default class Deployment extends Component {
                 type: "input",
                 name: "options.refreshToken",
                 message: "channel refresh token: ",
-                when: function () { return !refreshToken },
+                when:  () => !refreshToken,
                 filter: function (refreshToken: string) {
                     if (!refreshToken || refreshToken.length === 0)
                         return null;
@@ -259,7 +275,7 @@ export default class Deployment extends Component {
                         return true;
                     }
                     if (additionalOptions.error) {
-                        return "Channel options must be a JSON Format"
+                        return "Channel options must be a JSON Format";
                     } else {
                         return true;
                     }
@@ -281,7 +297,7 @@ export default class Deployment extends Component {
 
                     return true;
                 },
-                default: function (answer: JsonObject) {
+                default: (answer: JsonObject) => {
                     return channelUrl[answer.type as any];
                 }
             }
@@ -290,9 +306,11 @@ export default class Deployment extends Component {
 
         let options = { token, refreshToken, secret };
 
-        if (additionalOptions)
+        if (additionalOptions) {
             options = { ...options, ...additionalOptions as JsonObject };
-        let res = { id, name, type, options, url };
+        }
+            
+        const res = { id, name, type, options, url };
         try {
             answer.options = Object.assign(answer.options, answer.additionalOptions);
             answer.additionalOptions = undefined;
