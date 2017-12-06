@@ -4,3 +4,4 @@ coverage
 typings
 .nyc_output
 *.map
+.env
