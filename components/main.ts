@@ -14,8 +14,13 @@ export default class Main extends Component {
 
     async start(argv:string[]) {
         let commands = this.config.get<CommandList>("commands");
+        commander.version(`Kata CLI version ${this.config.default("version", "1.0.0")}`);
         await this.compile(commands, commander);
         commander.parse(argv);
+        const validCommands = commander.commands.map((x:any) => x.name());
+        if (argv.length === 2 || validCommands.indexOf(argv[2]) === -1) {
+            commander.parse([argv[0], argv[1], '-h']);
+        }
     }
 
     async compile(commands: CommandList, program: Command, currKey : string = "") {
