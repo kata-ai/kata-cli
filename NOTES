@@ -1,3 +1,11 @@
+[1.2.0]
+2017/12/06 15:16 +07:00
+- Change kata init output message
+- Fix proper handling for kata versions
+- Add discard and update draft
+- Add new version information when pushing bot
+- Generate challenge token for fbmessenger channel type
+
 [1.1.0]
 2017/11/28 14:45 +07:00
 - Handle NLU Management

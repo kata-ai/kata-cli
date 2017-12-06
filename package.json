@@ -1,7 +1,7 @@
 {
   "name": "kata-cli",
-  "version": "1.1.1",
-  "description": "Command line tools for Diaenne",
+  "version": "1.2.0",
+  "description": "Kata AI Command Line Tools",
   "main": "index.js",
   "bin": {
     "kata": "./bin/kata.js"
