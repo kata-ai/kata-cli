@@ -80,8 +80,17 @@ commands:
                     tag:
                         type: string
                         desc: tag version for deployment
+                    draft:
+                        type: string
                 handler: bot.update
                 alias: push
+            discard:
+                desc: discard bot
+                params:
+                    draft:
+                        type: string
+                handler: bot.discard
+                alias: discard
             delete:
                 desc: delete bot
                 handler: bot.delete

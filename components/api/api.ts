@@ -3,6 +3,7 @@ import { JsonObject, Component } from "merapi";
 import { IHelper } from "interfaces/main";
 
 export default class Api extends Component {
+    private draftApi: any;
     private apiClient: any;
     private bearer: any;
     private botApi: any;
@@ -33,6 +34,7 @@ export default class Api extends Component {
         this.userApi = new this.zaun.UserApi();
         this.teamApi = new this.zaun.TeamApi();
         this.deploymentApi = new this.zaun.DeploymentApi();
+        this.draftApi = new this.zaun.DraftApi();
         this.channelApi = new this.zaun.ChannelApi();
         this.sessionApi = new this.zaun.SessionApi();
         this.cachesApi = new this.zaun.CacheApi();
