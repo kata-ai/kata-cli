@@ -156,6 +156,8 @@ export default class Helper extends Component {
         
         return errorMessage;
     }
+    
+    public printError = (error: any) => console.error(this.wrapError(error));
 
     difference(object: any, base: any) {
         function changes(object: any, base: any) {
