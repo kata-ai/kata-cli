@@ -1,6 +1,6 @@
 {
   "name": "kata-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Kata AI Command Line Tools",
   "main": "index.js",
   "bin": {
