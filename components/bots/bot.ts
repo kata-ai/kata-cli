@@ -14,7 +14,16 @@ export default class Bot extends Component {
         super();
     }
 
-    public init(bot: string, name: string, version: string, options: JsonObject) {
+    public init(name: string, version: string, options: JsonObject) {
+        if (version) {
+            let versionRegex = /^\d+\.\d+\.\d+$/g;
+            if (!versionRegex.test(version)) {
+                console.log("Invalid version string");
+                console.log("Command kata init <botId> <botName> [version] is deprecated, use kata init <botName> [version] instead");
+                process.exit(0);
+            }
+        }
+
         if (!version) {
             version = "0.0.1";
         }
@@ -23,7 +32,6 @@ export default class Bot extends Component {
             schema: "kata.ai/schema/kata-ml/1.0",
             name,
             desc: "My First Bot",
-            id: bot,
             version: version || "0.0.1",
             flows: {
                 hello: {
@@ -74,7 +82,7 @@ export default class Bot extends Component {
 
         this.helper.dumpYaml("./bot.yml", botDesc);
 
-        console.log(`Initialized ${name} successfully with id ${bot}`);
+        console.log(`Initialized ${name} successfully`);
     }
 
     public async versions(options: JsonObject) {
@@ -254,16 +262,7 @@ export default class Bot extends Component {
 
                 console.log(`UPDATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
             } catch (e) {
-                const errorMessage = this.helper.wrapError(e);
-
-                if (errorMessage === "Bot not found.") {
-                    const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
-
-                    desc.version = result.data.version;
-                    console.log(`CREATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
-                } else {
-                    console.log(errorMessage);
-                }
+                console.log(this.helper.wrapError(e));
             }
         }
 
@@ -277,7 +276,7 @@ export default class Bot extends Component {
             console.log("Draft discarded.");
         }
         catch (e) {
-            this.helper.printError(e);
+            console.log(this.helper.wrapError(e));
         }
         this.helper.dumpYaml("./bot.yml", desc);
     }
@@ -308,7 +307,7 @@ export default class Bot extends Component {
             console.log("Draft updated.");
         }
         catch (e) {
-            this.helper.printError(e);
+            console.log(this.helper.wrapError(e));
         }
 
         this.helper.dumpYaml("./bot.yml", desc);

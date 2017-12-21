@@ -53,7 +53,7 @@ commands:
         subcommands:
             init:
                 desc: initialize new bot.yml file
-                args: "<bot> <name> [version]"
+                args: "<name> [version]"
                 params:
                     config:
                         type: string
