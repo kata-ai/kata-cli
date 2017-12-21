@@ -21,7 +21,7 @@ Use `kata --help` to see commands list available
 
 Command as **user** and **team** : 
 
-* `kata init [options] <bot> <name> [version`] - Init the bot
+* `kata init [options] <name> [version`] - Init the bot
 * `kata versions` - List versions of the bot
 * `kata list-bots` - List the bots
 * `kata push [options]` - Push the bot
