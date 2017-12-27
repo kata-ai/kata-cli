@@ -170,9 +170,7 @@ export default class Nlu extends Component {
 
             console.log(`NLU ${nluDesc.name} Updated !`);
         } catch (error) {
-            const errorMessage = this.helper.wrapError(error);
-
-            if (errorMessage === "You're not authorized to manage this Nlu.") {
+            if (error.status === 400) {
                 try {
                     await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
                     console.log(`NLU ${nluDesc.name} Created !`);
