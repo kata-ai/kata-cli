@@ -1,3 +1,8 @@
+[1.2.3]
+2017/12/27 11:48 +07:00
+- Fix bug on kata deploy and kata nl-push command
+
+[1.2.2]
 [1.2.1]
 2017/12/21 14:50 +07:00
 - Update kata init command
