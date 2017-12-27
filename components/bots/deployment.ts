@@ -55,18 +55,16 @@ export default class Deployment extends Component {
 
         try {
             let { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
-
+            
             deployment = data;
         } catch (e) {
-            let errorMessage = this.helper.wrapError(e);
-
-            if (errorMessage !== "Deployment not found.") {
-                console.log(errorMessage);
+            if (e.status !== 400) {
+                console.log(this.helper.wrapError(e));
 
                 return;
             }
         }
-
+        
         try {
             if (!deployment) {
                 let opts = {

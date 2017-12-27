@@ -451,13 +451,12 @@ export default class Bot extends Component {
                     this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
                 }
             } catch (e) {
-                const errorMessage = this.helper.wrapError(e);
 
-                if (errorMessage === "Session not found.") {
+                if (e.status !== 400) {
                     return;
                 }
 
-                return errorMessage;
+                return this.helper.wrapError(e);
             }
         }.bind(this);
 
