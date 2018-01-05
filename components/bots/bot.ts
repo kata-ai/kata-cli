@@ -340,7 +340,14 @@ export default class Bot extends Component {
 
     public console(options: JsonObject) {
         let currentSession = (options.session ? options.session : uuid()) as string;
-        const botDesc = this.helper.loadYaml("./bot.yml");
+        let botDesc;
+        try {
+            botDesc = this.helper.loadYaml("./bot.yml");    
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+            return;
+        }
+        
         const botId = botDesc.id;
         const defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
