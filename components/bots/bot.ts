@@ -477,6 +477,7 @@ export default class Bot extends Component {
     }
 
     public async pull(name : string, version : string, options : JsonObject) {
+        let isGettingBot = false;
         try {
             const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
             let found = false;
@@ -491,13 +492,21 @@ export default class Bot extends Component {
             }
             if (found) {
                 // Get specific bot version
+                isGettingBot = true;
                 const botId = selectedBot.id + ":" + version;
                 const getBot = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdGet, botId);
+                const botDesc = getBot.data;
+                this.helper.dumpYaml("./bot.yml", botDesc);
+                console.log(`SUCCESS PULL BOT ${name} WITH VERSION ${version}`);
             } else {
-                console.log(`CANNOT GET BOT WITH NAME ${name}`);
+                console.log(`BOT NOT FOUND`);
             }
         } catch (e) {
-            console.log(this.helper.wrapError(e));
+            if (isGettingBot) {
+                console.log(`CANNOT PULL BOT ${name} WITH VERSION ${version}`);
+            } else {
+                console.log(this.helper.wrapError(e));
+            }
         }
     }
 

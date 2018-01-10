@@ -84,6 +84,11 @@ commands:
                         type: string
                 handler: bot.update
                 alias: push
+            pull:
+                desc: pull bot with specified name and version
+                args: "<name> <version>"
+                handler: bot.pull
+                alias: pull
             discard:
                 desc: discard bot
                 params:
