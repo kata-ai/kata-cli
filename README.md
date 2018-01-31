@@ -25,6 +25,7 @@ Command as **user** and **team** :
 * `kata versions` - List versions of the bot
 * `kata list-bots` - List the bots
 * `kata push [options]` - Push the bot
+* `kata pull <name> <version>` - Pull the bot with specified name and version
 * `kata remove-bot` - Delete selected bot
 * `kata test [file]`
 * `kata console [options] <diaenneUrl>`

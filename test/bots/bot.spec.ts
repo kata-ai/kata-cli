@@ -14,12 +14,12 @@ import Tester from "../../components/scripts/tester";
 import Zaun from "../../components/api/zaun";
 
 @suite class BotTest {
-    private config: IConfig;
-    private helper: IHelper;
-    private compile: ICompile;
-    private tester: ITester;
-    private api: any;
-    private bot: any;
+    private config : IConfig;
+    private helper : IHelper;
+    private compile : ICompile;
+    private tester : ITester;
+    private api : any;
+    private bot : any;
     private botDesc = {
         schema: "kata.ai/schema/kata-ml/1.0",
         name: "Bot Name",
