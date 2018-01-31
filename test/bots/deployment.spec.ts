@@ -8,7 +8,7 @@ import Helper from "../../components/scripts/helper";
 import Api from "../../components/api/api";
 import Deployment from "../../components/bots/deployment";
 import Zaun from "../../components/api/zaun";
-import { v4 as uuid } from "node-uuid";
+import { v4 as uuid } from "uuid";
 const Table = require("cli-table");
 
 @suite class DeploymentTest {
