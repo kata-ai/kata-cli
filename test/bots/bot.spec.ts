@@ -14,12 +14,12 @@ import Tester from "../../components/scripts/tester";
 import Zaun from "../../components/api/zaun";
 
 @suite class BotTest {
-    private config : IConfig;
-    private helper : IHelper;
-    private compile : ICompile;
-    private tester : ITester;
-    private api : any;
-    private bot : any;
+    private config: IConfig;
+    private helper: IHelper;
+    private compile: ICompile;
+    private tester: ITester;
+    private api: any;
+    private bot: any;
     private botDesc = {
         schema: "kata.ai/schema/kata-ml/1.0",
         name: "Bot Name",
@@ -280,5 +280,27 @@ import Zaun from "../../components/api/zaun";
         consoleLogStub.restore();
         assert.calledOnce(deleteBotStub);
         assert.calledWith(deleteBotStub, this.botDesc.id);
+    }
+
+    @test public async "should pull bot with valid bot name"() {
+        const dumpYamlStub = stub(this.helper, "dumpYaml");
+        const botsGetStub = stub(this.api.botApi, "botsGet").callsFake((body, callback) => {
+            callback(null, { items: [this.botDesc] });
+        });
+        const botsBotIdGet = stub(this.api.botApi, "botsBotIdGet").callsFake((botId, callback) => {
+            callback(null, this.botDesc);
+        });
+        const consoleLogStub = stub(console, "log");
+
+        await this.bot.pull(this.botDesc.name, this.botDesc.version, {});
+
+        dumpYamlStub.restore();
+        botsGetStub.restore();
+        botsBotIdGet.restore();
+        consoleLogStub.restore();
+        assert.calledOnce(botsGetStub);
+        assert.callCount(dumpYamlStub, 1);
+        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
+        assert.calledWith(consoleLogStub, `SUCCESS PULL BOT ${this.botDesc.name} WITH VERSION ${this.botDesc.version}`);
     }
 }
