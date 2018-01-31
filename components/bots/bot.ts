@@ -1,6 +1,6 @@
 
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "node-uuid";
+import { v4 as uuid } from "uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
@@ -206,6 +206,7 @@ export default class Bot extends Component {
     public async update(options : JsonObject) {
         const desc = this.helper.loadYaml("./bot.yml");
 
+        const oldVersion = desc.version;
         let [major, minor, patch] = (desc.version as string).split(".").map((val : string) => parseInt(val));
 
         switch (options.rev) {
@@ -253,6 +254,8 @@ export default class Bot extends Component {
                 const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
                 console.log(`BOT CREATED SUCCESSFULLY WITH VERSION ${desc.version}`);
             } catch (e) {
+                desc.version = oldVersion;
+
                 console.log(this.helper.wrapError(e));
             }
         } else {
@@ -262,6 +265,8 @@ export default class Bot extends Component {
 
                 console.log(`UPDATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
             } catch (e) {
+                desc.version = oldVersion;
+
                 console.log(this.helper.wrapError(e));
             }
         }

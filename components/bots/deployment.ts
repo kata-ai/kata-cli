@@ -1,51 +1,51 @@
 
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "node-uuid";
+import { v4 as uuid } from "uuid";
 import { IHelper } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");
 const Table = require("cli-table");
 
 export default class Deployment extends Component {
-    constructor(private helper: IHelper, private api: any, private config: Config) {
+    constructor(private helper : IHelper, private api : any, private config : Config) {
         super();
     }
 
-    async deploy(name: string, label: string, options: JsonObject) {
+    public async deploy(name : string, label : string, options : JsonObject) {
         let deployment;
-        let bot = this.helper.getBotId();
-        let versionRegex = /^\d+\.\d+\.\d+$/g;
-        let tag: string = "";
-        let version: string = "";
+        const bot = this.helper.getBotId();
+        const versionRegex = /^\d+\.\d+\.\d+$/g;
+        let tag : string = "";
+        let version : string = "";
 
         try {
-            let { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
+            const { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, bot);
 
             if (label) {
-                let isVersion = versionRegex.test(label);
-                let latestTag = data.versions.filter((x: any) => {
-                    let splited = x.split("-");
-                    let cond = isVersion ? splited[0] : splited[1];
+                const isVersion = versionRegex.test(label);
+                const latestTag = data.versions.filter((x : any) => {
+                    const splited = x.split("-");
+                    const cond = isVersion ? splited[0] : splited[1];
 
                     return label === cond;
                 });
 
                 if (latestTag.length > 0) {
-                    let splited = latestTag[latestTag.length - 1].split("-");
+                    const splited = latestTag[latestTag.length - 1].split("-");
                     version = splited[0];
                     tag = isVersion ? splited[1] ? splited[1] : null : label;
-                }
-
-                else
+                } else {
                     throw new Error("INVALID TAG");
+                }
             } else {
                 version = data.latest;
                 tag = "latest";
             }
 
 
-            if (!data.versions.some((v: string) => v.split("-")[0] === version))
+            if (!data.versions.some((v : string) => v.split("-")[0] === version)) {
                 throw new Error("INVALID_VERSION");
+            }
 
 
         } catch (e) {
@@ -54,7 +54,7 @@ export default class Deployment extends Component {
         }
 
         try {
-            let { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
+            const { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
             
             deployment = data;
         } catch (e) {
@@ -67,46 +67,45 @@ export default class Deployment extends Component {
         
         try {
             if (!deployment) {
-                let opts = {
+                const opts = {
                     body: {
                         name,
                         botVersion: version,
                         channels: {}
                     }
-                }
+                };
 
-                let { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
+                const { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsPost, bot, opts);
 
                 console.log("DEPLOYMENT CREATED SUCCESSFULLY");
-                console.dir({ ...data, tag: tag }, { depth: null });
-            }
-            else {
-                let body = {
+                console.dir({ ...data, tag }, { depth: null });
+            } else {
+                const body = {
                     name,
                     botVersion: version
                 };
 
-                let { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
+                const { data } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdPut, bot, name, body);
 
                 console.log("DEPLOYMENT UPDATED SUCCESSFULLY");
-                console.dir({ ...data, tag: tag }, { depth: null });
+                console.dir({ ...data, tag }, { depth: null });
             }
         } catch (e) {
             console.log(this.helper.wrapError(e));
         }
     }
 
-    async list(options: JsonObject) {
+    public async list(options : JsonObject) {
         try {
-            let botId = this.helper.getBotId();
-            let { response } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
+            const botId = this.helper.getBotId();
+            const { response } = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsGet, botId, {});
 
             if (response && response.body) {
-                let table = new Table({
-                    head: ['Deployment Name', 'Version'],
+                const table = new Table({
+                    head: ["Deployment Name", "Version"],
                     colWidths: [30, 10]
                 });
-                response.body.forEach((deployment: JsonObject) => {
+                response.body.forEach((deployment : JsonObject) => {
                     table.push([deployment.name, deployment.botVersion]);
                 });
                 console.log(table.toString());
@@ -160,15 +159,16 @@ export default class Deployment extends Component {
         }
     }
 
-    async removeChannel(name: string, channelName: string, options: JsonObject) {
-        let bot = this.helper.getBotId();
+    public async removeChannel(name : string, channelName : string, options : JsonObject) {
+        const bot = this.helper.getBotId();
 
         try {
-            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
-            let deployment = result.data;
+            const result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdGet, bot, name);
+            const deployment = result.data;
 
-            if (!deployment.channels[channelName])
+            if (!deployment.channels[channelName]) {
                 throw new Error("CHANNEL NOT FOUND");
+            }
 
             await this.helper.toPromise(this.api.channelApi, this.api.channelApi.botsBotIdDeploymentsDeploymentIdChannelsChannelIdDelete, bot, name, deployment.channels[channelName]);
 
@@ -178,12 +178,12 @@ export default class Deployment extends Component {
         }
     }
 
-    async drop(name: string, options: JsonObject) {
-        let bot = this.helper.getBotId();
+    public async drop(name : string, options : JsonObject) {
+        const bot = this.helper.getBotId();
 
         try {
-            let result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdDelete, bot, name);
-            let deployment = result.data;
+            const result = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.botsBotIdDeploymentsDeploymentIdDelete, bot, name);
+            const deployment = result.data;
 
             console.log(deployment);
             console.log("DEPLOYMENT DELETED SUCCESSFULLY");
@@ -193,10 +193,10 @@ export default class Deployment extends Component {
     }
 
     private async getRequiredChannelData(data : JsonObject) : Promise<JsonObject> {
-        let { id, name, type, token, refreshToken, secret, url, additionalOptions } = data;
-        let channelType = this.config.default("config.channels.type", []);
-        let channelUrl = this.config.default("config.channels.url", []);
-        let answer = await inquirer.prompt([
+        const { id, name, type, token, refreshToken, secret, url, additionalOptions } = data;
+        const channelType = this.config.default("config.channels.type", []);
+        const channelUrl = this.config.default("config.channels.url", []);
+        const answer = await inquirer.prompt([
             {
                 type: "list",
                 name: "type",
@@ -209,7 +209,7 @@ export default class Deployment extends Component {
                     }
                     return true;
                 },
-                filter: (type: string) => {
+                filter: (type : string) => {
                     return type.toLowerCase();
                 }
             },
@@ -218,9 +218,10 @@ export default class Deployment extends Component {
                 name: "options.token",
                 message: "channel token: ",
                 when: () => !token,
-                filter: function (token: string) {
-                    if (!token || token.length === 0)
+                filter(token : string) {
+                    if (!token || token.length === 0) {
                         return null;
+                    }
 
                     return token;
                 }
@@ -230,9 +231,10 @@ export default class Deployment extends Component {
                 name: "options.refreshToken",
                 message: "channel refresh token: ",
                 when:  () => !refreshToken,
-                filter: function (refreshToken: string) {
-                    if (!refreshToken || refreshToken.length === 0)
+                filter(refreshToken : string) {
+                    if (!refreshToken || refreshToken.length === 0) {
                         return null;
+                    }
 
                     return refreshToken;
                 }
@@ -241,10 +243,11 @@ export default class Deployment extends Component {
                 type: "input",
                 name: "options.secret",
                 message: "channel secret key: ",
-                when: function () { return !secret },
-                filter: function (secret: string) {
-                    if (!secret || secret.length === 0)
+                when() { return !secret; },
+                filter(secret : string) {
+                    if (!secret || secret.length === 0) {
                         return null;
+                    }
 
                     return secret;
                 }
@@ -253,22 +256,23 @@ export default class Deployment extends Component {
                 type: "input",
                 name: "additionalOptions",
                 message: "channel additional options: ",
-                when: function () { return !additionalOptions },
-                filter: function (additionalOptions: string): JsonObject {
-                    if (!additionalOptions || additionalOptions.length === 0)
+                when() { return !additionalOptions; },
+                filter(additionalOptions : string) : JsonObject {
+                    if (!additionalOptions || additionalOptions.length === 0) {
                         return null;
+                    }
                     try {
-                        let result = JSON.parse(additionalOptions);
-                        if (typeof result === "object")
+                        const result = JSON.parse(additionalOptions);
+                        if (typeof result === "object") {
                             return result;
-                        else {
+                        } else {
                             return { error: true };
                         }
                     } catch (error) {
-                        return { error: error };
+                        return { error };
                     }
                 },
-                validate: function (additionalOptions: JsonObject) {
+                validate(additionalOptions : JsonObject) {
                     if (!additionalOptions) {
                         return true;
                     }
@@ -282,20 +286,22 @@ export default class Deployment extends Component {
             {
                 type: "input",
                 name: "url",
-                message: function (answer: JsonObject) {
-                    if (answer.type !== "generic")
+                message(answer : JsonObject) {
+                    if (answer.type !== "generic") {
                         return `channel api url (default: ${channelUrl[answer.type as any]}) :`;
+                    }
 
                     return "channel api url : ";
                 },
-                when: function () { return !url },
-                validate: function (url: string, answer: JsonObject) {
-                    if (!url && answer.type === "generic")
+                when() { return !url; },
+                validate(url : string, answer : JsonObject) {
+                    if (!url && answer.type === "generic") {
                         return "Channel api url cannot be empty";
+                    }
 
                     return true;
                 },
-                default: (answer: JsonObject) => {
+                default: (answer : JsonObject) => {
                     return channelUrl[answer.type as any];
                 }
             }
