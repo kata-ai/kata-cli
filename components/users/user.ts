@@ -1,5 +1,5 @@
 import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "node-uuid";
+import { v4 as uuid } from "uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
 const colors = require("colors");
 const inquirer = require("inquirer");

@@ -14,12 +14,12 @@ import Tester from "../../components/scripts/tester";
 import Zaun from "../../components/api/zaun";
 
 @suite class BotTest {
-    private config: IConfig;
-    private helper: IHelper;
-    private compile: ICompile;
-    private tester: ITester;
-    private api: any;
-    private bot: any;
+    private config : IConfig;
+    private helper : IHelper;
+    private compile : ICompile;
+    private tester : ITester;
+    private api : any;
+    private bot : any;
     private botDesc = {
         schema: "kata.ai/schema/kata-ml/1.0",
         name: "Bot Name",
@@ -89,14 +89,17 @@ import Zaun from "../../components/api/zaun";
         const dumpYamlStub = stub(this.helper, "dumpYaml");
         const consoleLogStub = stub(console, "log");
 
-        this.bot.init(this.botDesc.id, this.botDesc.name, this.botDesc.version);
+        this.bot.init(this.botDesc.name, this.botDesc.version, {});
+
+        const bot = Object.assign({}, this.botDesc);
+        delete bot.id;
 
         createDirStub.restore();
         dumpYamlStub.restore();
         consoleLogStub.restore();
         assert.callCount(dumpYamlStub, 1);
-        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
-        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully with id botId");
+        assert.calledWith(dumpYamlStub, "./bot.yml", bot);
+        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully");
     }
 
     @test public async "should call init bot successfully when user does not provide bot version"() {
@@ -104,14 +107,18 @@ import Zaun from "../../components/api/zaun";
         const dumpYamlStub = stub(this.helper, "dumpYaml");
         const consoleLogStub = stub(console, "log");
 
-        this.bot.init(this.botDesc.id, this.botDesc.name);
+        this.bot.init(this.botDesc.name, null, {});
+
+        const bot = Object.assign({}, this.botDesc);
+        delete bot.id;
+        bot.version = "0.0.1";
 
         createDirStub.restore();
         dumpYamlStub.restore();
         consoleLogStub.restore();
         assert.callCount(dumpYamlStub, 1);
-        assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: "0.0.1" });
-        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully with id botId");
+        assert.calledWith(dumpYamlStub, "./bot.yml", bot);
+        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully");
     }
 
     @test public async "should throw error when botId is not defined"() {
@@ -198,18 +205,18 @@ import Zaun from "../../components/api/zaun";
         assert.calledOnce(botsGetStub);
     }
 
-    @test public async "function bot update should call create bot api when gets error bot not found"() {
+    @test public async "function bot update should create bot when bot id not found"() {
+        const bot = Object.assign({}, this.botDesc);
+        delete bot.id;
+
         const botObj = {
             resolve: () => { },
-            get: () => this.botDesc
+            get: () => bot
         };
         const configCreateStub = stub(Config, "create").returns({});
-        const loadYamlStub = stub(this.helper, "loadYaml").returns(this.botDesc);
+        const loadYamlStub = stub(this.helper, "loadYaml").returns(bot);
         const execDirectiveStub = stub(this.compile, "execDirectives").returns(botObj);
-        const updateBotStub = stub(this.api.botApi, "botsBotIdPut").callsFake((botId, body, opts, callback) => {
-            callback(new Error("Bot not found."));
-        });
-        const createBotStub = stub(this.api.botApi, "botsPost").callsFake((body, callback) => {
+        const createBotStub = stub(this.api.botApi, "botsPost").callsFake(function fakeFn(body, callback) {
             callback(null, { version: this.botDesc.version });
         });
         const dumpYamlStub = stub(this.helper, "dumpYaml");
@@ -220,15 +227,12 @@ import Zaun from "../../components/api/zaun";
         configCreateStub.restore();
         loadYamlStub.restore();
         execDirectiveStub.restore();
-        updateBotStub.restore();
         createBotStub.restore();
         dumpYamlStub.restore();
         consoleLogStub.restore();
-        assert.calledOnce(updateBotStub);
         assert.calledOnce(createBotStub);
-        assert.calledWith(updateBotStub, this.botDesc.id, this.botDesc, {});
-        assert.calledWith(createBotStub, this.botDesc);
-        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
+        assert.calledWith(createBotStub, bot);
+        assert.calledWith(dumpYamlStub, "./bot.yml", bot);
     }
 
     @test public async "function bot update should call update bot api"() {
