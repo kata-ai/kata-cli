@@ -5,6 +5,10 @@
 Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
 For more information, check our website (http://kata.ai/en).
 
+## Links
+
+- [Changelog](CHANGELOG.md)
+
 # Installation
 
 Install Kata-CLI at your device, using this command:
