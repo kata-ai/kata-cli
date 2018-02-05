@@ -1,38 +1,45 @@
 # CHANGELOG
-## [1.3.0]
-2018/02/05 16:22 +07:00
+## [1.3.0] - 2018/02/05
+### Added :
 - Kata pull bot
+
+### Fixed
 - Fix version still increment when failed push bot
 
-## [1.2.4]
-2017/01/08 10:50 +07:00
+## [1.2.4] - 2017/01/08
+### Fixed :
 - Handle kata console error when no bot.yml in directory
 
-## [1.2.3]
-2017/12/27 11:48 +07:00
+## [1.2.3] - 2017/12/27
+### Fixed :
 - Fix bug on kata deploy and kata nl-push command
 
-## [1.2.2]
-## [1.2.1]
-2017/12/21 14:50 +07:00
+## [1.2.1] - 2017/12/21
+### Changed :
 - Update kata init command
 
-## [1.2.0]
-2017/12/06 15:16 +07:00
-- Change kata init output message
-- Fix proper handling for kata versions
+## [1.2.0] - 2017/12/06
+### Added : 
 - Add discard and update draft
 - Add new version information when pushing bot
 - Generate challenge token for fbmessenger channel type
 
-## [1.1.0]
-2017/11/28 14:45 +07:00
+### Changed :
+- Change kata init output message
+
+### Fixed : 
+- Fix proper handling for kata versions
+
+## [1.1.0] - 2017/11/28
+### Added : 
 - Handle NLU Management
+
+### Fixed :
 - Fix wrong username and password
 - Fix invalid user command input
 
-## [1.0.0]
-2017/10/26 16:02 +07:00
+## 1.0.0 - 2017/10/26
+### Added : 
 - Handle Bot Management
 - Handle Deployment Management
 - Handle User & Team Management
