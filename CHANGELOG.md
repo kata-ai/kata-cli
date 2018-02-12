@@ -1,4 +1,8 @@
 # CHANGELOG
+## [1.3.1] - 2018/02/12
+### Fixed
+- Fix undefined context and state in flow spec
+
 ## [1.3.0] - 2018/02/05
 ### Added :
 - Kata pull bot
