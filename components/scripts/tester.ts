@@ -123,8 +123,8 @@ export default class Tester extends Component {
             result[name] = this.helper.compareTestResult(execResult.data, test.expect);
             print(tab+name+": "+ (result[name] && !result[name].length ? colors.green("passed") : colors.red("not passing")));
             if (!execResult) break;
-            state = execResult.state;
-            context = execResult.context;
+            state = execResult.data.state;
+            context = execResult.data.context;
             data = execResult.data;
         }
 
