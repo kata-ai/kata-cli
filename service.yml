@@ -190,7 +190,7 @@ commands:
         desc: Command for config management
         subcommands:
             view:
-                desc: view config in .katajson
+                desc: view config stored in .katajson file
                 handler: helper.viewConfig
 
     set:
