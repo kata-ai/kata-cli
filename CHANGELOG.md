@@ -1,4 +1,11 @@
 # CHANGELOG
+## [1.3.2] - 2018/07/12
+### Added : 
+- Add config-view command
+
+### Fixed
+- Integrate function 'versions' to new bot version object
+
 ## [1.3.1] - 2018/02/12
 ### Fixed
 - Fix undefined context and state in flow spec
@@ -48,6 +55,7 @@
 - Handle Deployment Management
 - Handle User & Team Management
 
+[1.3.2]: https://github.com/kata-ai/kata-cli/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/kata-ai/kata-cli/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/kata-ai/kata-cli/compare/v1.2.4...v1.3.0
 [1.2.4]: https://github.com/kata-ai/kata-cli/compare/v1.2.3...v1.2.4
