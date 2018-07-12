@@ -185,6 +185,14 @@ commands:
                 args: "<id> [deploymentId]"
                 handler: session.delete
 
+    config:
+        type: group
+        desc: Command for config management
+        subcommands:
+            view:
+                desc: view config stored in .katajson file
+                handler: helper.viewConfig
+
     set:
         type: command
         desc: Command for set property value

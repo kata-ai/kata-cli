@@ -27,6 +27,7 @@ Command as **user** and **team** :
 
 * `kata init [options] <name> [version`] - Init the bot
 * `kata versions` - List versions of the bot
+* `kata config-view` - View config stored in .katajson file
 * `kata list-bots` - List the bots
 * `kata push [options]` - Push the bot
 * `kata pull <name> <version>` - Pull the bot with specified name and version

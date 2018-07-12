@@ -10,76 +10,76 @@ const inquirer = require("inquirer");
 
 export default class Helper extends Component {
 
-    constructor(private config: IConfig) {
+    constructor(private config : IConfig) {
         super();
     }
 
-    getFiles(dir: string, ending: string) : string[] {
-        let fileList = fs.readdirSync(dir);
-        let res = [];
-        for (let i=0; i<fileList.length; i++) {
-            let stat = fs.statSync(path.resolve(dir, fileList[i]));
+    public getFiles(dir : string, ending : string) : string[] {
+        const fileList = fs.readdirSync(dir);
+        const res = [];
+        for (let i = 0; i < fileList.length; i++) {
+            const stat = fs.statSync(path.resolve(dir, fileList[i]));
             if (stat.isDirectory()) {
-                res.push(...this.getFiles(dir+"/"+fileList[i], ending));
-            } else if(stat.isFile() && fileList[i].endsWith(ending)) {
-                res.push(dir+"/"+fileList[i]);
+                res.push(...this.getFiles(dir + "/" + fileList[i], ending));
+            } else if (stat.isFile() && fileList[i].endsWith(ending)) {
+                res.push(dir + "/" + fileList[i]);
             }
         }
         return res;
-    };
+    }
 
-    loadYaml(file: string) : JsonObject {
+    public loadYaml(file : string) : JsonObject {
         return yaml.safeLoad(fs.readFileSync(file, "utf8"));
-    };
+    }
 
-    dumpYaml(file: string, object: JsonObject) : void {
+    public dumpYaml(file : string, object : JsonObject) : void {
         fs.writeFileSync(file, yaml.safeDump(object, { indent: 4, lineWidth: 150 }), "utf8");
-    };
+    }
 
-    compareTestResult(result: Json, expect: Json) : {field: string, expect: any, result: any}[] {
-        if (!result) return null;
-        let errors = [];
-        let expected = this.config.create(expect).flatten();
-        let res = this.config.create(result);
-        for (let i in expected) {
-            let value = res.get(i);
+    public compareTestResult(result : Json, expect : Json) : { field : string, expect : any, result : any }[] {
+        if (!result) { return null; }
+        const errors = [];
+        const expected = this.config.create(expect).flatten();
+        const res = this.config.create(result);
+        for (const i in expected) {
+            const value = res.get(i);
             if (value !== expected[i]) {
-                errors.push({field: i, expect: expected[i], result: value});
+                errors.push({ field: i, expect: expected[i], result: value });
             }
         }
         return errors;
-    };
+    }
 
-    setProp(prop: string, value: string, options?: JsonObject) : void {
-        let jsonPath = `${os.homedir()}/.katajson`;
-        let jsonProp;
-
-        if (fs.existsSync(jsonPath))
-            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-        else
-            jsonProp = {};
-
-        jsonProp[prop] = value;
-
-        fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");
-    };
-
-    getProp(prop: string, options?: JsonObject) : Json {
-        let jsonPath = `${os.homedir()}/.katajson`;
+    public setProp(prop : string, value : string, options? : JsonObject) : void {
+        const jsonPath = `${os.homedir()}/.katajson`;
         let jsonProp;
 
         if (fs.existsSync(jsonPath)) {
             jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+        } else {
+            jsonProp = {};
         }
-        else {
+
+        jsonProp[prop] = value;
+
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");
+    }
+
+    public getProp(prop : string, options? : JsonObject) : Json {
+        const jsonPath = `${os.homedir()}/.katajson`;
+        let jsonProp;
+
+        if (fs.existsSync(jsonPath)) {
+            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+        } else {
             jsonProp = {};
         }
 
         return jsonProp[prop];
     }
 
-    delete() : Boolean {
-        let jsonPath = `${os.homedir()}/.katajson`;
+    public delete() : Boolean {
+        const jsonPath = `${os.homedir()}/.katajson`;
 
         if (fs.existsSync(jsonPath)) {
             fs.unlinkSync(jsonPath);
@@ -89,33 +89,35 @@ export default class Helper extends Component {
         return false;
     }
 
-    toPromise(ctx: any, func: any, ...args: any[]): Promise<any> {
+    public toPromise(ctx : any, func : any, ...args : any[]) : Promise<any> {
         return new Promise((resolve, reject) => {
-            args.push((error: Error, data: any, response: Response) => {
-                if (error)
+            args.push((error : Error, data : any, response : Response) => {
+                if (error) {
                     reject(error);
-                else
-                    resolve({data, response});
+                } else {
+                    resolve({ data, response });
+                }
             });
-            
+
             func.apply(ctx, args);
         });
     }
 
-    getBotId() : string {
-        let desc = this.loadYaml("./bot.yml");
+    public getBotId() : string {
+        const desc = this.loadYaml("./bot.yml");
 
-        return <string>desc.id;
+        return desc.id as string;
     }
 
-    createDirectory(dirPath: string, mode?: number) {
-        if (!fs.existsSync(dirPath))
+    public createDirectory(dirPath : string, mode? : number) {
+        if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath, mode);
+        }
     }
 
-    getCurrentToken() : JsonObject {
-        let currentLogin = <string> this.getProp("current_login") || "";
-        let tokenProp = <JsonObject>(this.getProp("token") || {});
+    public getCurrentToken() : JsonObject {
+        const currentLogin = this.getProp("current_login") as string || "";
+        const tokenProp = (this.getProp("token") || {}) as JsonObject;
 
         return {
             currentLogin,
@@ -123,44 +125,44 @@ export default class Helper extends Component {
         };
     }
 
-    loadYamlOrJsonFile(filePath: string) {
-        if (!fs.existsSync(filePath))
+    public loadYamlOrJsonFile(filePath : string) {
+        if (!fs.existsSync(filePath)) {
             return new Error("FILE NOT FOUND");
+        }
 
-        let fileExt = path.extname(filePath);
+        const fileExt = path.extname(filePath);
 
         if (fileExt === ".json") {
             return JSON.parse(fs.readFileSync(filePath, "utf8"));
-        }
-        else if (fileExt === ".yml" || fileExt === ".yaml") {
+        } else if (fileExt === ".yml" || fileExt === ".yaml") {
             return this.loadYaml(filePath);
         } else if (fileExt === ".txt") {
             return fs.readFileSync(filePath, "utf8");
-        }
-        else {
+        } else {
             return new Error("UNSUPPORTED FILE TYPE");
         }
     }
 
-    async inquirerPrompt(questions: JsonObject[]): Promise<JsonObject> {
+    public async inquirerPrompt(questions : JsonObject[]) : Promise<JsonObject> {
         return inquirer.prompt(questions);
     }
 
-    wrapError(error : any) {
+    public wrapError(error : any) {
         let errorMessage;
-        
-        if (error.response && error.response.body && error.response.body.message)
+
+        if (error.response && error.response.body && error.response.body.message) {
             errorMessage = error.response.body.message;
-        else
+        } else {
             errorMessage = error.message;
-        
+        }
+
         return errorMessage;
     }
-    
-    public printError = (error: any) => console.error(this.wrapError(error));
 
-    difference(object: any, base: any) {
-        function changes(object: any, base: any) {
+    public printError = (error : any) => console.error(this.wrapError(error));
+
+    public difference(object : any, base : any) {
+        function changes(object : any, base : any) {
             return _.transform(object, function(result, value, key) {
                 if (!_.isEqual(value, base[key])) {
                     result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
@@ -170,4 +172,18 @@ export default class Helper extends Component {
 
         return changes(object, base);
     }
-};
+
+    public viewConfig() : void {
+        const jsonPath = `${os.homedir()}/.katajson`;
+        let jsonProp;
+
+        if (fs.existsSync(jsonPath)) {
+            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            delete jsonProp.first_login;
+        } else {
+            jsonProp = ".katajson file not found";
+        }
+
+        console.log(jsonProp);
+    }
+}
