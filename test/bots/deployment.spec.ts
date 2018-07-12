@@ -12,10 +12,10 @@ import { v4 as uuid } from "uuid";
 const Table = require("cli-table");
 
 @suite class DeploymentTest {
-    private config : IConfig;
-    private helper : IHelper;
-    private api : any;
-    private deployment : any;
+    private config: IConfig;
+    private helper: IHelper;
+    private api: any;
+    private deployment: any;
     private emptyDeploymentObj = {
         name: "test",
         botId: "739b5e9f-d5e1-44b1-93a8-954d291df170",
@@ -75,7 +75,7 @@ const Table = require("cli-table");
         };
         const getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         const getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: { data: [{ version: this.deploymentObj.botVersion }] }, latest: this.deploymentObj.botVersion });
         });
         const createDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsPost").callsFake((botId, opts, callback) => {
             callback(null, { ...this.deploymentObj, channels: {}, id: createdDeploymentId });
@@ -108,7 +108,7 @@ const Table = require("cli-table");
         };
         const getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         const getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: ["1.0.0", "1.0.1", this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: { data: [{ version: "1.0.0" }, { version: "1.0.1" }, { version: this.deploymentObj.botVersion }] }, latest: this.deploymentObj.botVersion });
         });
         const getDeploymentStub = stub(this.api.deploymentApi, "botsBotIdDeploymentsDeploymentIdGet").callsFake((botId, deploymentId, callback) => {
             callback(null, this.deploymentObj);
@@ -150,7 +150,7 @@ const Table = require("cli-table");
         };
         const getBotIdStub = stub(this.helper, "getBotId").returns(this.deploymentObj.botId);
         const getBotVersionStub = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake((botId, callback) => {
-            callback(null, { versions: [this.deploymentObj.botVersion], latest: this.deploymentObj.botVersion });
+            callback(null, { versions: { data: [{ version: this.deploymentObj.botVersion }] }, latest: this.deploymentObj.botVersion });
         });
         const consoleLogStub = stub(console, "log");
 
@@ -174,7 +174,7 @@ const Table = require("cli-table");
             callback(null, this.channelObjWithOptions);
         });
         const consoleLogStub = stub(console, "log");
-        const channels : { [name : string] : string } = {};
+        const channels: { [name: string]: string } = {};
         channels[this.channelObjWithOptions.name] = this.channelObjWithOptions.id;
 
         const channelData = {
