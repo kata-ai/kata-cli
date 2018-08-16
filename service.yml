@@ -38,6 +38,7 @@ config:
             - fbmessenger
             - telegram
             - qiscus
+            - twitter
 
         url:
             line: https://api.line.me
@@ -45,6 +46,7 @@ config:
             fbmessenger: https://graph.facebook.com/v2.6/me/messages
             slack: https://slack.com/api
             qiscus: https://<appId>.qiscus.com
+            twitter: https://api.twitter.com
 
 commands:
     bot:
