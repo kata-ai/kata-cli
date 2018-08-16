@@ -1,4 +1,11 @@
 # CHANGELOG
+## [1.4.0] - 2018/08/16
+### Added : 
+- Add twitter channel type
+
+### Fixed :
+- Switch team method
+
 ## [1.3.2] - 2018/07/12
 ### Added : 
 - Add config-view command
