@@ -9,11 +9,11 @@ const deasync = require("deasync");
 
 export default class User extends Component {
 
-    constructor(private helper : IHelper, private api : any) {
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
-    public async login(options : JsonObject) {
+    public async login(options: JsonObject) {
         try {
             let currToken = this.helper.getCurrentToken().token;
             if (options.token) {
@@ -47,7 +47,7 @@ export default class User extends Component {
                         when() {
                             return !user;
                         },
-                        validate(user : string) {
+                        validate(user: string) {
                             if (!user) {
                                 return "Username cannot be empty";
                             }
@@ -63,7 +63,7 @@ export default class User extends Component {
                         when() {
                             return !pass;
                         },
-                        validate(password : string) {
+                        validate(password: string) {
                             if (!password) {
                                 return "Password cannot be empty";
                             }
@@ -82,7 +82,7 @@ export default class User extends Component {
                 } else {
                     const token = result.data.id;
 
-                    this.helper.setProp("first_login", { type: "user", username: user });
+                    this.helper.setProp("first_login", { type: "user", username: user, id: result.data.userId });
                     this.setToken({ name: user, type: "user" }, token);
 
                     console.log(`Logged in as ${user}`);
@@ -120,7 +120,7 @@ export default class User extends Component {
         }
     }
 
-    public async switch(type : string, name? : string) {
+    public async switch(type: string, name?: string) {
         try {
             const firstLogin = this.helper.getProp("first_login") as JsonObject;
             const currentType = this.helper.getProp("current_user_type");
@@ -130,12 +130,10 @@ export default class User extends Component {
             }
 
             if (type === "team") {
-                const info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.username);
-                const { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, name);
-                const teams = info ? info.data.teams.map((x : any) => x.teamId) : [];
-
-                if (data && teams.indexOf(data.id) > -1) {
-                    const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: data.id });
+                const info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
+                const teams = info ? info.data.teams.filter((team: any) => team.username === name) : [];
+                if (teams.length > 0) {
+                    const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: teams[0].teamId });
                     const token = result.data.id;
                     this.setToken({ name, type: "team" }, token);
                     console.log(`Switched to team ${name}`);
@@ -174,13 +172,13 @@ export default class User extends Component {
     }
 
 
-    public whoami(options : JsonObject) {
+    public whoami(options: JsonObject) {
         const currentLogin = this.helper.getProp("current_login") as string;
         const currentType = this.helper.getProp("current_user_type") as string;
         console.log(`Current login: ${currentLogin}, login type: ${currentType}`);
     }
 
-    public async createTeam(name : string) {
+    public async createTeam(name: string) {
         try {
             const currentLogin = this.helper.getProp("current_login") as string;
             const currentUserType = this.helper.getProp("current_user_type") as string;
@@ -204,7 +202,7 @@ export default class User extends Component {
         }
     }
 
-    public async createUser(username : string, options? : JsonObject) {
+    public async createUser(username: string, options?: JsonObject) {
         const password = await this.helper.inquirerPrompt([
             {
                 type: "password",
@@ -229,7 +227,7 @@ export default class User extends Component {
                 throw new Error("Invalid retype password");
             }
 
-            let role : string;
+            let role: string;
             if (options.admin) {
                 role = "admin";
             } else if (options.internal) {
@@ -252,7 +250,7 @@ export default class User extends Component {
         }
     }
 
-    private setToken(userInfo : JsonObject, token : string) {
+    private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
         this.helper.setProp("current_user_type", userInfo.type);
         const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
@@ -260,7 +258,7 @@ export default class User extends Component {
         this.helper.setProp("token", tokenProp);
     }
 
-    private async getNewPasswordData() : Promise<JsonObject> {
+    private async getNewPasswordData(): Promise<JsonObject> {
         let oldPass : string;
         let newPass : string;
         let rePass : string;
@@ -289,7 +287,7 @@ export default class User extends Component {
                 when() {
                     return !newPass;
                 },
-                validate(password : string) {
+                validate(password: string) {
                     if (!password) {
                         return "Password cannot be empty";
                     }
@@ -305,7 +303,7 @@ export default class User extends Component {
                 when() {
                     return !rePass;
                 },
-                validate(password : string, answer : JsonObject) {
+                validate(password: string, answer: JsonObject) {
                     if (!password) {
                         return "Password cannot be empty";
                     }
