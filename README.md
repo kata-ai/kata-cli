@@ -58,3 +58,40 @@ Command as **team :**
 
 * `kata add-member <username> [options] --admin`
 * `kata remove-member <username>`
+
+# Kata CLI 2.0
+
+Soon, we will implement kata-cli 2.0 because of our updated platform to 3.0.
+
+## Changes 
+
+### Project environment and Namespace
+
+Before running kata-cli main command (ex: push, pull, etc.), user have to define what project that user is working on with command : 
+`kata set-project <projectName>`
+
+You can switch between namespace with kata-cli (ex: platform, dashboard), but the details are tbd.
+
+### New commands
+
+Some of kata-cli old commands are deprecated and replaced with new command
+
+New command : 
+
+* `kata set-project <projectName>`
+* `kata set-namespace <namespace>`
+* `kata init <name>`
+* `kata list-revision`
+* `kata pull [revision]`
+* `kata delete`
+* `kata test [file] [revision]`
+* `kata console [revision]`
+
+Deprecated command : 
+
+* `kata pull <name> <version>` 
+* `kata remove-bot`
+* `kata test [file]`
+* `kata console <diaenneUrl>`
+* `kata init <name> [version]`
+* `kata versions`
