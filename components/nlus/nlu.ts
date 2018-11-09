@@ -109,10 +109,29 @@ export default class Nlu extends Component {
     public async push() {
         const nluDesc : any = this.helper.loadYaml("./nlu.yml");
 
-        try {
-            const nlu = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameGet, nluDesc.name);
-            const entities = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameEntitiesGet, nluDesc.name);
+        let nlu;
+        let entities;
 
+        try {
+            nlu = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameGet, nluDesc.name);
+            entities = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameEntitiesGet, nluDesc.name);
+
+        } catch (error) {
+            if (error.status === 400) {
+                try {
+                    await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
+                    console.log(`NLU ${nluDesc.name} Created !`);
+                } catch (error) {
+                    console.log(this.helper.wrapError(error));
+                }
+            } else {
+                console.log(this.helper.wrapError(error));
+            }
+            return;
+        }
+
+
+        try {
             if (nlu && nlu.data) {
                 let { lang, visibility } = nluDesc;
                 visibility = visibility || "private";
@@ -124,9 +143,11 @@ export default class Nlu extends Component {
                         for (const key in localDiff) {
                             if (entities.data[key]) {
                                 // Update remote entity
-                                await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesEntityNamePut,
-                                    nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                if (!nluDesc.entities[key].inherit) {
+                                    await this.helper.toPromise(this.api.nluApi,
+                                        this.api.nluApi.nlusNluNameEntitiesEntityNamePut,
+                                        nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                }
                             } else {
                                 // Create new entity
                                 await this.helper.toPromise(this.api.nluApi,
@@ -170,16 +191,7 @@ export default class Nlu extends Component {
 
             console.log(`NLU ${nluDesc.name} Updated !`);
         } catch (error) {
-            if (error.status === 400) {
-                try {
-                    await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
-                    console.log(`NLU ${nluDesc.name} Created !`);
-                } catch (error) {
-                    console.log(this.helper.wrapError(error));
-                }
-            } else {
-                console.log(this.helper.wrapError(error));
-            }
+            console.log(this.helper.wrapError(error));
         }
     }
 
