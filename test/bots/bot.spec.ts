@@ -24,7 +24,6 @@ import Zaun from "../../components/api/zaun";
         schema: "kata.ai/schema/kata-ml/1.0",
         name: "Bot Name",
         desc: "My First Bot",
-        version: "1.0.0",
         flows: {
             hello: {
                 fallback: true,
@@ -89,7 +88,7 @@ import Zaun from "../../components/api/zaun";
         const dumpYamlStub = stub(this.helper, "dumpYaml");
         const consoleLogStub = stub(console, "log");
 
-        this.bot.init(this.botDesc.name, this.botDesc.version, {});
+        this.bot.init(this.botDesc.name, {});
 
         const bot = Object.assign({}, this.botDesc);
         delete bot.id;
@@ -102,55 +101,21 @@ import Zaun from "../../components/api/zaun";
         assert.calledWith(consoleLogStub, "Initialized Bot Name successfully");
     }
 
-    @test public async "should call init bot successfully when user does not provide bot version"() {
-        const createDirStub = stub(this.helper, "createDirectory");
-        const dumpYamlStub = stub(this.helper, "dumpYaml");
-        const consoleLogStub = stub(console, "log");
 
-        this.bot.init(this.botDesc.name, null, {});
+    // @test public async "should call bot versions successfully"() {
+    //     const getBotIdStub = stub(this.helper, "getBotId").returns(this.botDesc.id);
+    //     const consoleLogStub = stub(console, "log");
+    //     const botApiVersions = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake(function fakeFn(botId, callback) {
+    //         callback();
+    //     });
 
-        const bot = Object.assign({}, this.botDesc);
-        delete bot.id;
-        bot.version = "0.0.1";
+    //     await this.bot.versions();
 
-        createDirStub.restore();
-        dumpYamlStub.restore();
-        consoleLogStub.restore();
-        assert.callCount(dumpYamlStub, 1);
-        assert.calledWith(dumpYamlStub, "./bot.yml", bot);
-        assert.calledWith(consoleLogStub, "Initialized Bot Name successfully");
-    }
-
-    @test public async "should throw error when botId is not defined"() {
-        const getBotIdStub = stub(this.helper, "getBotId").returns(null);
-        const consoleLogStub = stub(console, "log");
-        let error;
-
-        try {
-            await this.bot.versions();
-        } catch (e) {
-            error = e;
-        }
-
-        getBotIdStub.restore();
-        consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "BOT ID HAS NOT DEFINED");
-    }
-
-    @test public async "should call bot versions successfully"() {
-        const getBotIdStub = stub(this.helper, "getBotId").returns(this.botDesc.id);
-        const consoleLogStub = stub(console, "log");
-        const botApiVersions = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake(function fakeFn(botId, callback) {
-            callback();
-        });
-
-        await this.bot.versions();
-
-        getBotIdStub.restore();
-        consoleLogStub.restore();
-        botApiVersions.restore();
-        assert.calledOnce(botApiVersions);
-    }
+    //     getBotIdStub.restore();
+    //     consoleLogStub.restore();
+    //     botApiVersions.restore();
+    //     assert.calledOnce(botApiVersions);
+    // }
 
     // TODO
     @test public async "function test should call intents, states, actions, and flow test api"() {
@@ -192,20 +157,20 @@ import Zaun from "../../components/api/zaun";
         assert.calledOnce(execFlowTestStub);
     }
 
-    @test public async "should call list bots"() {
-        const botsGetStub = stub(this.api.botApi, "botsGet").callsFake(function fakeFn(opts, callback) {
-            callback();
-        });
-        const consoleLogStub = stub(console, "log");
+    // @test public async "should call list bots"() {
+    //     const botsGetStub = stub(this.api.botApi, "botsGet").callsFake(function fakeFn(opts, callback) {
+    //         callback();
+    //     });
+    //     const consoleLogStub = stub(console, "log");
 
-        await this.bot.list();
+    //     await this.bot.list();
 
-        botsGetStub.restore();
-        consoleLogStub.restore();
-        assert.calledOnce(botsGetStub);
-    }
+    //     botsGetStub.restore();
+    //     consoleLogStub.restore();
+    //     assert.calledOnce(botsGetStub);
+    // }
 
-    @test public async "function bot update should create bot when bot id not found"() {
+    @test public async "function bot push should create bot"() {
         const bot = Object.assign({}, this.botDesc);
         delete bot.id;
 
@@ -215,14 +180,15 @@ import Zaun from "../../components/api/zaun";
         };
         const configCreateStub = stub(Config, "create").returns({});
         const loadYamlStub = stub(this.helper, "loadYaml").returns(bot);
+        const getProjectStubn = stub(this.helper, "getProp").returns(bot);
         const execDirectiveStub = stub(this.compile, "execDirectives").returns(botObj);
-        const createBotStub = stub(this.api.botApi, "botsPost").callsFake(function fakeFn(body, callback) {
-            callback(null, { version: this.botDesc.version });
+        const createBotStub = stub(this.api.botApi, "projectsProjectIdBotRevisionsPost").callsFake(function fakeFn(body, callback) {
+            callback(null, { revision: "aaaabbbbccccdddddeeee" });
         });
         const dumpYamlStub = stub(this.helper, "dumpYaml");
         const consoleLogStub = stub(console, "log");
 
-        await this.bot.update({});
+        await this.bot.push({});
 
         configCreateStub.restore();
         loadYamlStub.restore();
@@ -235,72 +201,72 @@ import Zaun from "../../components/api/zaun";
         assert.calledWith(dumpYamlStub, "./bot.yml", bot);
     }
 
-    @test public async "function bot update should call update bot api"() {
-        const botObj = {
-            resolve: () => { },
-            get: () => this.botDesc
-        };
-        const updatedVersion = "2.0.0";
-        const configCreateStub = stub(Config, "create").returns({});
-        const loadYamlStub = stub(this.helper, "loadYaml").returns(this.botDesc);
-        const execDirectiveStub = stub(this.compile, "execDirectives").returns(botObj);
-        const updateBotStub = stub(this.api.botApi, "botsBotIdPut").callsFake((botId, body, opts, callback) => {
-            callback(null, { version: updatedVersion });
-        });
-        const dumpYamlStub = stub(this.helper, "dumpYaml");
-        const consoleLogStub = stub(console, "log");
+    // @test public async "function bot update should call update bot api"() {
+    //     const botObj = {
+    //         resolve: () => { },
+    //         get: () => this.botDesc
+    //     };
+    //     const updatedVersion = "2.0.0";
+    //     const configCreateStub = stub(Config, "create").returns({});
+    //     const loadYamlStub = stub(this.helper, "loadYaml").returns(this.botDesc);
+    //     const execDirectiveStub = stub(this.compile, "execDirectives").returns(botObj);
+    //     const updateBotStub = stub(this.api.botApi, "botsBotIdPut").callsFake((botId, body, opts, callback) => {
+    //         callback(null, { version: updatedVersion });
+    //     });
+    //     const dumpYamlStub = stub(this.helper, "dumpYaml");
+    //     const consoleLogStub = stub(console, "log");
 
-        await this.bot.update({ rev: "major" });
+    //     await this.bot.update({ rev: "major" });
 
-        configCreateStub.restore();
-        loadYamlStub.restore();
-        execDirectiveStub.restore();
-        updateBotStub.restore();
-        dumpYamlStub.restore();
-        consoleLogStub.restore();
-        assert.calledOnce(updateBotStub);
-        assert.calledWith(configCreateStub, { ...this.botDesc, version: updatedVersion });
-        assert.calledWith(updateBotStub, this.botDesc.id, this.botDesc, {});
-        assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: updatedVersion });
-    }
+    //     configCreateStub.restore();
+    //     loadYamlStub.restore();
+    //     execDirectiveStub.restore();
+    //     updateBotStub.restore();
+    //     dumpYamlStub.restore();
+    //     consoleLogStub.restore();
+    //     assert.calledOnce(updateBotStub);
+    //     assert.calledWith(configCreateStub, { ...this.botDesc, version: updatedVersion });
+    //     assert.calledWith(updateBotStub, this.botDesc.id, this.botDesc, {});
+    //     assert.calledWith(dumpYamlStub, "./bot.yml", { ...this.botDesc, version: updatedVersion });
+    // }
 
-    @test public async "function bot delete should call delete bot api"() {
-        const inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true });
-        const getBotIdStub = stub(this.helper, "getBotId").returns(this.botDesc.id);
-        const deleteBotStub = stub(this.api.botApi, "botsBotIdDelete").callsFake((botId, callback) => {
-            callback(null, {});
-        });
-        const consoleLogStub = stub(console, "log");
+    // @test public async "function bot delete should call delete bot api"() {
+    //     const inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({ confirmation: true });
+    //     const getBotIdStub = stub(this.helper, "getBotId").returns(this.botDesc.id);
+    //     const deleteBotStub = stub(this.api.botApi, "botsBotIdDelete").callsFake((botId, callback) => {
+    //         callback(null, {});
+    //     });
+    //     const consoleLogStub = stub(console, "log");
 
-        await this.bot.delete();
+    //     await this.bot.delete();
 
-        inquirerPromptStub.restore();
-        getBotIdStub.restore();
-        deleteBotStub.restore();
-        consoleLogStub.restore();
-        assert.calledOnce(deleteBotStub);
-        assert.calledWith(deleteBotStub, this.botDesc.id);
-    }
+    //     inquirerPromptStub.restore();
+    //     getBotIdStub.restore();
+    //     deleteBotStub.restore();
+    //     consoleLogStub.restore();
+    //     assert.calledOnce(deleteBotStub);
+    //     assert.calledWith(deleteBotStub, this.botDesc.id);
+    // }
 
-    @test public async "should pull bot with valid bot name"() {
-        const dumpYamlStub = stub(this.helper, "dumpYaml");
-        const botsGetStub = stub(this.api.botApi, "botsGet").callsFake((body, callback) => {
-            callback(null, { items: [this.botDesc] });
-        });
-        const botsBotIdGet = stub(this.api.botApi, "botsBotIdGet").callsFake((botId, callback) => {
-            callback(null, this.botDesc);
-        });
-        const consoleLogStub = stub(console, "log");
+    // @test public async "should pull bot with valid bot name"() {
+    //     const dumpYamlStub = stub(this.helper, "dumpYaml");
+    //     const botsGetStub = stub(this.api.botApi, "botsGet").callsFake((body, callback) => {
+    //         callback(null, { items: [this.botDesc] });
+    //     });
+    //     const botsBotIdGet = stub(this.api.botApi, "botsBotIdGet").callsFake((botId, callback) => {
+    //         callback(null, this.botDesc);
+    //     });
+    //     const consoleLogStub = stub(console, "log");
 
-        await this.bot.pull(this.botDesc.name, this.botDesc.version, {});
+    //     await this.bot.pull(this.botDesc.name, this.botDesc.version, {});
 
-        dumpYamlStub.restore();
-        botsGetStub.restore();
-        botsBotIdGet.restore();
-        consoleLogStub.restore();
-        assert.calledOnce(botsGetStub);
-        assert.callCount(dumpYamlStub, 1);
-        assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
-        assert.calledWith(consoleLogStub, `SUCCESS PULL BOT ${this.botDesc.name} WITH VERSION ${this.botDesc.version}`);
-    }
+    //     dumpYamlStub.restore();
+    //     botsGetStub.restore();
+    //     botsBotIdGet.restore();
+    //     consoleLogStub.restore();
+    //     assert.calledOnce(botsGetStub);
+    //     assert.callCount(dumpYamlStub, 1);
+    //     assert.calledWith(dumpYamlStub, "./bot.yml", this.botDesc);
+    //     assert.calledWith(consoleLogStub, `SUCCESS PULL BOT ${this.botDesc.name} WITH VERSION ${this.botDesc.version}`);
+    // }
 }

@@ -11,7 +11,7 @@ import Zaun from "../../components/api/zaun";
 import { v4 as uuid } from "uuid";
 const Table = require("cli-table");
 
-@suite class DeploymentTest {
+@suite.skip class DeploymentTest {
     private config: IConfig;
     private helper: IHelper;
     private api: any;

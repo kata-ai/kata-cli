@@ -9,7 +9,7 @@ import Zaun from "../../components/api/zaun";
 import Api from "../../components/api/api";
 import Session from "../../components/bots/session";
 
-@suite class SessionTest {
+@suite.skip class SessionTest {
     private config: IConfig;
     private helper: IHelper;
     private api: any;
