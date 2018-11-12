@@ -55,7 +55,7 @@ commands:
         subcommands:
             init:
                 desc: initialize new bot.yml file
-                args: "<name> [version]"
+                args: "<name>"
                 params:
                     config:
                         type: string
@@ -73,18 +73,10 @@ commands:
             push:
                 desc: push and update version bot
                 params:
-                    rev:
-                        type: enum
-                        enum:
-                            - major
-                            - minor
-                            - patch
                     tag:
                         type: string
                         desc: tag version for deployment
-                    draft:
-                        type: string
-                handler: bot.update
+                handler: bot.push
                 alias: push
             pull:
                 desc: pull bot with specified name and version

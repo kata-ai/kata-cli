@@ -14,25 +14,11 @@ export default class Bot extends Component {
         super();
     }
 
-    public init(name: string, version: string, options: JsonObject) {
-        if (version) {
-            const versionRegex = /^\d+\.\d+\.\d+$/g;
-            if (!versionRegex.test(version)) {
-                console.log("Invalid version string");
-                console.log("Command kata init <botId> <botName> [version] is deprecated, use kata init <botName> [version] instead");
-                process.exit(0);
-            }
-        }
-
-        if (!version) {
-            version = "0.0.1";
-        }
-
+    public init(name: string, options: JsonObject) {
         const botDesc = {
             schema: "kata.ai/schema/kata-ml/1.0",
             name,
             desc: "My First Bot",
-            version: version || "0.0.1",
             flows: {
                 hello: {
                     fallback: true,
@@ -203,34 +189,9 @@ export default class Bot extends Component {
         }
     }
 
-    public async update(options: JsonObject) {
+    public async push(options: JsonObject) {
         const desc = this.helper.loadYaml("./bot.yml");
-
-        const oldVersion = desc.version;
-        let [major, minor, patch] = (desc.version as string).split(".").map((val: string) => parseInt(val));
-
-        switch (options.rev) {
-            case "major":
-                ++major;
-                minor = 0;
-                patch = 0;
-                break;
-            case "minor":
-                ++minor;
-                patch = 0;
-                break;
-            case "patch":
-                ++patch;
-                break;
-        }
-
-        if (major === undefined || minor === undefined || patch === undefined) {
-            major = major || 0;
-            minor = minor || 0;
-            patch = patch || 0;
-        }
-
-        desc.version = `${major}.${minor}.${patch}`;
+        const projectId = this.getProject();
         desc.tag = options.tag || null;
 
         let bot = Config.create(desc, { left: "${", right: "}" });
@@ -245,30 +206,12 @@ export default class Bot extends Component {
             return;
         }
 
-        if (!botDesc.id) {
-            const id = uuid();
-            botDesc.id = id;
-            desc.id = id;
-
-            try {
-                const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsPost, botDesc);
-                console.log(`BOT CREATED SUCCESSFULLY WITH VERSION ${desc.version}`);
-            } catch (e) {
-                desc.version = oldVersion;
-
-                console.log(this.helper.wrapError(e));
-            }
-        } else {
-            try {
-                const result = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdPut, botDesc.id, botDesc, {});
-                desc.version = result.data.version;
-
-                console.log(`UPDATED BOT SUCCESSFULLY WITH VERSION ${desc.version}`);
-            } catch (e) {
-                desc.version = oldVersion;
-
-                console.log(this.helper.wrapError(e));
-            }
+        try {
+            const result = await this.helper.toPromise(this.api.botApi, 
+                this.api.botApi.projectsProjectIdBotRevisionsPost, projectId, botDesc);
+            console.log(`Push Bot Success. Revision : ${result.data.revision}`);
+        } catch (e) {
+            console.log(this.helper.wrapError(e));
         }
 
         this.helper.dumpYaml("./bot.yml", desc);
@@ -341,6 +284,14 @@ export default class Bot extends Component {
         }
     }
 
+    /**
+     * 
+     * @param options 
+     * TO DO :
+     * Create local session
+     * Create mock environment
+     * 
+     */
     public console(options: JsonObject) {
         let currentSession = (options.session ? options.session : uuid()) as string;
         let botDesc;
@@ -541,5 +492,15 @@ export default class Bot extends Component {
 
 
         throw new Error("Sync only accept promises");
+    }
+
+    private getProject() {
+        const projectId = this.helper.getProp("projectId")
+
+        if (!projectId || projectId === "") {
+            throw Error("You must select a Project first, execute kata list-project to list your projects.");
+        }
+        
+        return projectId;
     }
 }
