@@ -8,6 +8,8 @@ const repl = require("repl");
 const util = require("util");
 const deasync = require("deasync");
 const Table = require("cli-table");
+const os = require("os");
+const fs = require("fs");
 
 export default class Bot extends Component {
     constructor(private compile: ICompile, private helper: IHelper, private tester: ITester, private api: any) {
@@ -190,8 +192,7 @@ export default class Bot extends Component {
     }
 
     public async push(options: JsonObject) {
-        const desc = this.helper.loadYaml("./bot.yml");
-        const projectId = this.getProject();
+        const desc = this.helper.loadYaml("./bot.yml");        
         desc.tag = options.tag || null;
 
         let bot = Config.create(desc, { left: "${", right: "}" });
@@ -207,9 +208,11 @@ export default class Bot extends Component {
         }
 
         try {
+            const projectId = this.getProject();
+            botDesc.id = projectId;
             const result = await this.helper.toPromise(this.api.botApi, 
                 this.api.botApi.projectsProjectIdBotRevisionsPost, projectId, botDesc);
-            console.log(`Push Bot Success. Revision : ${result.data.revision}`);
+            console.log(`Push Bot Success. Revision : ${result.data.revision.substring(0, 7)}`);
         } catch (e) {
             console.log(this.helper.wrapError(e));
         }
@@ -293,17 +296,18 @@ export default class Bot extends Component {
      * 
      */
     public console(options: JsonObject) {
-        let currentSession = (options.session ? options.session : uuid()) as string;
+        let projectId: string;
         let botDesc;
         try {
+            projectId = this.getProject() as string;
             botDesc = this.helper.loadYaml("./bot.yml");
         } catch (error) {
             console.log(this.helper.wrapError(error));
             return;
         }
 
-        const botId = botDesc.id;
-        const defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
+        // const botId = botDesc.id;
+        // const defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
         const con = repl.start({
             prompt: botDesc.name + ">",
@@ -313,18 +317,21 @@ export default class Bot extends Component {
         });
 
         con.context.text = function text(str: string) {
+            let currentSession = this.getLocalSession();
             const message = {
                 type: "text",
                 content: str
             };
+
             const body = {
-                sessionId: currentSession,
-                message
+                // sessionId: currentSession,
+                // message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
-
+                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
+                currentSession = data;
+                this.setLocalSession(currentSession);
                 return data;
             } catch (e) {
                 return this.helper.wrapError(e);
@@ -332,19 +339,21 @@ export default class Bot extends Component {
         }.bind(this);
 
         con.context.button = function button(op: JsonObject, obj: JsonObject = {}) {
+            let currentSession = this.getLocalSession();
             obj.op = op;
             const message = {
                 type: "data",
                 payload: obj
             };
             const body = {
-                sessionId: currentSession,
-                message
+                // sessionId: currentSession,
+                // message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
-
+                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
+                currentSession = data;
+                this.setLocalSession(currentSession);
                 return data;
             } catch (e) {
                 return this.helper.wrapError(e);
@@ -352,73 +361,76 @@ export default class Bot extends Component {
         }.bind(this);
 
         con.context.command = function button(command: string, obj: JsonObject = {}) {
+            let currentSession = this.getLocalSession();
             const message = {
                 type: "command",
                 content: command,
                 payload: obj
             };
             const body = {
-                sessionId: currentSession,
-                message
+                // sessionId: currentSession,
+                // message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, botId, body));
-
+                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, projectId, body));
+                currentSession = data;
+                this.setLocalSession(currentSession);
                 return data;
             } catch (e) {
                 return this.helper.wrapError(e);
             }
         }.bind(this);
 
-        con.context.current = function (session: string) {
-            if (arguments.length) {
-                currentSession = session;
-            } else {
-                return currentSession;
-            }
-        }.bind(this);
+        // con.context.current = function (session: string) {
+        //     if (arguments.length) {
+        //         currentSession = session;
+        //     } else {
+        //         return currentSession;
+        //     }
+        // }.bind(this);
 
-        con.context.session = function session(name: string, update: JsonObject) {
-            try {
-                if (!arguments.length) {
-                    const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
+        // con.context.session = function session(name: string, update: JsonObject) {
+        //     try {
+        //         if (!arguments.length) {
+        //             const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
 
-                    return res.data;
-                } else if (arguments.length === 1) {
-                    const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+        //             return res.data;
+        //         } else if (arguments.length === 1) {
+        //             const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
 
-                    return res.data;
-                } else {
-                    let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
-                    const session = res.data;
-                    res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
+        //             return res.data;
+        //         } else {
+        //             let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
+        //             const session = res.data;
+        //             res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
 
-                    return res.data;
-                }
-            } catch (e) {
-                return this.helper.wrapError(e);
-            }
-        }.bind(this);
+        //             return res.data;
+        //         }
+        //     } catch (e) {
+        //         return this.helper.wrapError(e);
+        //     }
+        // }.bind(this);
 
         con.context.clear = function clear(name: string) {
-            name = name || currentSession;
+            this.setLocalSession({})
+            // name = name || currentSession;
 
-            try {
-                const { data } = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
-                const session = { ...data };
+            // try {
+            //     const { data } = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
+            //     const session = { ...data };
 
-                if (session) {
-                    this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
-                }
-            } catch (e) {
+            //     if (session) {
+            //         this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
+            //     }
+            // } catch (e) {
 
-                if (e.status !== 400) {
-                    return;
-                }
+            //     if (e.status !== 400) {
+            //         return;
+            //     }
 
-                return this.helper.wrapError(e);
-            }
+            //     return this.helper.wrapError(e);
+            // }
         }.bind(this);
 
         con.context.clearCaches = function clearCaches(num: number = 20) {
@@ -496,11 +508,33 @@ export default class Bot extends Component {
 
     private getProject() {
         const projectId = this.helper.getProp("projectId")
-
+    
         if (!projectId || projectId === "") {
-            throw Error("You must select a Project first, execute kata list-project to list your projects.");
+            throw Error("Error : You must specify a Project first, execute kata list-project to list your projects.");
         }
         
         return projectId;
+    }
+
+    private setLocalSession(session: Object) {
+        const jsonPath = `${os.homedir()}/.katasession`;
+        let jsonProp;
+        try {
+            fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");    
+        } catch (error) {
+            console.log(this.helper.wrapError(`Error set local session : ${error.message}`));
+        }
+        
+    }
+
+    private getLocalSession() {
+        const jsonPath = `${os.homedir()}/.katasession`;
+
+        if (fs.existsSync(jsonPath)) {
+            return JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+        } else {
+            // default session
+            return {};
+        }
     }
 }
