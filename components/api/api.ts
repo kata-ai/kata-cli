@@ -28,9 +28,9 @@ export default class Api extends Component {
         let basePath = this.helper.getProp("zaunUrl") || "https://api.kata.ai";
 
         this.apiClient.basePath = basePath;
-        this.bearer = this.apiClient.authentications['Bearer'];
-        const currentLogin = <string>this.helper.getProp("current_login") || "user";
-        const tokenObj = <JsonObject>this.helper.getProp("token") || {};
+        this.bearer = this.apiClient.authentications.Bearer;
+        const currentLogin = this.helper.getProp("current_login") as string || "user";
+        const tokenObj = this.helper.getProp("token") as JsonObject || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
 
         this.botApi = new this.zaun.BotApi();

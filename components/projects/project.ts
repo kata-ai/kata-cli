@@ -4,7 +4,7 @@ import { IHelper } from "interfaces/main";
 import { JsonObject } from "merapi";
 import inquirer = require("inquirer");
 const Table = require("cli-table");
-const colors = require('colors/safe');
+const colors = require("colors/safe");
 
 export default class Project {
     constructor(
@@ -20,7 +20,7 @@ export default class Project {
                 message: "Project name:",
             },
         ]);
-        const options = await this.helper.inquirerPrompt([
+        const inquiredOptions = await this.helper.inquirerPrompt([
             {
                 type: "number",
                 name: "timezone",
@@ -32,27 +32,10 @@ export default class Project {
                 name: "description",
                 message: "Project description:",
             },
-            {
-                type: "confirm",
-                name: "bot",
-                message: "Use bot?",
-                default: true,
-            },
-            {
-                type: "confirm",
-                name: "cms",
-                message: "Use cms?",
-                default: true,
-            },
-            {
-                type: "confirm",
-                name: "nlu",
-                message: "Use nlu?",
-                default: true,
-            },
         ]);
+        const options = { bot: true, cms: true, nlu: true, ...inquiredOptions };
 
-        let nluOptions: any = {}
+        let nluOptions: any = {};
         if (options.nlu) {
             nluOptions = await this.helper.inquirerPrompt([
                 {
@@ -69,10 +52,10 @@ export default class Project {
                 },
             ]);
             nluOptions.nluVisibility = nluOptions.privateNlu ? "private" : "public";
-            delete nluOptions.privateNlu
+            delete nluOptions.privateNlu;
         }
 
-        const requestBody = { ...projectData, options: { ...options, nluOptions } }
+        const requestBody = { ...projectData, options: { ...options, nluOptions } };
 
         try {
             const { response } = await this.helper.toPromise(
@@ -80,10 +63,10 @@ export default class Project {
             );
 
             if (response && response.body && response.body.id) {
-                const project = response.body
+                const project = response.body;
                 const projectId = project.id;
                 this.helper.setProp("projectId", projectId);
-                console.log(colors.green(`Project "${project.name}" (${projectId}) is successfully created`))
+                console.log(colors.green(`Project "${project.name}" (${projectId}) is successfully created`));
                 return;
             }
 
@@ -117,21 +100,21 @@ export default class Project {
 
             if (response && response.body && response.body.data) {
                 const projectList: object[] = response.body.data;
-                const choices = projectList.map((project: any) => ({ name: project.name, value: project }))
+                const choices = projectList.map((projectRow: any) => ({ name: projectRow.name, value: projectRow }));
                 const { project } = await inquirer.prompt<any>([
                     {
-                        type: 'list',
-                        name: 'project',
+                        type: "list",
+                        name: "project",
                         message: "Select project:",
                         paginated: true,
                         choices
                     },
-                ])
+                ]);
                 this.helper.setProp("projectId", project.id);
                 console.log(colors.green(`Project "${project.name}" (${project.id}) is successfully selected`));
                 return;
             }
-            console.error("Failed to list projects")
+            console.error("Failed to list projects");
 
         } catch (e) {
             console.error(this.helper.wrapError(e));
