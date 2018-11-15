@@ -1,11 +1,6 @@
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
-import { ICompile, IHelper, ITester } from "interfaces/main";
-const colors = require("colors");
+import { Component, JsonObject } from "merapi";
+import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
-const repl = require("repl");
-const util = require("util");
-const deasync = require("deasync");
 
 export default class User extends Component {
 

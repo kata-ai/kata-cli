@@ -1,5 +1,5 @@
-import { Component, ILogger, IConfigReader, Json, IInjector } from "merapi";
-import { Command, CommandList, CommandDescriptor } from "interfaces/main";
+import { Command, CommandDescriptor, CommandList } from "interfaces/main";
+import { Component, IConfigReader, IInjector } from "merapi";
 
 const commander = require("commander");
 
