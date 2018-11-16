@@ -287,14 +287,6 @@ export default class Bot extends Component {
         }
     }
 
-    /**
-     * 
-     * @param options 
-     * TO DO :
-     * Create local session
-     * Create mock environment
-     * 
-     */
     public console(options: JsonObject) {
         let projectId: string;
         let botDesc;
@@ -305,9 +297,6 @@ export default class Bot extends Component {
             console.log(this.helper.wrapError(error));
             return;
         }
-
-        // const botId = botDesc.id;
-        // const defaultDeploymentId = "f223c9e0-6ba1-434d-8313-a9f18ca364bd";
 
         const con = repl.start({
             prompt: botDesc.name + ">",
@@ -324,15 +313,12 @@ export default class Bot extends Component {
             };
 
             const body = {
-                // sessionId: currentSession,
-                // message
+                session: currentSession,
+                message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
-                currentSession = data;
-                this.setLocalSession(currentSession);
-                return data;
+                return this.converse(projectId, body);
             } catch (e) {
                 return this.helper.wrapError(e);
             }
@@ -346,15 +332,12 @@ export default class Bot extends Component {
                 payload: obj
             };
             const body = {
-                // sessionId: currentSession,
-                // message
+                session: currentSession,
+                message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
-                currentSession = data;
-                this.setLocalSession(currentSession);
-                return data;
+                return this.converse(projectId, body);
             } catch (e) {
                 return this.helper.wrapError(e);
             }
@@ -368,69 +351,24 @@ export default class Bot extends Component {
                 payload: obj
             };
             const body = {
-                // sessionId: currentSession,
-                // message
+                session: currentSession,
+                message
             };
 
             try {
-                const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdConversePost, projectId, body));
-                currentSession = data;
-                this.setLocalSession(currentSession);
-                return data;
+                return this.converse(projectId, body);
             } catch (e) {
                 return this.helper.wrapError(e);
             }
         }.bind(this);
 
-        // con.context.current = function (session: string) {
-        //     if (arguments.length) {
-        //         currentSession = session;
-        //     } else {
-        //         return currentSession;
-        //     }
-        // }.bind(this);
+        con.context.current = function (session: string) {
+            return this.getLocalSession();
+        }.bind(this);
 
-        // con.context.session = function session(name: string, update: JsonObject) {
-        //     try {
-        //         if (!arguments.length) {
-        //             const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "get"));
-
-        //             return res.data;
-        //         } else if (arguments.length === 1) {
-        //             const res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
-
-        //             return res.data;
-        //         } else {
-        //             let res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, currentSession, "getOrCreate"));
-        //             const session = res.data;
-        //             res = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdPut, botId, defaultDeploymentId, session.id, update));
-
-        //             return res.data;
-        //         }
-        //     } catch (e) {
-        //         return this.helper.wrapError(e);
-        //     }
-        // }.bind(this);
 
         con.context.clear = function clear(name: string) {
-            this.setLocalSession({})
-            // name = name || currentSession;
-
-            // try {
-            //     const { data } = this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdGet, botId, defaultDeploymentId, name, "get"));
-            //     const session = { ...data };
-
-            //     if (session) {
-            //         this.sync(this.helper.toPromise(this.api.sessionApi, this.api.sessionApi.botsBotIdDeploymentsDeploymentIdSessionsSessionIdDelete, botId, defaultDeploymentId, session.id));
-            //     }
-            // } catch (e) {
-
-            //     if (e.status !== 400) {
-            //         return;
-            //     }
-
-            //     return this.helper.wrapError(e);
-            // }
+            this.resetSession();
         }.bind(this);
 
         con.context.clearCaches = function clearCaches(num: number = 20) {
@@ -478,7 +416,7 @@ export default class Bot extends Component {
         }
     }
 
-    private sync(promise: any) {
+    private sync(promise: any): any {
         if (promise && typeof promise.then === "function") {
             let done = false;
             let error: Error = null;
@@ -516,11 +454,19 @@ export default class Bot extends Component {
         return projectId;
     }
 
+    private converse(projectId: string, body: Object) {
+        const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
+        const { session } = data;
+        this.setLocalSession(session);
+        return data;
+    }
+
     private setLocalSession(session: Object) {
         const jsonPath = `${os.homedir()}/.katasession`;
-        let jsonProp;
         try {
-            fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");    
+            if (session) {
+                fs.writeFileSync(jsonPath, JSON.stringify(session), "utf8");    
+            }
         } catch (error) {
             console.log(this.helper.wrapError(`Error set local session : ${error.message}`));
         }
@@ -534,7 +480,31 @@ export default class Bot extends Component {
             return JSON.parse(fs.readFileSync(jsonPath, "utf8"));
         } else {
             // default session
-            return {};
+            return {
+                "channel_id" : "console-channel",
+                "environment_id" : "console-environment",
+                "states" : {},
+                "contexes" : {},
+                "history" : [ ],
+                "current" : null,
+                "meta" : null,
+                "timestamp" : Date.now(),
+                "data" : {},
+                "created_at" : Date.now(),
+                "updated_at" : Date.now(),
+                "session_start" : Date.now(),
+                "session_id" : "test~from~console",
+                "id" : "test~from~console"
+            };
+        }
+    }
+
+    private resetSession() {
+        const jsonPath = `${os.homedir()}/.katasession`;
+
+        if (fs.existsSync(jsonPath)) {
+            fs.unlinkSync(jsonPath);
+            return true;
         }
     }
 }
