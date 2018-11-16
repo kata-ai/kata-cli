@@ -1,12 +1,10 @@
 
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
+import { Component, Config, IHash, JsonObject } from "merapi";
+import { v4 as uuid } from "uuid";
 const colors = require("colors");
-const inquirer = require("inquirer");
 const repl = require("repl");
 const util = require("util");
-const deasync = require("deasync");
 const Table = require("cli-table");
 const os = require("os");
 const fs = require("fs");
@@ -476,34 +474,6 @@ export default class Bot extends Component {
                 console.log(this.helper.wrapError(e));
             }
         }
-    }
-
-    private sync(promise: any) {
-        if (promise && typeof promise.then === "function") {
-            let done = false;
-            let error: Error = null;
-            let result;
-
-            promise.then((res: any) => {
-                done = true;
-                result = res;
-            }).catch((e: Error) => {
-                error = e;
-            });
-
-            deasync.loopWhile(() => {
-                return !done && !error;
-            });
-
-            if (error) {
-                throw error;
-            }
-
-            return result;
-        }
-
-
-        throw new Error("Sync only accept promises");
     }
 
     private getProject() {

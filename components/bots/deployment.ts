@@ -1,8 +1,6 @@
 
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
 import { IHelper } from "interfaces/main";
-const colors = require("colors");
+import { Component, Config, JsonObject } from "merapi";
 const inquirer = require("inquirer");
 const Table = require("cli-table");
 

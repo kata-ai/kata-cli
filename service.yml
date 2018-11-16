@@ -12,6 +12,9 @@ components:
     deployment: bots/Deployment
     session: bots/Session
 
+    # Project managements
+    project: projects/Project
+
     # user management
     user: users/User
     team: users/Team
@@ -140,6 +143,24 @@ commands:
                 args: <name>
                 handler: deployment.drop
                 alias: drop
+
+    project:
+        type: group
+        desc: Commands for project bot
+        subcommands:
+            create:
+                desc: create project
+                handler: project.create
+                alias: create-project
+            select:
+                desc: select project
+                handler: project.select
+                alias: select-project
+            list:
+                desc: list all project
+                handler: project.list
+                alias: list-project
+                
     session:
         type: group
         desc: Commands for session management
