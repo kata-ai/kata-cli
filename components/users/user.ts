@@ -78,7 +78,7 @@ export default class User extends Component {
                     const token = result.data.id;
 
                     this.helper.setProp("first_login", { type: "user", username: user, id: result.data.userId });
-                    this.setToken({ name: user, type: "user" }, token);
+                    this.setToken({ name: user, type: "user", namespace: "platform" }, token);
 
                     console.log(`Logged in as ${user}`);
                 }
@@ -248,6 +248,7 @@ export default class User extends Component {
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
         this.helper.setProp("current_user_type", userInfo.type);
+        this.helper.setProp("namespace", userInfo.namespace);
         const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
         tokenProp[userInfo.name as string] = token;
         this.helper.setProp("token", tokenProp);
