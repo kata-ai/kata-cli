@@ -1,15 +1,15 @@
 
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
 import { ICompile, IHelper, ITester } from "interfaces/main";
+import { Component, Config, IHash, JsonObject } from "merapi";
+import { v4 as uuid } from "uuid";
+
 const colors = require("colors");
-const inquirer = require("inquirer");
 const repl = require("repl");
 const util = require("util");
-const deasync = require("deasync");
 const Table = require("cli-table");
 const os = require("os");
 const fs = require("fs");
+const deasync = require("deasync");
 
 export default class Bot extends Component {
     constructor(private compile: ICompile, private helper: IHelper, private tester: ITester, private api: any) {
@@ -343,7 +343,7 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.command = function button(command: string, obj: JsonObject = {}) {
+        con.context.command = function command(command: string, obj: JsonObject = {}) {
             let currentSession = this.getLocalSession();
             const message = {
                 type: "command",
@@ -362,14 +362,8 @@ export default class Bot extends Component {
             }
         }.bind(this);
 
-        con.context.current = function (session: string) {
-            return this.getLocalSession();
-        }.bind(this);
-
-
-        con.context.clear = function clear(name: string) {
-            this.resetSession();
-        }.bind(this);
+        con.context.current = () => this.getLocalSession();
+        con.context.clear = () => this.resetSession();
 
         con.context.clearCaches = function clearCaches(num: number = 20) {
             try {
@@ -380,6 +374,34 @@ export default class Bot extends Component {
                 return this.helper.wrapError(e);
             }
         }.bind(this);
+    }
+
+    private sync(promise: any) {
+        if (promise && typeof promise.then === "function") {
+            let done = false;
+            let error: Error = null;
+            let result;
+
+            promise.then((res: any) => {
+                done = true;
+                result = res;
+            }).catch((e: Error) => {
+                error = e;
+            });
+
+            deasync.loopWhile(() => {
+                return !done && !error;
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            return result;
+        }
+
+
+        throw new Error("Sync only accept promises");
     }
 
     public async pull(name: string, version: string, options: JsonObject) {
@@ -416,34 +438,6 @@ export default class Bot extends Component {
         }
     }
 
-    private sync(promise: any): any {
-        if (promise && typeof promise.then === "function") {
-            let done = false;
-            let error: Error = null;
-            let result;
-
-            promise.then((res: any) => {
-                done = true;
-                result = res;
-            }).catch((e: Error) => {
-                error = e;
-            });
-
-            deasync.loopWhile(() => {
-                return !done && !error;
-            });
-
-            if (error) {
-                throw error;
-            }
-
-            return result;
-        }
-
-
-        throw new Error("Sync only accept promises");
-    }
-
     private getProject() {
         const projectId = this.helper.getProp("projectId")
     
@@ -455,7 +449,7 @@ export default class Bot extends Component {
     }
 
     private converse(projectId: string, body: Object) {
-        const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body));
+        const { data } = this.sync(this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotConversePost, projectId, body)) as any;
         const { session } = data;
         this.setLocalSession(session);
         return data;

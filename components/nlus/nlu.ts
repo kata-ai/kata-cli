@@ -1,12 +1,9 @@
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
-import { ICompile, IHelper, ITester } from "interfaces/main";
-
-const colors = require("colors");
-const inquirer = require("inquirer");
+import { IHelper } from "interfaces/main";
+import { Component, JsonObject } from "merapi";
 const Table = require("cli-table");
 const fs = require("fs");
-const template : any = {
+
+const template: any = {
     default: {
         name: "kata",
         lang: "id",
