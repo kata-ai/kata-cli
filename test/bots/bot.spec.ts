@@ -102,20 +102,18 @@ import Zaun from "../../components/api/zaun";
     }
 
 
-    // @test public async "should call bot versions successfully"() {
-    //     const getBotIdStub = stub(this.helper, "getBotId").returns(this.botDesc.id);
-    //     const consoleLogStub = stub(console, "log");
-    //     const botApiVersions = stub(this.api.botApi, "botsBotIdVersionsGet").callsFake(function fakeFn(botId, callback) {
-    //         callback();
-    //     });
+    @test public async "should call bot revisions successfully"() {
+        const consoleLogStub = stub(console, "log");
+        const botApiVersions = stub(this.api.botApi, "projectsProjectIdBotRevisionsGet").callsFake(function fakeFn(botId, callback) {
+            callback();
+        });
 
-    //     await this.bot.versions();
+        await this.bot.revisions();
 
-    //     getBotIdStub.restore();
-    //     consoleLogStub.restore();
-    //     botApiVersions.restore();
-    //     assert.calledOnce(botApiVersions);
-    // }
+        consoleLogStub.restore();
+        botApiVersions.restore();
+        assert.calledOnce(botApiVersions);
+    }
 
     // TODO
     @test public async "function test should call intents, states, actions, and flow test api"() {

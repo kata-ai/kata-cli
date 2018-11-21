@@ -65,10 +65,10 @@ commands:
                         desc: param string
                 handler: bot.init
                 alias: init
-            versions:
-                desc: list all bot versions
-                handler: bot.versions
-                alias: versions
+            revisions:
+                desc: list all bot revision
+                handler: bot.revisions
+                alias: revisions
             list:
                 desc: list all user's bots
                 handler: bot.list

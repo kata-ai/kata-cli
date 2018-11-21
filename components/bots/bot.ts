@@ -73,26 +73,18 @@ export default class Bot extends Component {
         console.log(`Initialized ${name} successfully`);
     }
 
-    public async versions(options: JsonObject) {
+    public async revisions(options: JsonObject) {
         try {
-            const botId = this.helper.getBotId();
-
-            if (!botId) {
-                throw new Error("BOT ID HAS NOT DEFINED");
-            }
-            const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdVersionsGet, botId);
-            if (data.versions) {
-                const history = data.versions;
-                console.log("Bot Versions : ");
-                history.data.forEach((hist: JsonObject) => {
-                    if (hist.tag) {
-                        console.log(`- ${hist.version} (${hist.tag})`);
-                    } else {
-                        console.log(`- ${hist.version}`);
-                    }
+            const projectId = this.getProject();
+            const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsGet, projectId);
+            const result = data;
+            if (result && result.data) {
+                console.log("Bot Revision : ");
+                result.data.forEach((hist: JsonObject) => {
+                    console.log(`- ${hist.revision}`);
                 });
             } else {
-                console.log("You must push at least 1 bot to acquire version");
+                console.log("You must push at least 1 bot to acquire revisions");
             }
         } catch (e) {
             if (e.code === "ENOENT") {
