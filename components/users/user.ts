@@ -131,7 +131,9 @@ export default class User extends Component {
                     const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: teams[0].teamId });
                     const token = result.data.id;
                     this.setToken({ name, type: "team" }, token);
-                    console.log(`Switched to team ${name}`);
+                    this.helper.setProp("current_login", name);
+                    this.helper.setProp("current_user_type", "team");
+                    console.log(`Switched to team: ${name}`);
                 } else {
                     console.log("Unable to switch to Team : Invalid team");
                 }
