@@ -6,23 +6,6 @@
     "jsRules": {},
     "rules": {
         "member-ordering": [false],
-        "typedef-whitespace": [
-            true,
-            {
-              "call-signature": "onespace",
-              "index-signature": "onespace",
-              "parameter": "onespace",
-              "property-declaration": "onespace",
-              "variable-declaration": "onespace"
-            },
-            {
-              "call-signature": "onespace",
-              "index-signature": "onespace",
-              "parameter": "onespace",
-              "property-declaration": "onespace",
-              "variable-declaration": "onespace"
-            }
-        ],
         "align": [false],
         "object-literal-sort-keys": [false],
         "new-parens": true,
