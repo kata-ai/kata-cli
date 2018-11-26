@@ -65,12 +65,10 @@ Soon, we will implement kata-cli 2.0 because of our updated platform to 3.0.
 
 ## Changes 
 
-### Project environment and Namespace
+### Project environment
 
 Before running kata-cli main command (ex: push, pull, etc.), user have to define what project that user is working on with command : 
 `kata set-project <projectName>`
-
-You can switch between namespace with kata-cli (ex: platform, dashboard), but the details are tbd.
 
 ### New commands
 
@@ -78,20 +76,18 @@ Some of kata-cli old commands are deprecated and replaced with new command
 
 New command : 
 
-* `kata set-project <projectName>`
-* `kata set-namespace <namespace>`
-* `kata init <name>`
-* `kata list-revision`
-* `kata pull [revision]`
-* `kata delete`
-* `kata test [file] [revision]`
-* `kata console [revision]`
+* `kata set-project <projectName>` - Select project that you want to use, any bot operation will be related to that project
 
 Deprecated command : 
+(`Old command` -> `New command`)
 
-* `kata pull <name> <version>` 
-* `kata remove-bot`
-* `kata test [file]`
-* `kata console <diaenneUrl>`
-* `kata init <name> [version]`
-* `kata versions`
+* `kata init <name> [version]` -> `kata init <name>`
+* `kata pull <name> <version>` -> `kata pull [revision]`
+* `kata remove-bot` -> `kata delete`
+* `kata test [file]` -> `kata test [file] [revision]`
+* `kata console <diaenneUrl>` -> `kata console [revision]`
+* `kata versions` -> `kata list-revision`
+
+### New kata-cli Console
+
+If you execute `kata console` command, kata-cli will generate a `.katasession` file in your home directory, so you can debug further.  And if you want to view your current session in kata-cli, after executing `kata console` just type `current()`.
