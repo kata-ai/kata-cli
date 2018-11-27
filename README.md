@@ -72,21 +72,34 @@ Before running kata-cli main command (ex: push, pull, etc.), user have to define
 
 ### New commands
 
-Some of kata-cli old commands are deprecated and replaced with new command
-
 New command : 
 
+* `kata create-project` - Create a project
+* `kata list-project` - Display current projects that you have
 * `kata set-project <projectName>` - Select project that you want to use, any bot operation will be related to that project
 
-Deprecated command : 
-(`Old command` -> `New command`)
+Updated command (`Old command` -> `New command`) :
 
 * `kata init <name> [version]` -> `kata init <name>`
 * `kata pull <name> <version>` -> `kata pull [revision]`
-* `kata remove-bot` -> `kata delete`
 * `kata test [file]` -> `kata test [file] [revision]`
 * `kata console <diaenneUrl>` -> `kata console [revision]`
 * `kata versions` -> `kata list-revision`
+
+Deprecated Command :
+
+Temporary :
+* `deploy <name> [version]`
+* `list-deployment`
+* `add-channel [options] <name> <channelName>`
+* `remove-channel <name> <channelName>`
+
+Permanent : 
+* `kata session-get <id> [deploymentId]`
+* `kata session-create <id> [deploymentId]`
+* `kata session-update <id> [deploymentId]`
+* `kata session-delete <id> [deploymentId]`
+
 
 ### New kata-cli Console
 
