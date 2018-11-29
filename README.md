@@ -75,7 +75,8 @@ Commands  | Functionalities
 `kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 **Deprecated Commands**
-Sadly to say that there are several commands which are no longer in use :(
+
+Sad to say that there are several commands which are no longer in use :(
 
 _Temporary deprecated:_
 * `kata deploy <name> [version]`
