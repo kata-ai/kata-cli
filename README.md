@@ -6,7 +6,7 @@ For more information, check our website (http://kata.ai/en).
 
 Soon, we will implement Kata-CLI 2.0 because of our updated platform to 3.0. In Kata-CLI 2.0, we introduce Project Environment on the top of the Bots. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on. 
 
-## Changelog 
+# Changelog 
 - [Changelog](CHANGELOG.md)
 
 # Installation
@@ -16,43 +16,48 @@ npm install -g Kata-CLI
 ```
 This is the preferred method to install Kata-CLI, as it will always install the most recent stable release.
 
-# Commands
+# Command Listings
 Use `kata --help` into your command line to see the list of commands offered by Kata-CLI.
 
-The list of command below is accessible by user with role as **user** : 
-Kata-CLI command  | Functionality
-------------- | -------------
+The list of command below is accessible by user with role as **user** :
+
+Commands  | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata login [options]` | the parameter `options` can be `user` or `team`
 `kata whoami` | to see the current user login informations
 `kata pwd` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
 
-This command is accessible by user with role as **admin** : 
-Kata-CLI command  | Functionality
-------------- | -------------
+This command is accessible by user with role as **admin** :
+
+Commands  | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata create-user` | to set spesific role and create user 
 
-Command as **team :**
-Kata-CLI command  | Functionality
-------------- | -------------
+Command as **team** :
+
+Commands  | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata add-member <userName> [options] --admin` | to assign user as the teammember
 `kata remove-member <userName>` | to remove member from the team
 
-The list of command below is accessible by user with role as **user** and **team**: 
+The list of command below is accessible by user with role as **user** and **team**:   
 
 **Project environment related command**  
 We implement several new commands to manage Project: 
-Kata-CLI command  | Functionality
-------------- | -------------
+
+Commands  | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata create-project` | to create a project
 `kata list-project` | to display current projects that you have
 `kata select-project` | to select project that you want to use, any bot operation will be related to that project
 
 **Bot related command**  
 Please notice that there are also updated commands from the Bot Environment:
-Kata-CLI command  | Functionality
-------------- | -------------
+
+Commands  | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata init <botName>` | to initialize the bot
 `kata revisions` | to list the revisions of the bot
 `kata config-view` | to view user configurations
@@ -67,16 +72,16 @@ Kata-CLI command  | Functionality
 `kata remove-channel <botName> <channelName>` | to remove bot channel
 `kata drop <botName>` | to drop bot 
 `kata set <prop> <value>` | 
-`kata switch <roleType> [userName|teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
+`kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 **Deprecated Commands**
 Sadly to say that there are several commands which are no longer in use :(
 
 _Temporary deprecated:_
-* `deploy <name> [version]`
-* `list-deployment`
-* `add-channel [options] <name> <channelName>`
-* `remove-channel <name> <channelName>`
+* `kata deploy <name> [version]`
+* `kata list-deployment`
+* `kata add-channel [options] <name> <channelName>`
+* `kata remove-channel <name> <channelName>`
 
 _Permanently deprecated:_
 * `kata session-get <id> [deploymentId]`
@@ -84,7 +89,7 @@ _Permanently deprecated:_
 * `kata session-update <id> [deploymentId]`
 * `kata session-delete <id> [deploymentId]`
 
-## Best Practice
+# Best Practice
 We hope that you can get a smooth experience in working with Kata-CLI by following several best practice steps: 
 
 **1. Login to the platform**
