@@ -35,13 +35,13 @@ Command as **team :**
 
 The list of command below is accessible by user with role as **user** and **team**: 
 
-## Project Environment
+**Project Environment**
 We implement several new commands to manage Project Environment: 
 * `kata create-project` - Create a project
 * `kata list-project` - Display current projects that you have
 * `kata select-project` - Select project that you want to use, any bot operation will be related to that project
 
-## Bot Environment
+**Bot Environment**
 Please notice that there are also updated commands from the Bot Environment:
 * `kata init <name>` - to initialize the bot
 * `kata revisions` - to list the revisions of the bot
@@ -63,16 +63,16 @@ Please notice that there are also updated commands from the Bot Environment:
 * `kata set <prop> <value>`
 * `kata switch <type> [name]`
 
-## Deprecated Commands
+**Deprecated Commands**
 Sadly to say that there are several commands which are no longer in use :(
 
-### Temporary deprecated:
+_Temporary deprecated:_
 * `deploy <name> [version]`
 * `list-deployment`
 * `add-channel [options] <name> <channelName>`
 * `remove-channel <name> <channelName>`
 
-### Permanent deprecated: 
+_Permanently deprecated:_
 * `kata session-get <id> [deploymentId]`
 * `kata session-create <id> [deploymentId]`
 * `kata session-update <id> [deploymentId]`
@@ -81,7 +81,7 @@ Sadly to say that there are several commands which are no longer in use :(
 ## Best Practice
 We hope that you can get a smooth experience in working with Kata-CLI by following several best practice steps: 
 
-1. Login to the platform
+**1. Login to the platform**
 First of all, we need to login into platform using `kata login`
 
 ```
@@ -91,7 +91,7 @@ First of all, we need to login into platform using `kata login`
 Logged in as your-username
 ```
 
-2. Create the Project
+**2. Create the Project**
 Welcome to your workspace. Now, it is time to create a project on it.
 ```shell
 ➜ kata create-project
@@ -108,7 +108,7 @@ Voila, your first project is there. To see the list of your project, run this co
 ```
 then select the existing projects that you're gonna working on.
 
-3. Create the Bot
+**3. Create the Bot**
 Once the project is selected, then it is the turn to build the bot!
 ```shell
 ➜ kata init your-bot-name
@@ -120,14 +120,14 @@ To see the list of bot revisions, run this command:
 ➜ kata-revisions
 ```
 
-3. Push your bot changes
+**4. Push your bot changes**
 Customize your bot on `bot.yml` file, then push the bot: 
 ```shell
 ➜ kata push
 Push Bot Success. Revision : 6bb61b7
 ```
 
-4. Make a conversation with your bot!
+**5. Make a conversation with your bot!**
 Once you pushed the latest revision of your bot, that means you are ready to test a conversation with your bot. Run this command on your terminal
 ```shell
 ➜ kata console
@@ -184,7 +184,7 @@ or this command, for a better JSON alignment:
     data: {} }
 ```
 
-4. Logout from the platform
+**6. Logout**
 Congratulations that you finish your first revision of the bot. Now, it is the time to logout from the platform.
 ```shell
 ➜  kata logout 
