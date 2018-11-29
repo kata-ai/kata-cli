@@ -95,6 +95,7 @@ We hope that you can get a smooth experience in working with Kata-CLI by followi
 
 **1. Login to the platform**
 
+
 First of all, we need to login into platform using `kata login`
 
 ```
@@ -105,6 +106,7 @@ Logged in as your-username
 ```
 
 **2. Create the Project**
+
 
 Welcome to your workspace. Now, it is time to create a project on it.
 ```shell
@@ -124,6 +126,7 @@ then select the existing projects that you're gonna working on.
 
 **3. Create the Bot**
 
+
 Once the project is selected, then it is the turn to build the bot!
 ```shell
 ➜ kata init your-bot-name
@@ -137,6 +140,7 @@ To see the list of bot revisions, run this command:
 
 **4. Push your bot changes**
 
+
 Customize your bot on `bot.yml` file, then push the bot: 
 ```shell
 ➜ kata push
@@ -144,6 +148,7 @@ Push Bot Success. Revision : 6bb61b7
 ```
 
 **5. Make a conversation with your bot!**
+
 
 Once you pushed the latest revision of your bot, that means you are ready to test a conversation with your bot. Run this command on your terminal
 ```shell
@@ -202,6 +207,7 @@ or this command, for a better JSON alignment:
 ```
 
 **6. Logout**
+
 
 Congratulations that you finish your first revision of the bot. Now, it is the time to logout from the platform.
 ```shell
