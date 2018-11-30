@@ -281,7 +281,8 @@ export default class Nlu extends Component {
     public async snapshot() {
         try {
             const projectId = this.helper.getProp("projectId");
-            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluSnapshotGet, projectId);
+            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluSnapshotGet, projectId, nluDesc.name);
             console.log(`Snapshot captured!`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
