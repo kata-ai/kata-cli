@@ -261,8 +261,8 @@ export default class Nlu extends Component {
         try {
             page = page || 1;
             limit = limit || 10;
-            // const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, { page, limit });
-            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPublicGet);
+            const projectId = this.helper.getProp("projectId");
+            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, projectId, { page, limit });
             if (nlus && nlus.data) {
                 const table = new Table({
                     head: ["Name", "Language", "Visibility"]
