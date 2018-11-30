@@ -44,6 +44,6 @@ export default class Api extends Component {
         // this.sessionApi = new this.zaun.SessionApi();
         // this.cachesApi = new this.zaun.CacheApi();
         // this.utilApi = new this.zaun.UtilApi();
-        // this.nluApi = new this.zaun.NluApi();
+        this.nluApi = new this.zaun.NluApi();
     }
 }

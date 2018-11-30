@@ -96,7 +96,7 @@ export default class Project {
 
     public async select() {
         try {
-            const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, {});
+            const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, { limit: 50 });
 
             if (response && response.body && response.body.data) {
                 const projectList: object[] = response.body.data;
