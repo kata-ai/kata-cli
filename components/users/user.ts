@@ -1,11 +1,6 @@
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
-import { ICompile, IHelper, ITester } from "interfaces/main";
-const colors = require("colors");
+import { Component, JsonObject } from "merapi";
+import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
-const repl = require("repl");
-const util = require("util");
-const deasync = require("deasync");
 
 export default class User extends Component {
 
@@ -83,7 +78,7 @@ export default class User extends Component {
                     const token = result.data.id;
 
                     this.helper.setProp("first_login", { type: "user", username: user, id: result.data.userId });
-                    this.setToken({ name: user, type: "user" }, token);
+                    this.setToken({ name: user, type: "user", namespace: "platform" }, token);
 
                     console.log(`Logged in as ${user}`);
                 }
@@ -136,7 +131,9 @@ export default class User extends Component {
                     const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: teams[0].teamId });
                     const token = result.data.id;
                     this.setToken({ name, type: "team" }, token);
-                    console.log(`Switched to team ${name}`);
+                    this.helper.setProp("current_login", name);
+                    this.helper.setProp("current_user_type", "team");
+                    console.log(`Switched to team: ${name}`);
                 } else {
                     console.log("Unable to switch to Team : Invalid team");
                 }
@@ -253,6 +250,7 @@ export default class User extends Component {
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
         this.helper.setProp("current_user_type", userInfo.type);
+        this.helper.setProp("namespace", userInfo.namespace);
         const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
         tokenProp[userInfo.name as string] = token;
         this.helper.setProp("token", tokenProp);

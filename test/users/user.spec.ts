@@ -1,19 +1,19 @@
-import { IConfigReader, IConfig, Config } from "merapi";
-import { suite, test } from "mocha-typescript";
-import { spy, stub, assert } from "sinon";
-import { IHelper } from "../../interfaces/main";
+// tslint:disable:member-access
 import { readFileSync } from "fs";
 import { safeLoad } from "js-yaml";
-import Helper from "../../components/scripts/helper";
-import Zaun from "../../components/api/zaun";
+import { Config, IConfig } from "merapi";
+import { suite, test } from "mocha-typescript";
+import { assert, stub } from "sinon";
 import Api from "../../components/api/api";
+import Zaun from "../../components/api/zaun";
+import Helper from "../../components/scripts/helper";
 import User from "../../components/users/user";
+import { IHelper } from "../../interfaces/main";
 
 @suite class UserTest {
     private config: IConfig;
     private helper: IHelper;
     private api: any;
-    private session: any;
     private user: any;
 
     private userTokenObj = {
@@ -45,17 +45,17 @@ import User from "../../components/users/user";
         expire: 1506915325
     }
     private teamObj = {
-        id: 'e563ec87-dae9-45f0-a2b3-515a069fb2b0',
-        username: 'user1',
-        password: 'password',
-        type: 'team',
-        email: <string> null,
-        profile: <string> null,
-        roleId: '55f7d797-a938-4f59-9c6a-cf6cd8a01d08',
-        created_at: '2017-06-18T01:46:13.000Z',
-        updated_at: '2017-06-18T01:46:13.000Z',
-        teams: <any[]> [{teamId: 'e563ec87-dae9-45f0-a2b3-515a069fb2b0'}]
-    }
+        id: "e563ec87-dae9-45f0-a2b3-515a069fb2b0",
+        username: "user1",
+        password: "password",
+        type: "team",
+        email: null as string,
+        profile: null as string,
+        roleId: "55f7d797-a938-4f59-9c6a-cf6cd8a01d08",
+        created_at: "2017-06-18T01:46:13.000Z",
+        updated_at: "2017-06-18T01:46:13.000Z",
+        teams: [{ teamId: "e563ec87-dae9-45f0-a2b3-515a069fb2b0", username: "team1" }] as any[]
+    };
 
     constructor() {
         let zaun = Zaun();
@@ -170,18 +170,17 @@ import User from "../../components/users/user";
     }
 
     @test async "function switch should switch team successfully with team name"() {
-        let consoleLogStub = stub(console, "log");
-        let getTokenStub = stub(this.helper, "getCurrentToken").returns({token: "token"});
-        let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
+        const getTokenStub = stub(this.helper, "getCurrentToken").returns({ token: "token" });
+        const getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
             callback(null, this.teamObj);
         });
-        let createTokenTeamStub = stub(this.api.authApi, "tokensPost").callsFake((body, callback) => {
+        const createTokenTeamStub = stub(this.api.authApi, "tokensPost").callsFake((body, callback) => {
             callback(null, this.teamTokenObj);
-        })
-        let setPropStub = stub(this.helper, "setProp");
-        let getPropStub = stub(this.helper, "getProp");
+        });
+        const setPropStub = stub(this.helper, "setProp");
+        const getPropStub = stub(this.helper, "getProp");
 
-        getPropStub.withArgs("first_login").returns({user: "user1", type: "user"});
+        getPropStub.withArgs("first_login").returns({ user: "user1", type: "user" });
         getPropStub.withArgs("current_user_type").returns("user");
 
         await this.user.switch("team", "team1");

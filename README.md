@@ -58,3 +58,49 @@ Command as **team :**
 
 * `kata add-member <username> [options] --admin`
 * `kata remove-member <username>`
+
+# Kata CLI 2.0
+
+Soon, we will implement kata-cli 2.0 because of our updated platform to 3.0.
+
+## Changes 
+
+### Project environment
+
+Before running kata-cli main command (ex: push, pull, etc.), user have to define what project that user is working on with command : 
+`kata set-project <projectName>`
+
+### New commands
+
+New command : 
+
+* `kata create-project` - Create a project
+* `kata list-project` - Display current projects that you have
+* `kata set-project <projectName>` - Select project that you want to use, any bot operation will be related to that project
+
+Updated command (`Old command` -> `New command`) :
+
+* `kata init <name> [version]` -> `kata init <name>`
+* `kata pull <name> <version>` -> `kata pull [revision]`
+* `kata test [file]` -> `kata test [file] [revision]`
+* `kata console <diaenneUrl>` -> `kata console [revision]`
+* `kata versions` -> `kata list-revision`
+
+Deprecated Command :
+
+Temporary :
+* `deploy <name> [version]`
+* `list-deployment`
+* `add-channel [options] <name> <channelName>`
+* `remove-channel <name> <channelName>`
+
+Permanent : 
+* `kata session-get <id> [deploymentId]`
+* `kata session-create <id> [deploymentId]`
+* `kata session-update <id> [deploymentId]`
+* `kata session-delete <id> [deploymentId]`
+
+
+### New kata-cli Console
+
+If you execute `kata console` command, kata-cli will generate a `.katasession` file in your home directory, so you can debug further.  And if you want to view your current session in kata-cli, after executing `kata console` just type `current()`.
