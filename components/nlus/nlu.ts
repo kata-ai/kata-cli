@@ -276,9 +276,9 @@ export default class Nlu extends Component {
         try {
             page = page || 1;
             limit = limit || 10;
-            const nlus = await this.helper.toPromise(
-                this.api.projectApi, this.api.projectApi.ProjectsGet, { page, limit }
-            );
+
+            const projectId = this.helper.getProp("projectId");
+            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, projectId, { page, limit });
             if (nlus && nlus.data) {
                 const table = new Table({
                     head: ["Name", "Language", "Visibility"]
@@ -295,9 +295,11 @@ export default class Nlu extends Component {
     }
 
     public async snapshot() {
+        const projectId = this.helper.getProp("projectId");
         try {
-            const nluDesc: any = this.helper.loadYaml("./nlu.yml");
-            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameSnapshotGet, nluDesc.name);
+            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluSnapshotGet, projectId, nluDesc.name);
+
             console.log(`Snapshot captured!`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
