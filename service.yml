@@ -295,6 +295,10 @@ commands:
         type: group
         desc: command for nlu management
         subcommands:
+            pull:
+                desc: pull nlu from server
+                handler: nlu.pull
+                alias: nl-pull
             push:
                 desc: create or update nlu
                 handler: nlu.push
