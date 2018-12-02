@@ -143,7 +143,7 @@ export default class Nlu extends Component {
                                 // Update remote entity
                                 if (!nluDesc.entities[key].inherit) {
                                     await this.helper.toPromise(this.api.nluApi,
-                                        this.api.nluApi.projectsProjectIdNlusEntitiesEntityNamePut,
+                                        this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNamePut,
                                         nluDesc.name, key, { ...nluDesc.entities[key], name: key });
                                 }
                             } else {
@@ -161,7 +161,7 @@ export default class Nlu extends Component {
                             if (!nluDesc.entities[key]) {
                                 // delete remote entity
                                 await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.projectsProjectIdNlusEntitiesEntityNameDelete,
+                                    this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
                                     nluDesc.name, key);
                             }
                         }
@@ -173,7 +173,7 @@ export default class Nlu extends Component {
                         if (entities.data[key]) {
                             // delete remote entity
                             await this.helper.toPromise(this.api.nluApi,
-                                this.api.nluApi.projectsProjectIdNlusEntitiesEntityNameDelete,
+                                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
                                 nluDesc.name, key);
                         }
                     }
