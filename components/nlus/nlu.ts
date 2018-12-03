@@ -127,7 +127,7 @@ export default class Nlu extends Component {
 
         try {
             nlu = await this.helper.toPromise(this.api.projectApi,
-                this.api.projectApi.projectsProjectIdNluGet, nluDesc.name);
+                this.api.projectApi.projectsProjectIdNluGet, projectId);
             entities = await this.helper.toPromise(this.api.nluApi,
                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, nluDesc.name);
 
