@@ -118,79 +118,98 @@ export default class Nlu extends Component {
     }
 
     public async push() {
+
+        const projectId = this.helper.getProp("projectId");
         const nluDesc: any = this.helper.loadYaml("./nlu.yml");
 
-        try {
-            const nlu = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameGet, nluDesc.name);
-            const entities = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameEntitiesGet, nluDesc.name);
+        let nlu;
+        let entities;
 
-            if (nlu && nlu.data) {
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi,
+                this.api.projectApi.projectsProjectIdNluGet, projectId);
+            nlu = body;
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+            return;
+        }
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, projectId, nluDesc.name);
+            entities = body;
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+            return;
+        }
+
+
+        try {
+            if (nlu) {
                 let { lang, visibility } = nluDesc;
                 visibility = visibility || "private";
-                await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePut, nluDesc.name, { lang, visibility });
+                // await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePut,
+                //     nluDesc.name, { lang, visibility });
 
-                if (nluDesc.entities && entities.data) {
-                    const localDiff = this.helper.difference(nluDesc.entities, entities.data);
+                if (nluDesc.entities && entities) {
+                    const localDiff = this.helper.difference(nluDesc.entities, entities);
+
                     if (localDiff) {
                         for (const key in localDiff) {
-                            if (entities.data[key]) {
+                            if (entities[key]) {
                                 // Update remote entity
-                                await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesEntityNamePut,
-                                    nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                if (!nluDesc.entities[key].inherit) {
+                                    await this.helper.toPromise(this.api.nluApi,
+                                        this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNamePut,
+                                        projectId, nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                }
                             } else {
                                 // Create new entity
                                 await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesPost,
-                                    nluDesc.name, { ...nluDesc.entities[key], name: key });
+                                    this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
+                                    projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
                             }
                         }
                     }
 
-                    const remoteDiff = this.helper.difference(entities.data, nluDesc.entities);
+                    const remoteDiff = this.helper.difference(entities, nluDesc.entities);
                     if (remoteDiff) {
                         for (const key in remoteDiff) {
                             if (!nluDesc.entities[key]) {
                                 // delete remote entity
                                 await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesEntityNameDelete,
-                                    nluDesc.name, key);
+                                    this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
+                                    projectId, nluDesc.name, key);
                             }
                         }
                     }
                 }
 
-                if (!nluDesc.entities && entities.data) {
-                    for (const key in entities.data) {
-                        // delete remote entity
-                        await this.helper.toPromise(this.api.nluApi,
-                            this.api.nluApi.nlusNluNameEntitiesEntityNameDelete,
-                            nluDesc.name, key);
+                if (!nluDesc.entities && entities) {
+                    for (const key in entities) {
+                        if (entities[key]) {
+                            // delete remote entity
+                            await this.helper.toPromise(this.api.nluApi,
+                                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
+                                projectId, nluDesc.name, key);
+                        }
                     }
                 }
 
-                if (nluDesc.entities && !entities.data) {
+                if (nluDesc.entities && !entities) {
                     for (const key in nluDesc.entities) {
-                        // create new entity
-                        await this.helper.toPromise(this.api.nluApi,
-                            this.api.nluApi.nlusNluNameEntitiesPost,
-                            nluDesc.name, { ...nluDesc.entities[key], name: key });
+                        if (nluDesc.entities[key]) {
+                            // create new entity
+                            await this.helper.toPromise(this.api.nluApi,
+                                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
+                                projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
+                        }
                     }
                 }
             }
 
             console.log(`NLU ${nluDesc.name} Updated !`);
         } catch (error) {
-            if (error.status === 400) {
-                try {
-                    await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
-                    console.log(`NLU ${nluDesc.name} Created !`);
-                } catch (error) {
-                    console.log(this.helper.wrapError(error));
-                }
-            } else {
-                console.log(this.helper.wrapError(error));
-            }
+            console.log(this.helper.wrapError(error));
         }
     }
 
