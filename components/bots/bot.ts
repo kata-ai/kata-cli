@@ -97,7 +97,7 @@ export default class Bot extends Component {
 
     public async test(file: string, options: JsonObject) {
         const testFiles = file ? [file] : this.helper.getFiles("./test", ".spec.yml");
-        const botId = this.helper.getBotId();
+        const botId = this.helper.getProjectId();
 
         if (!botId) {
             throw new Error("BOT ID HAS NOT DEFINED");
@@ -167,24 +167,8 @@ export default class Bot extends Component {
         }
     }
 
-    public async list(options: JsonObject) {
-        try {
-            const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
-            const table = new Table({
-                head: ["Bot ID", "Bot Name", "Version", "Description"]
-                , colWidths: [20, 20, 10, 20]
-            });
-            data.items.forEach((bot: { id: string, name: string, version: string, desc: string }) => {
-                table.push([bot.id, bot.name, bot.version, bot.desc]);
-            });
-            console.log(table.toString());
-        } catch (e) {
-            console.log(this.helper.wrapError(e));
-        }
-    }
-
     public async push(options: JsonObject) {
-        const desc = this.helper.loadYaml("./bot.yml");        
+        const desc = this.helper.loadYaml("./bot.yml");
         desc.tag = options.tag || null;
 
         let bot = Config.create(desc, { left: "${", right: "}" });
@@ -202,7 +186,7 @@ export default class Bot extends Component {
         try {
             const projectId = this.getProject();
             botDesc.id = projectId;
-            const result = await this.helper.toPromise(this.api.botApi, 
+            const result = await this.helper.toPromise(this.api.botApi,
                 this.api.botApi.projectsProjectIdBotRevisionsPost, projectId, botDesc);
             console.log(`Push Bot Success. Revision : ${result.data.revision.substring(0, 7)}`);
         } catch (e) {
@@ -268,7 +252,7 @@ export default class Bot extends Component {
             return;
         }
 
-        const botId = this.helper.getBotId();
+        const botId = this.helper.getProjectId();
 
         try {
             const { data } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdDelete, botId);
@@ -432,11 +416,11 @@ export default class Bot extends Component {
 
     private getProject() {
         const projectId = this.helper.getProp("projectId")
-    
+
         if (!projectId || projectId === "") {
             throw Error("Error : You must specify a Project first, execute kata list-project to list your projects.");
         }
-        
+
         return projectId;
     }
 
@@ -451,12 +435,12 @@ export default class Bot extends Component {
         const jsonPath = `${os.homedir()}/.katasession`;
         try {
             if (session) {
-                fs.writeFileSync(jsonPath, JSON.stringify(session), "utf8");    
+                fs.writeFileSync(jsonPath, JSON.stringify(session), "utf8");
             }
         } catch (error) {
             console.log(this.helper.wrapError(`Error set local session : ${error.message}`));
         }
-        
+
     }
 
     private getLocalSession() {

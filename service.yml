@@ -9,7 +9,9 @@ components:
 
     # bot management
     bot: bots/Bot
+    channel: bots/Channel
     deployment: bots/Deployment
+    environment: bots/Environment
     session: bots/Session
 
     # Project managements
@@ -69,10 +71,6 @@ commands:
                 desc: list all bot revision
                 handler: bot.revisions
                 alias: revisions
-            list:
-                desc: list all user's bots
-                handler: bot.list
-                alias: list-bots
             push:
                 desc: push and update version bot
                 params:
@@ -115,34 +113,63 @@ commands:
         type: group
         desc: Commands for deployment bot
         subcommands:
-            deploy:
+            create:
                 desc: create or update deployment
-                args: <name> [version]
-                handler: deployment.deploy
-                alias: deploy
+                # args: [botRevision]
+                handler: deployment.create
+                alias: create-deployment
+            # deploy:
+            #     desc: create or update deployment
+            #     args: <name> [version]
+            #     handler: deployment.deploy
+            #     alias: deploy
             list:
                 desc: list all deployment by bot id
                 handler: deployment.list
                 alias: list-deployment
+
+    environment:
+        type: group
+        desc: Commands for environment bot
+        subcommands:
+            create:
+                desc: create or update environment
+                args: <slug>
+                handler: environment.create
+                alias: create-environment
+            list:
+                desc: xxxxx
+                handler: environment.list
+                alias: list-environment
+            update:
+                desc: xxxxx
+                args: <name> [version]
+                handler: environment.update
+                alias: update
+
+    channels:
+        type: group
+        desc: Commands for channel
+        subcommands:
             addChannel:
-                args: <name> <channelName>
+                args: <environmentId> <channelName>
                 params:
                     data:
                         type: json
                         desc: channel json data
                         short: d
-                handler: deployment.addChannel
+                handler: channel.addChannel
                 alias: add-channel
+            list:
+                args: <environmentId>
+                desc: xxxxx
+                handler: channel.list
+                alias: list-channel
             removeChannel:
                 desc: remove channel
                 args: <name> <channelName>
-                handler: deployment.removeChannel
+                handler: channel.removeChannel
                 alias: remove-channel
-            drop:
-                desc: remove deployment
-                args: <name>
-                handler: deployment.drop
-                alias: drop
 
     project:
         type: group
@@ -308,11 +335,6 @@ commands:
                 handler: nlu.init
                 args: "<name> [sandbox]"
                 alias: nl-init
-            list:
-                desc: list nlu
-                handler: nlu.listNlus
-                args: "[page] [number]"
-                alias: list-nlus
             train:
                 desc: train nlu
                 handler: nlu.train
