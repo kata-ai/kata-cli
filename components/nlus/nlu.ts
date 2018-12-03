@@ -129,15 +129,10 @@ export default class Nlu extends Component {
             nlu = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdNluGet, projectId);
             entities = await this.helper.toPromise(this.api.nluApi,
-                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, nluDesc.name);
+                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, projectId, nluDesc.name);
 
         } catch (error) {
-            if (error.status === 400) {
-                console.log(`No NLU under project ${projectId} found`);
-                return;
-            } else {
-                console.log(this.helper.wrapError(error));
-            }
+            console.log(this.helper.wrapError(error));
             return;
         }
 
@@ -158,13 +153,13 @@ export default class Nlu extends Component {
                                 if (!nluDesc.entities[key].inherit) {
                                     await this.helper.toPromise(this.api.nluApi,
                                         this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNamePut,
-                                        nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                        projectId, nluDesc.name, key, { ...nluDesc.entities[key], name: key });
                                 }
                             } else {
                                 // Create new entity
                                 await this.helper.toPromise(this.api.nluApi,
                                     this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
-                                    nluDesc.name, { ...nluDesc.entities[key], name: key });
+                                    projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
                             }
                         }
                     }
@@ -176,7 +171,7 @@ export default class Nlu extends Component {
                                 // delete remote entity
                                 await this.helper.toPromise(this.api.nluApi,
                                     this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
-                                    nluDesc.name, key);
+                                    projectId, nluDesc.name, key);
                             }
                         }
                     }
@@ -188,7 +183,7 @@ export default class Nlu extends Component {
                             // delete remote entity
                             await this.helper.toPromise(this.api.nluApi,
                                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
-                                nluDesc.name, key);
+                                projectId, nluDesc.name, key);
                         }
                     }
                 }
@@ -199,7 +194,7 @@ export default class Nlu extends Component {
                             // create new entity
                             await this.helper.toPromise(this.api.nluApi,
                                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
-                                nluDesc.name, { ...nluDesc.entities[key], name: key });
+                                projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
                         }
                     }
                 }
