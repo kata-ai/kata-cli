@@ -2,6 +2,7 @@ import { IHelper } from "interfaces/main";
 import { Component, JsonObject } from "merapi";
 const Table = require("cli-table");
 const fs = require("fs");
+const yaml = require("js-yaml");
 
 const template: any = {
     default: {
@@ -86,20 +87,33 @@ const template: any = {
 
 export default class Nlu extends Component {
 
-    constructor(private helper : IHelper, private api : any) {
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
-    public async init(name : string, sandbox? : string) {
+    public async init(name: string, sandbox?: string) {
         try {
-            const sandboxName : any = sandbox || "default";
-            const nluDesc : any = template[sandboxName];
+            const sandboxName: any = sandbox || "default";
+            const nluDesc: any = template[sandboxName];
 
             nluDesc.name = name;
             this.helper.dumpYaml("./nlu.yml", nluDesc);
             console.log(`Init NLU ${name}`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async pull() {
+        const projectId = this.helper.getProp("projectId");
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdNluGet, projectId);
+            const nluYml = yaml.dump(body);
+            console.log("Writing to nlu.yml...");
+            fs.writeFileSync("nlu.yml", nluYml);
+        } catch (error) {
+            console.log("Error: ", this.helper.wrapError(error));
+            return;
         }
     }
 
@@ -197,9 +211,9 @@ export default class Nlu extends Component {
         }
     }
 
-    public async train(options : JsonObject) {
+    public async train(options: JsonObject) {
+        const projectId = this.helper.getProp("projectId");
         try {
-            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
             let opts = {};
             if (options.file) {
                 console.log(`Training.. (input file: ${options.file})`);
@@ -213,17 +227,18 @@ export default class Nlu extends Component {
                 };
             }
 
-            const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameTrainPost, nluDesc.name, opts);
+            const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluTrainPost, projectId, opts);
             console.log(`Success: ${trainResult.data.count} data trained !`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
     }
 
-    public async predict(options : JsonObject) {
+    public async predict(options: JsonObject) {
+        const projectId = this.helper.getProp("projectId");
         try {
-            const nluDesc : any = !options.nlu ? this.helper.loadYaml("./nlu.yml") : { name: "" };
-            let nluName = nluDesc.name;
+            const nluDesc: any = !options.nlu ? this.helper.loadYaml("./nlu.yml") : { name: "" };
+            const nluName = options.nlu || nluDesc.id;
             let opts = {};
             if (options.file) {
                 console.log(`Predict.. (input file: ${options.file})`);
@@ -231,22 +246,22 @@ export default class Nlu extends Component {
                     file: fs.createReadStream(options.file)
                 };
 
-                nluName = options.nlu || nluName;
             } else if (options.sentence) {
                 console.log(`Predict.. (input: ${options.sentence})`);
                 opts = {
                     sentence: options.sentence
                 };
 
-                nluName = options.nlu || nluName;
             } else {
                 throw new Error("Please input sentence or file to predict");
             }
 
-            const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluName, opts);
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.nluApi, this.api.nluApi.projectsProjectIdNlusNluNamePredictPost, projectId, nluName, opts
+            );
             console.log(`Success, result : `);
             let i = 0;
-            predicResult.response.body.result.forEach((x : any) => {
+            body.result.forEach((x: any) => {
                 console.log(`${++i}. Input: ${x.input}`);
                 console.log(`   Result: ${JSON.stringify(x.output)}`);
 
@@ -264,7 +279,7 @@ export default class Nlu extends Component {
                     head: ["Type", "Name", "Desc"]
                     , colWidths: [10, 10, 40]
                 });
-                profiles.data.forEach((profile : { type : string, name : string, desc : string }) => {
+                profiles.data.forEach((profile: { type: string, name: string, desc: string }) => {
                     table.push([profile.type, profile.name, profile.desc]);
                 });
                 console.log(table.toString());
@@ -274,10 +289,11 @@ export default class Nlu extends Component {
         }
     }
 
-    public async listNlus(page? : number, limit? : number) {
+    public async listNlus(page?: number, limit?: number) {
         try {
             page = page || 1;
             limit = limit || 10;
+
             const projectId = this.helper.getProp("projectId");
             const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, projectId, { page, limit });
             if (nlus && nlus.data) {
@@ -285,7 +301,7 @@ export default class Nlu extends Component {
                     head: ["Name", "Language", "Visibility"]
                     , colWidths: [20, 20, 20]
                 });
-                nlus.data.items.forEach((nlus : { name : string, lang : string, visibility : string }) => {
+                nlus.data.items.forEach((nlus: { name: string, lang: string, visibility: string }) => {
                     table.push([nlus.name, nlus.lang, nlus.visibility]);
                 });
                 console.log(table.toString());
@@ -296,10 +312,11 @@ export default class Nlu extends Component {
     }
 
     public async snapshot() {
+        const projectId = this.helper.getProp("projectId");
         try {
-            const projectId = this.helper.getProp("projectId");
             const nluDesc : any = this.helper.loadYaml("./nlu.yml");
             const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluSnapshotGet, projectId, nluDesc.name);
+
             console.log(`Snapshot captured!`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
