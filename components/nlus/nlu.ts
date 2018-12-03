@@ -126,11 +126,17 @@ export default class Nlu extends Component {
         let entities;
 
         try {
-            nlu = await this.helper.toPromise(this.api.projectApi,
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdNluGet, projectId);
-            entities = await this.helper.toPromise(this.api.nluApi,
+            nlu = body;
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+            return;
+        }
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, projectId, nluDesc.name);
-
+            entities = body;
         } catch (error) {
             console.log(this.helper.wrapError(error));
             return;
@@ -138,17 +144,18 @@ export default class Nlu extends Component {
 
 
         try {
-            if (nlu && nlu.data) {
+            if (nlu) {
                 let { lang, visibility } = nluDesc;
                 visibility = visibility || "private";
                 // await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePut,
                 //     nluDesc.name, { lang, visibility });
 
-                if (nluDesc.entities && entities.data) {
-                    const localDiff = this.helper.difference(nluDesc.entities, entities.data);
+                if (nluDesc.entities && entities) {
+                    const localDiff = this.helper.difference(nluDesc.entities, entities);
+
                     if (localDiff) {
                         for (const key in localDiff) {
-                            if (entities.data[key]) {
+                            if (entities[key]) {
                                 // Update remote entity
                                 if (!nluDesc.entities[key].inherit) {
                                     await this.helper.toPromise(this.api.nluApi,
@@ -164,7 +171,7 @@ export default class Nlu extends Component {
                         }
                     }
 
-                    const remoteDiff = this.helper.difference(entities.data, nluDesc.entities);
+                    const remoteDiff = this.helper.difference(entities, nluDesc.entities);
                     if (remoteDiff) {
                         for (const key in remoteDiff) {
                             if (!nluDesc.entities[key]) {
@@ -177,9 +184,9 @@ export default class Nlu extends Component {
                     }
                 }
 
-                if (!nluDesc.entities && entities.data) {
-                    for (const key in entities.data) {
-                        if (entities.data[key]) {
+                if (!nluDesc.entities && entities) {
+                    for (const key in entities) {
+                        if (entities[key]) {
                             // delete remote entity
                             await this.helper.toPromise(this.api.nluApi,
                                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
@@ -188,9 +195,9 @@ export default class Nlu extends Component {
                     }
                 }
 
-                if (nluDesc.entities && !entities.data) {
+                if (nluDesc.entities && !entities) {
                     for (const key in nluDesc.entities) {
-                        if (entities.data[key]) {
+                        if (nluDesc.entities[key]) {
                             // create new entity
                             await this.helper.toPromise(this.api.nluApi,
                                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
