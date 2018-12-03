@@ -15,11 +15,21 @@ export default class Deployment {
         );
 
         try {
+            // const { response: { body: deployments } } = await this.helper.toPromise(
+            //     this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentsVersionsVersionGet,
+            //     projectId
+
+            // );
+            // console.log(deployments)
+
             const postBody = {
                 version: "0.0.1",
                 botRevision: project.botLatestRevision,
                 modules: (null as any),
             };
+            console.log(postBody)
+
+
 
             const { response: { body } } = await this.helper.toPromise(
                 this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsPost,
@@ -29,7 +39,8 @@ export default class Deployment {
             console.log(body);
             console.log("DEPLOYMENT CREATED SUCCESSFULLY");
         } catch (e) {
-            console.error("Error: ", this.helper.wrapError(e));
+            console.error("Error")
+            console.log(this.helper.wrapError(e));
         }
     }
 
