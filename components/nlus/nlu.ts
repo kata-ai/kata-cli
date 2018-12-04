@@ -108,7 +108,9 @@ export default class Nlu extends Component {
         const projectId = this.helper.getProp("projectId");
         try {
             const { response: { body } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdNluGet, projectId);
-            const nluYml = yaml.dump(body);
+            const {name, lang, visibility, entities} = body;
+            const nluDesc = {name, lang, visibility, entities};
+            const nluYml = yaml.dump(nluDesc);
             console.log("Writing to nlu.yml...");
             fs.writeFileSync("nlu.yml", nluYml);
         } catch (error) {
