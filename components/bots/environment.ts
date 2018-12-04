@@ -115,11 +115,12 @@ export default class Environment {
 
     private async getLatestDeployment() {
         const projectId = this.helper.getProjectId();
-        console.log(projectId)
-        const { response: { body: latestDeployment } } = await this.helper.toPromise(
+
+        const { response } = await this.helper.toPromise(
             this.api.projectApi, this.api.projectApi.projectsProjectIdDeploymentGet, projectId
         );
-        return latestDeployment;
+
+        return response && response.body && response.body.latestDeployment;
     }
 
     private async listEnvironment(): Promise<any[]> {
