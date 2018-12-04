@@ -91,15 +91,15 @@ commands:
                         type: string
                 handler: bot.discard
                 alias: discard
-            delete:
-                desc: delete bot
-                handler: bot.delete
-                alias: remove-bot
-            test:
-                desc: running test file
-                args: "[file]"
-                handler: bot.test
-                alias: test
+            # delete:
+            #     desc: delete bot
+            #     handler: bot.delete
+            #     alias: remove-bot
+            # test:
+            #     desc: running test file
+            #     args: "[file]"
+            #     handler: bot.test
+            #     alias: test
             console:
                 desc: kata-cli interactive command
                 params:
@@ -291,7 +291,7 @@ commands:
             changePassword:
                 desc: change current user password
                 handler: user.changePassword
-                alias: pwd
+                alias: change-password
             createTeam:
                 desc: create team
                 args: <name>
