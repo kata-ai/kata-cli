@@ -14,9 +14,15 @@ export default class Deployment {
             projectId
         );
 
+        const { response: { body: latestDeployment } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdDeploymentGet, projectId);
+        const prevVersion = latestDeployment.version;
+        const [major, minor, patch] = prevVersion.split(".");
+        const updatedPatch = Number(patch) + 1;
+        const targetVersion = `${major}.${minor}.${updatedPatch}`;
+        
         try {
             const postBody = {
-                version: "0.0.1",
+                version: targetVersion,
                 botRevision: project.botLatestRevision,
                 modules: (null as any),
             };
@@ -25,11 +31,11 @@ export default class Deployment {
                 this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsPost,
                 postBody, projectId,
             );
-
-            console.log(body);
-            console.log("DEPLOYMENT CREATED SUCCESSFULLY");
+            
+            console.log(`Succesfully create Deployment to version ${targetVersion}`);
         } catch (e) {
-            console.error("Error: ", this.helper.wrapError(e));
+            console.error("Error");
+            console.log(this.helper.wrapError(e));
         }
     }
 
