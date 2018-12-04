@@ -8,17 +8,18 @@ export default class Channel {
     constructor(private helper: IHelper, private api: any, private config: Config) {
     }
 
-    public async addChannel(environmentId: string, channelName: string, options: JsonObject) {
+    public async addChannel(channelName: string, options: JsonObject) {
         const projectId = this.helper.getProjectId();
+        const environmentId = await this.inquireEnvironmentId();
+
         try {
-            // add chnnel/environmentchannel
-            const { response: { body } }= await this.helper.toPromise(
+            const { response: { body: channelsBody } } = await this.helper.toPromise(
                 this.api.deploymentApi,
                 this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet,
                 projectId, environmentId, {},
             );
 
-            const channels: { name: string; id: string }[] = body;
+            const channels: { name: string; id: string }[] = channelsBody;
             const channelWithSameName = channels.find((row) => row.name === channelName);
             if (channelWithSameName) {
                 throw new Error("CHANNEL NAME HAS BEEN USED");
@@ -39,7 +40,7 @@ export default class Channel {
                 environmentId,
                 channelData,
             );
-            console.log(result.response.body)
+            console.log(result.response.body);
             const channel = result.response.body;
 
 
@@ -56,8 +57,9 @@ export default class Channel {
     }
 
 
-    public async list(environmentId: string) {
+    public async list() {
         const projectId = this.helper.getProjectId();
+        const environmentId = await this.inquireEnvironmentId();
 
         try {
             const { response: { body } } = await this.helper.toPromise(
@@ -65,17 +67,20 @@ export default class Channel {
                 projectId, environmentId, {}
             );
 
-            if (body) {
-                const table = new Table({
-                    head: ["Channel Name", "Channel Type", "Channel ID"],
-                    colWidths: [30, 30, 42]
-                });
-
-                body.forEach((channel: JsonObject) => {
-                    table.push([channel.name, channel.type, channel.id]);
-                });
-                console.log(table.toString());
+            if (!body) {
+                throw Error("Failed to list Channels for this environment.");
             }
+
+            const table = new Table({
+                head: ["Channel Name", "Channel Type", "Channel ID"],
+                colWidths: [30, 30, 42]
+            });
+
+            body.forEach((channel: JsonObject) => {
+                table.push([channel.name, channel.type, channel.id]);
+            });
+            console.log(table.toString());
+
         } catch (e) {
             console.log(this.helper.wrapError(e));
         }
@@ -83,9 +88,10 @@ export default class Channel {
 
 
     public async removeChannel(
-        environmentId: string, channelName: string, options: JsonObject
+        channelName: string, options: JsonObject
     ) {
         const projectId = this.helper.getProjectId();
+        const environmentId = await this.inquireEnvironmentId();
 
         try {
             const { response: { body } } = await this.helper.toPromise(
@@ -99,7 +105,7 @@ export default class Channel {
             if (!channel) {
                 throw new Error("CHANNEL NOT FOUND");
             }
-            console.log(channel)
+            console.log(channel);
 
             await this.helper.toPromise(
                 this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsChannelIdDelete,
@@ -242,5 +248,33 @@ export default class Channel {
             //
         }
         return { ...res, ...answer };
+    }
+
+    private async listEnvironment() {
+        const projectId = this.helper.getProp("projectId");
+        const { response: { body } } = await this.helper.toPromise(
+            this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsGet, projectId, {}
+            );
+        if (!body || !body.data) {
+            throw Error("Failed to list environments.");
+        }
+        return body.data;
+    }
+
+    private async inquireEnvironmentId(): Promise<string> {
+        const environmentListP = this.listEnvironment();
+        const environmentList = await environmentListP;
+        const choices = environmentList.map((row: any) => ({ name: row.name, value: row.id }));
+
+        const { environmentId } = await inquirer.prompt<any>([
+            {
+                type: "list",
+                name: "environmentId",
+                message: "Select project:",
+                paginated: true,
+                choices
+            },
+        ]);
+        return environmentId;
     }
 }

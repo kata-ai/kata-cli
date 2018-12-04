@@ -137,6 +137,7 @@ export default class Deployment {
             );
 
             console.log(body);
+            // if (body && Object.keys())
             console.log("DEPLOYMENT CREATED SUCCESSFULLY");
         } catch (e) {
             console.error("Error")

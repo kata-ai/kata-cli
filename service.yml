@@ -133,16 +133,16 @@ commands:
         desc: Commands for environment bot
         subcommands:
             create:
-                desc: create or update environment
+                desc: Create an environment on the selected project
                 args: <slug>
                 handler: environment.create
                 alias: create-environment
             list:
-                desc: xxxxx
+                desc: List environments of the selected project
                 handler: environment.list
                 alias: list-environment
             update:
-                desc: xxxxx
+                desc: Update an environment of the selected project
                 args: <name> [version]
                 handler: environment.update
                 alias: update
@@ -152,7 +152,8 @@ commands:
         desc: Commands for channel
         subcommands:
             addChannel:
-                args: <environmentId> <channelName>
+                args: <channelName>
+                desc: Create a channel on the selected environment
                 params:
                     data:
                         type: json
@@ -161,13 +162,12 @@ commands:
                 handler: channel.addChannel
                 alias: add-channel
             list:
-                args: <environmentId>
-                desc: xxxxx
+                desc: List channels of the selected environment
                 handler: channel.list
                 alias: list-channel
             removeChannel:
-                desc: remove channel
-                args: <name> <channelName>
+                desc: Remove a channel from the selected environment
+                args: <channelName>
                 handler: channel.removeChannel
                 alias: remove-channel
 
