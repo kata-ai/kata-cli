@@ -6,7 +6,7 @@ const Table = require("cli-table");
 export default class Deployment {
     constructor(private helper: IHelper, private api: any) {
     }
-
+    
     public async create() {
         const projectId = this.helper.getProjectId();
         const { response: { body: project } } = await this.helper.toPromise(
@@ -14,16 +14,24 @@ export default class Deployment {
             projectId
         );
 
-        const { response: { body: latestDeployment } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdDeploymentGet, projectId);
-        const prevVersion = latestDeployment.version;
-        const [major, minor, patch] = prevVersion.split(".");
-        const updatedPatch = Number(patch) + 1;
-        const targetVersion = `${major}.${minor}.${updatedPatch}`;
-        
+        let targetVersion;
+        try {
+            const { response: { body: latestDeployment } } = await this.helper.toPromise(this.api.projectApi,
+                this.api.projectApi.projectsProjectIdDeploymentGet, projectId);
+            const prevVersion = latestDeployment.version;
+            const [major, minor, patch] = prevVersion.split(".");
+            const updatedPatch = Number(patch) + 1;
+            targetVersion  = `${major}.${minor}.${updatedPatch}`;
+        } catch (e) {
+            targetVersion = "0.0.1";
+        }
+
         try {
             const postBody = {
                 version: targetVersion,
                 botRevision: project.botLatestRevision,
+                nluRevision: project.nluLatestRevision,
+                cmsRevision: project.cmsLatestRevision,
                 modules: (null as any),
             };
 
@@ -31,7 +39,7 @@ export default class Deployment {
                 this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsPost,
                 postBody, projectId,
             );
-            
+
             console.log(`Succesfully create Deployment to version ${targetVersion}`);
         } catch (e) {
             console.error("Error");
