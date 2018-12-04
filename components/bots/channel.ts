@@ -1,16 +1,21 @@
 
 import { IHelper } from "interfaces/main";
 import { Config, JsonObject } from "merapi";
+import Environment from "./environment";
 import inquirer = require("inquirer");
 const Table = require("cli-table");
 
 export default class Channel {
-    constructor(private helper: IHelper, private api: any, private config: Config) {
-    }
+    constructor(
+        private helper: IHelper,
+        private api: any,
+        private config: Config,
+        private environment: Environment,
+    ) { }
 
     public async addChannel(channelName: string, options: JsonObject) {
         const projectId = this.helper.getProjectId();
-        const environmentId = await this.inquireEnvironmentId();
+        const environmentId = await this.environment.askEnvironmentId();
 
         try {
             const { response: { body: channelsBody } } = await this.helper.toPromise(
@@ -59,7 +64,7 @@ export default class Channel {
 
     public async list() {
         const projectId = this.helper.getProjectId();
-        const environmentId = await this.inquireEnvironmentId();
+        const environmentId = await this.environment.askEnvironmentId();
 
         try {
             const { response: { body } } = await this.helper.toPromise(
@@ -91,7 +96,7 @@ export default class Channel {
         channelName: string, options: JsonObject
     ) {
         const projectId = this.helper.getProjectId();
-        const environmentId = await this.inquireEnvironmentId();
+        const environmentId = await this.environment.askEnvironmentId();
 
         try {
             const { response: { body } } = await this.helper.toPromise(
@@ -248,33 +253,5 @@ export default class Channel {
             //
         }
         return { ...res, ...answer };
-    }
-
-    private async listEnvironment() {
-        const projectId = this.helper.getProp("projectId");
-        const { response: { body } } = await this.helper.toPromise(
-            this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsGet, projectId, {}
-            );
-        if (!body || !body.data) {
-            throw Error("Failed to list environments.");
-        }
-        return body.data;
-    }
-
-    private async inquireEnvironmentId(): Promise<string> {
-        const environmentListP = this.listEnvironment();
-        const environmentList = await environmentListP;
-        const choices = environmentList.map((row: any) => ({ name: row.name, value: row.id }));
-
-        const { environmentId } = await inquirer.prompt<any>([
-            {
-                type: "list",
-                name: "environmentId",
-                message: "Select project:",
-                paginated: true,
-                choices
-            },
-        ]);
-        return environmentId;
     }
 }

@@ -156,6 +156,8 @@ export default class Helper extends Component {
 
         if (error.response && error.response.body && error.response.body.message) {
             errorMessage = error.response.body.message;
+        } else if (error.response && error.response.body) {
+            errorMessage = error.response.body;
         } else {
             errorMessage = error.message;
         }

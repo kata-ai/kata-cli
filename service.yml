@@ -143,9 +143,9 @@ commands:
                 alias: list-environment
             update:
                 desc: Update an environment of the selected project
-                args: <name> [version]
+                args: <newDeploymentVersion>
                 handler: environment.update
-                alias: update
+                alias: update-environment
 
     channels:
         type: group
