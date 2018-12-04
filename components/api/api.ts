@@ -10,8 +10,7 @@ export default class Api extends Component {
     private authApi: any;
     private userApi: any;
     private teamApi: any;
-    private deploymentApi: any;
-    private channelApi: any;
+    public deploymentApi: any;
     private sessionApi: any;
     private cachesApi: any;
     private utilApi: any;

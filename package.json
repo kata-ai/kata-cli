@@ -54,7 +54,7 @@
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.11",
     "merapi": "^0.17.1",
-    "merapi-proxy": "^0.1.3",
+    "merapi-proxy": "^0.1.7",
     "superagent": "^3.8.2",
     "uuid": "^3.2.1",
     "zaun": "git+ssh://git@bitbucket.org/yesboss/zaun-swagger.git"

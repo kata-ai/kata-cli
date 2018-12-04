@@ -109,7 +109,11 @@ export default class Helper extends Component {
         return desc.id as string;
     }
 
-    public createDirectory(dirPath : string, mode? : number) {
+    public getProjectId(): string {
+        return this.getProp("projectId") as string;
+    }
+
+    public createDirectory(dirPath: string, mode?: number) {
         if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath, mode);
         }
@@ -152,6 +156,8 @@ export default class Helper extends Component {
 
         if (error.response && error.response.body && error.response.body.message) {
             errorMessage = error.response.body.message;
+        } else if (error.response && error.response.body) {
+            errorMessage = error.response.body;
         } else {
             errorMessage = error.message;
         }
