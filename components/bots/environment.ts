@@ -80,7 +80,7 @@ export default class Environment {
         }
     }
 
-    public async askEnvironmentId(prop?: { message?: string }): Promise<string> {
+    public async askEnvironmentId(prop: { message?: string } = {}): Promise<string> {
         const environmentList = await this.listEnvironment();
         const choices = environmentList.map((row: any) => ({ name: `${row.name} (${row.depVersion})`, value: row.id }));
 
@@ -120,7 +120,7 @@ export default class Environment {
             this.api.projectApi, this.api.projectApi.projectsProjectIdDeploymentGet, projectId
         );
 
-        return response && response.body && response.body.latestDeployment;
+        return response && response.body;
     }
 
     private async listEnvironment(): Promise<any[]> {
