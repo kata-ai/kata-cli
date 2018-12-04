@@ -114,15 +114,9 @@ commands:
         desc: Commands for deployment bot
         subcommands:
             create:
-                desc: create or update deployment
-                # args: [botRevision]
+                desc: Create a Deployment of the selected project
                 handler: deployment.create
                 alias: create-deployment
-            # deploy:
-            #     desc: create or update deployment
-            #     args: <name> [version]
-            #     handler: deployment.deploy
-            #     alias: deploy
             list:
                 desc: list all deployment by bot id
                 handler: deployment.list
@@ -173,7 +167,7 @@ commands:
 
     project:
         type: group
-        desc: Commands for project bot
+        desc: Commands for bot projects
         subcommands:
             create:
                 desc: create project
