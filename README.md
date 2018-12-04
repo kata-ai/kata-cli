@@ -67,24 +67,23 @@ Commands  | Functionalities
 `kata remove-bot` | to delete selected bot
 `kata test [fileName]` | to run a test for the bot 
 `kata console [revision]` | to converse with the bot
-`kata deploy <botName> [version]` | to deploy the bot
-`kata add-channel [options] <botName> <channelName>` | to add bot channel
-`kata remove-channel <botName> <channelName>` | to remove bot channel
+`kata create-deployment` | Create a Deployment
+`kata list-deployment` | List Deployments
+`kata create-environment <slug>` | Create an environment on the selected project
+`kata list-environment` | List environments of the selected project
+`kata update-environment <newDeploymentVersion>` | Update an environment of the selected project
+`kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
+`kata list-channel` | List channels of the selected environment
+`kata remove-channel <channelName>` | Remove the channel named channelName from the selected environment
 `kata drop <botName>` | to drop bot 
 `kata set <prop> <value>` | 
 `kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 **Deprecated Commands**
 
-Sad to say that there are several commands which are no longer in use :(
-
-_Temporary deprecated:_
-* `kata deploy <name> [version]`
-* `kata list-deployment`
-* `kata add-channel [options] <name> <channelName>`
-* `kata remove-channel <name> <channelName>`
 
 _Permanently deprecated:_
+* `kata deploy <name> [version]`
 * `kata session-get <id> [deploymentId]`
 * `kata session-create <id> [deploymentId]`
 * `kata session-update <id> [deploymentId]`
