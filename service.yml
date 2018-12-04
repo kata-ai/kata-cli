@@ -326,8 +326,7 @@ commands:
                 alias: nl-push
             init:
                 desc: init nlu file
-                handler: nlu.init
-                args: "<name> [sandbox]"
+                handler: nlu.pull
                 alias: nl-init
             train:
                 desc: train nlu
