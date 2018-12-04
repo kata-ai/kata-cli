@@ -215,6 +215,18 @@ export default class Nlu extends Component {
 
     public async train(options: JsonObject) {
         const projectId = this.helper.getProp("projectId");
+        let nluDesc;
+        try {
+            nluDesc = this.helper.loadYaml("./nlu.yml");
+        } catch (e) {
+            console.log("Missing nlu.yml");
+            return;
+        }
+        const nluName = nluDesc.name;
+        if (!nluName) {
+            console.log("Missing name in nlu.yml");
+            return;
+        }
         try {
             let opts = {};
             if (options.file) {
@@ -229,7 +241,8 @@ export default class Nlu extends Component {
                 };
             }
 
-            const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluTrainPost, projectId, opts);
+            const trainResult = await this.helper.toPromise(this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameTrainPost, projectId, nluName, opts);
             console.log(`Success: ${trainResult.data.count} data trained !`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -238,9 +251,19 @@ export default class Nlu extends Component {
 
     public async predict(options: JsonObject) {
         const projectId = this.helper.getProp("projectId");
+        let nluDesc;
         try {
-            const nluDesc: any = !options.nlu ? this.helper.loadYaml("./nlu.yml") : { name: "" };
-            const nluName = options.nlu || nluDesc.id;
+            nluDesc = this.helper.loadYaml("./nlu.yml");
+        } catch (e) {
+            console.log("Missing nlu.yml");
+            return;
+        }
+        const nluName = nluDesc.name;
+        if (!nluName) {
+            console.log("Missing name in nlu.yml");
+            return;
+        }
+        try {
             let opts = {};
             if (options.file) {
                 console.log(`Predict.. (input file: ${options.file})`);
