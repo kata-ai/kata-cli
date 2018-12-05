@@ -1,12 +1,10 @@
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
-import { ICompile, IHelper, ITester } from "interfaces/main";
-
-const colors = require("colors");
-const inquirer = require("inquirer");
+import { IHelper } from "interfaces/main";
+import { Component, JsonObject } from "merapi";
 const Table = require("cli-table");
 const fs = require("fs");
-const template : any = {
+const yaml = require("js-yaml");
+
+const template: any = {
     default: {
         name: "kata",
         lang: "id",
@@ -89,14 +87,14 @@ const template : any = {
 
 export default class Nlu extends Component {
 
-    constructor(private helper : IHelper, private api : any) {
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
-    public async init(name : string, sandbox? : string) {
+    public async init(name: string, sandbox?: string) {
         try {
-            const sandboxName : any = sandbox || "default";
-            const nluDesc : any = template[sandboxName];
+            const sandboxName: any = sandbox || "default";
+            const nluDesc: any = template[sandboxName];
 
             nluDesc.name = name;
             this.helper.dumpYaml("./nlu.yml", nluDesc);
@@ -106,85 +104,107 @@ export default class Nlu extends Component {
         }
     }
 
+    public async pull() {
+        const projectId = this.helper.getProp("projectId");
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdNluGet, projectId);
+            const {name, lang, visibility, entities} = body;
+            const nluDesc = {name, lang, visibility, entities};
+            const nluYml = yaml.dump(nluDesc);
+            console.log("Writing to nlu.yml...");
+            fs.writeFileSync("nlu.yml", nluYml);
+        } catch (error) {
+            console.log("Error: ", this.helper.wrapError(error));
+            return;
+        }
+    }
+
     public async push() {
-        const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+
+        const projectId = this.helper.getProp("projectId");
+        const nluDesc: any = this.helper.loadYaml("./nlu.yml");
 
         let nlu;
         let entities;
 
         try {
-            nlu = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameGet, nluDesc.name);
-            entities = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameEntitiesGet, nluDesc.name);
-
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi,
+                this.api.projectApi.projectsProjectIdNluGet, projectId);
+            nlu = body;
         } catch (error) {
-            if (error.status === 400) {
-                try {
-                    await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusPost, nluDesc);
-                    console.log(`NLU ${nluDesc.name} Created !`);
-                } catch (error) {
-                    console.log(this.helper.wrapError(error));
-                }
-            } else {
-                console.log(this.helper.wrapError(error));
-            }
+            console.log(this.helper.wrapError(error));
+            return;
+        }
+        try {
+            const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesGet, projectId, nluDesc.name);
+            entities = body;
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
             return;
         }
 
 
         try {
-            if (nlu && nlu.data) {
+            if (nlu) {
                 let { lang, visibility } = nluDesc;
                 visibility = visibility || "private";
-                await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePut, nluDesc.name, { lang, visibility });
+                // await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePut,
+                //     nluDesc.name, { lang, visibility });
 
-                if (nluDesc.entities && entities.data) {
-                    const localDiff = this.helper.difference(nluDesc.entities, entities.data);
+                if (nluDesc.entities && entities) {
+                    const localDiff = this.helper.difference(nluDesc.entities, entities);
+
                     if (localDiff) {
                         for (const key in localDiff) {
-                            if (entities.data[key]) {
+                            if (entities[key]) {
                                 // Update remote entity
                                 if (!nluDesc.entities[key].inherit) {
                                     await this.helper.toPromise(this.api.nluApi,
-                                        this.api.nluApi.nlusNluNameEntitiesEntityNamePut,
-                                        nluDesc.name, key, { ...nluDesc.entities[key], name: key });
+                                        this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNamePut,
+                                        projectId, nluDesc.name, key, { ...nluDesc.entities[key], name: key });
                                 }
                             } else {
                                 // Create new entity
                                 await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesPost,
-                                    nluDesc.name, { ...nluDesc.entities[key], name: key });
+                                    this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
+                                    projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
                             }
                         }
                     }
 
-                    const remoteDiff = this.helper.difference(entities.data, nluDesc.entities);
+                    const remoteDiff = this.helper.difference(entities, nluDesc.entities);
                     if (remoteDiff) {
                         for (const key in remoteDiff) {
                             if (!nluDesc.entities[key]) {
                                 // delete remote entity
                                 await this.helper.toPromise(this.api.nluApi,
-                                    this.api.nluApi.nlusNluNameEntitiesEntityNameDelete,
-                                    nluDesc.name, key);
+                                    this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
+                                    projectId, nluDesc.name, key);
                             }
                         }
                     }
                 }
 
-                if (!nluDesc.entities && entities.data) {
-                    for (const key in entities.data) {
-                        // delete remote entity
-                        await this.helper.toPromise(this.api.nluApi,
-                            this.api.nluApi.nlusNluNameEntitiesEntityNameDelete,
-                            nluDesc.name, key);
+                if (!nluDesc.entities && entities) {
+                    for (const key in entities) {
+                        if (entities[key]) {
+                            // delete remote entity
+                            await this.helper.toPromise(this.api.nluApi,
+                                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameDelete,
+                                projectId, nluDesc.name, key);
+                        }
                     }
                 }
 
-                if (nluDesc.entities && !entities.data) {
+                if (nluDesc.entities && !entities) {
                     for (const key in nluDesc.entities) {
-                        // create new entity
-                        await this.helper.toPromise(this.api.nluApi,
-                            this.api.nluApi.nlusNluNameEntitiesPost,
-                            nluDesc.name, { ...nluDesc.entities[key], name: key });
+                        if (nluDesc.entities[key]) {
+                            // create new entity
+                            await this.helper.toPromise(this.api.nluApi,
+                                this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
+                                projectId, nluDesc.name, { ...nluDesc.entities[key], name: key });
+                        }
                     }
                 }
             }
@@ -195,9 +215,21 @@ export default class Nlu extends Component {
         }
     }
 
-    public async train(options : JsonObject) {
+    public async train(options: JsonObject) {
+        const projectId = this.helper.getProp("projectId");
+        let nluDesc;
         try {
-            const nluDesc : any = this.helper.loadYaml("./nlu.yml");
+            nluDesc = this.helper.loadYaml("./nlu.yml");
+        } catch (e) {
+            console.log("Missing nlu.yml");
+            return;
+        }
+        const nluName = nluDesc.name;
+        if (!nluName) {
+            console.log("Missing name in nlu.yml");
+            return;
+        }
+        try {
             let opts = {};
             if (options.file) {
                 console.log(`Training.. (input file: ${options.file})`);
@@ -211,17 +243,29 @@ export default class Nlu extends Component {
                 };
             }
 
-            const trainResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameTrainPost, nluDesc.name, opts);
+            const trainResult = await this.helper.toPromise(this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameTrainPost, projectId, nluName, opts);
             console.log(`Success: ${trainResult.data.count} data trained !`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
     }
 
-    public async predict(options : JsonObject) {
+    public async predict(options: JsonObject) {
+        const projectId = this.helper.getProp("projectId");
+        let nluDesc;
         try {
-            const nluDesc : any = !options.nlu ? this.helper.loadYaml("./nlu.yml") : { name: "" };
-            let nluName = nluDesc.name;
+            nluDesc = this.helper.loadYaml("./nlu.yml");
+        } catch (e) {
+            console.log("Missing nlu.yml");
+            return;
+        }
+        const nluName = nluDesc.name;
+        if (!nluName) {
+            console.log("Missing name in nlu.yml");
+            return;
+        }
+        try {
             let opts = {};
             if (options.file) {
                 console.log(`Predict.. (input file: ${options.file})`);
@@ -229,22 +273,22 @@ export default class Nlu extends Component {
                     file: fs.createReadStream(options.file)
                 };
 
-                nluName = options.nlu || nluName;
             } else if (options.sentence) {
                 console.log(`Predict.. (input: ${options.sentence})`);
                 opts = {
                     sentence: options.sentence
                 };
 
-                nluName = options.nlu || nluName;
             } else {
                 throw new Error("Please input sentence or file to predict");
             }
 
-            const predicResult = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNamePredictPost, nluName, opts);
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.nluApi, this.api.nluApi.projectsProjectIdNlusNluNamePredictPost, projectId, nluName, opts
+            );
             console.log(`Success, result : `);
             let i = 0;
-            predicResult.response.body.result.forEach((x : any) => {
+            body.result.forEach((x: any) => {
                 console.log(`${++i}. Input: ${x.input}`);
                 console.log(`   Result: ${JSON.stringify(x.output)}`);
 
@@ -262,7 +306,7 @@ export default class Nlu extends Component {
                     head: ["Type", "Name", "Desc"]
                     , colWidths: [10, 10, 40]
                 });
-                profiles.data.forEach((profile : { type : string, name : string, desc : string }) => {
+                profiles.data.forEach((profile: { type: string, name: string, desc: string }) => {
                     table.push([profile.type, profile.name, profile.desc]);
                 });
                 console.log(table.toString());
@@ -272,17 +316,20 @@ export default class Nlu extends Component {
         }
     }
 
-    public async listNlus(page? : number, limit? : number) {
+    // deprecated soon
+    private async listNlus(page?: number, limit?: number) {
         try {
             page = page || 1;
             limit = limit || 10;
-            const nlus = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusGet, { page, limit });
+
+            const projectId = this.helper.getProp("projectId");
+            const nlus = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdNluGet, projectId, { page, limit });
             if (nlus && nlus.data) {
                 const table = new Table({
                     head: ["Name", "Language", "Visibility"]
                     , colWidths: [20, 20, 20]
                 });
-                nlus.data.items.forEach((nlus : { name : string, lang : string, visibility : string }) => {
+                nlus.data.items.forEach((nlus: { name: string, lang: string, visibility: string }) => {
                     table.push([nlus.name, nlus.lang, nlus.visibility]);
                 });
                 console.log(table.toString());
@@ -293,9 +340,11 @@ export default class Nlu extends Component {
     }
 
     public async snapshot() {
+        const projectId = this.helper.getProp("projectId");
         try {
             const nluDesc : any = this.helper.loadYaml("./nlu.yml");
-            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.nlusNluNameSnapshotGet, nluDesc.name);
+            const result = await this.helper.toPromise(this.api.nluApi, this.api.nluApi.projectsProjectIdNluSnapshotGet, projectId, nluDesc.name);
+
             console.log(`Snapshot captured!`);
         } catch (error) {
             console.log(this.helper.wrapError(error));

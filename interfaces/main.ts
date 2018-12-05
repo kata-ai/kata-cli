@@ -292,6 +292,7 @@ export interface IHelper {
     getProp(prop: string, options?: JsonObject): Json;
     toPromise(ctx: any, func: any, ...args: any[]): Promise<any>;
     getBotId(): string;
+    getProjectId(): string;
     createDirectory(path: string, mode?: number) : void;
     getCurrentToken() : JsonObject;
     loadYamlOrJsonFile(filePath: string) : JsonObject;

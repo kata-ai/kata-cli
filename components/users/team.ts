@@ -1,16 +1,13 @@
-import { Component, JsonObject, IHash, Config, Json } from "merapi";
-import { v4 as uuid } from "uuid";
-import { ICompile, IHelper, ITester } from "interfaces/main";
-const colors = require("colors");
-const inquirer = require("inquirer");
+import { IHelper } from "interfaces/main";
+import { Component, JsonObject } from "merapi";
 
 export default class Team extends Component {
 
-    constructor(private helper : IHelper, private api : any) {
+    constructor(private helper: IHelper, private api: any) {
         super();
     }
 
-    public async addMember(username : string, options? : JsonObject) {
+    public async addMember(username: string, options?: JsonObject) {
         try {
             const role = options.admin ? "teamAdmin" : "teamMember";
             const { userInfo, teamInfo, teamMember, currentLogin } = await this.getInfo(username);
