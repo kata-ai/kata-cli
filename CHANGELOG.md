@@ -1,4 +1,8 @@
 # CHANGELOG
+## [2.0.1] - 2018/12/05
+### Fixed : 
+- Fix .gitignore
+
 ## [2.0.0] - 2018/12/05
 ### Added : 
 - Kata CLI v2.0
