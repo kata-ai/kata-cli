@@ -120,13 +120,10 @@ export default class User extends Component {
             const firstLogin = this.helper.getProp("first_login") as JsonObject;
             const currentType = this.helper.getProp("current_user_type");
             const currentLogin = this.helper.getProp("current_login");
+            const username = name ? name : currentLogin;
 
-            if (type === "user" && currentType === type) {
-                throw new Error(`Unable to switch : already on ${type}`);
-            }
-
-            if (type === "team" && currentType === type && name === currentLogin) {
-                throw new Error(`Unable to switch : already on ${currentLogin} team`);
+            if (currentType === type && username === currentLogin) {
+                throw new Error(`Unable to switch : already on ${currentLogin} ${type}`);
             }
 
 
