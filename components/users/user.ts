@@ -187,9 +187,6 @@ export default class User extends Component {
             const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: "teamAdmin" });
 
             if (response && response.body.id) {
-                const { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
-                const result = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, response.body.id, data.id, { roleId: "teamAdmin" });
-
                 console.log(`Team ${name} created !`);
             } else {
                 console.log(`Team ${name} exist !`);
