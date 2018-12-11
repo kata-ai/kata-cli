@@ -7,13 +7,12 @@ export default class Deployment {
     constructor(private helper: IHelper, private api: any) {
     }
 
-    public async create() {
+    public async create(versionType?: string) {
         const projectId = this.helper.getProjectId();
         const { response: { body: project } } = await this.helper.toPromise(
             this.api.projectApi, this.api.projectApi.projectsProjectIdGet,
             projectId
         );
-
         // TODO: {page:1, limit:1}
         let botRevision: string;
         let nluRevision: string;
@@ -53,13 +52,26 @@ export default class Deployment {
         }
 
         let targetVersion;
+
         try {
+            // get previous deployment version
             const { response: { body: latestDeployment } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdDeploymentGet, projectId);
             const prevVersion = latestDeployment.version;
-            const [major, minor, patch] = prevVersion.split(".");
-            const updatedPatch = Number(patch) + 1;
-            targetVersion  = `${major}.${minor}.${updatedPatch}`;
+            let [major, minor, patch] = prevVersion.split(".");
+
+            if (versionType === "major") {
+                major = Number(major) + 1;
+                minor = 0;
+                patch = 0;
+            } else if (versionType === "minor") {
+                minor = Number(minor) + 1;
+                patch = 0;
+            } else {
+                patch = Number(patch) + 1;
+            }
+            targetVersion = `${major}.${minor}.${patch}`;
+            
         } catch (e) {
             targetVersion = "0.0.1";
         }
