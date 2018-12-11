@@ -71,7 +71,9 @@ export default class Team extends Component {
             throw new Error("Must be on team to do this operation");
         }
 
-        const requestTeamData = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
+        const requestTeamData =
+            await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
+
         let teamInfo: any;
         if (requestTeamData.response && requestTeamData.response.body) {
             teamInfo = requestTeamData.response.body;
@@ -79,7 +81,9 @@ export default class Team extends Component {
             throw new Error("Cannot add user to team");
         }
         
-        const requestUserData = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
+        const requestUserData =
+            await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
+
         let userInfo: any;
         if (requestUserData && requestUserData.response) {
             userInfo = requestUserData.response.body;
@@ -87,7 +91,9 @@ export default class Team extends Component {
             throw new Error("Cannot add user to team");
         }
 
-        const requestTeamMember = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamInfo.id);
+        const requestTeamMember =
+            await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamInfo.id);
+
         let teamMember: any;
         if (requestTeamMember && requestTeamMember.response) {
             teamMember = requestTeamMember.response.body;
