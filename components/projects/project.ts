@@ -55,7 +55,7 @@ export default class Project {
             delete nluOptions.privateNlu;
         }
 
-        const requestBody = { ...projectData, options: { ...options, nluOptions } };
+        const requestBody = { ...projectData, options: { ...options, ...nluOptions } };
 
         try {
             const { response } = await this.helper.toPromise(
