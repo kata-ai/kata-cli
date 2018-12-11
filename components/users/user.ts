@@ -128,7 +128,7 @@ export default class User extends Component {
                 const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
 
                 if (!response) {
-                    throw new Error(`Unable to switch team`);
+                    throw new Error("Unable to switch team");
                 }
 
                 const teams = response && response.body ? response.body.teams.filter((team: any) => team.username === name) : [];

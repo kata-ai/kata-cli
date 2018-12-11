@@ -94,7 +94,7 @@ export default class Team extends Component {
         const requestTeamMember =
             await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamInfo.id);
 
-        let teamMember: any;
+        let teamMember: any[];
         if (requestTeamMember && requestTeamMember.response) {
             teamMember = requestTeamMember.response.body;
         } else {
@@ -109,7 +109,7 @@ export default class Team extends Component {
         };
     }
 
-    private checkUser(userId : string, member : any) : boolean {
+    private checkUser(userId: string, member: any[]): boolean {
         const teamMember = member.map((x: JsonObject) => x.userId);
         if (teamMember.indexOf(userId) > -1) {
             return true;
