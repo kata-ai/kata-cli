@@ -126,6 +126,11 @@ export default class User extends Component {
 
             if (type === "team") {
                 const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
+
+                if (!response) {
+                    throw new Error(`Unable to switch team`);
+                }
+
                 const teams = response && response.body ? response.body.teams.filter((team: any) => team.username === name) : [];
                 if (teams.length > 0) {
                     const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: teams[0].teamId });
