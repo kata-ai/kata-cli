@@ -80,8 +80,8 @@ commands:
                 handler: bot.push
                 alias: push
             pull:
-                desc: pull bot with specified name and version
-                args: "<name> <version>"
+                desc: pull bot with specific revision
+                args: "[revision]"
                 handler: bot.pull
                 alias: pull
             discard:
@@ -181,7 +181,7 @@ commands:
                 desc: list all project
                 handler: project.list
                 alias: list-project
-                
+
     session:
         type: group
         desc: Commands for session management

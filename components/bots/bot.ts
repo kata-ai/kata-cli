@@ -380,38 +380,58 @@ export default class Bot extends Component {
         throw new Error("Sync only accept promises");
     }
 
-    public async pull(name: string, version: string, options: JsonObject) {
-        let isGettingBot = false;
+    public async pull(revision: string, options: JsonObject) {
+
+        let projectId;
+        let bots;
+        let botDesc;
+
         try {
-            const { data, response } = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsGet, {});
-            let found = false;
-            let selectedBot: any;
-            for (const bot of data.items) {
-                const botName = bot.name;
-                if (botName === name) {
-                    found = true;
-                    selectedBot = bot;
-                    break;
+            projectId = this.getProject();
+        } catch (e) {
+            console.log(this.helper.wrapError(e));
+            return;
+        }
+        try {
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsGet, projectId);
+            bots = body.data;
+
+        } catch (e) {
+            console.log("INVALID PROJECT");
+            return;
+        }
+        try {
+            if (!revision) {
+                revision = bots[0].revision;
+            }
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionGet, projectId, revision);
+            botDesc = body;
+
+        } catch (e) {
+            console.log("INVALID PROJECT REVISION");
+            return;
+        }
+
+        // remove data
+        delete botDesc.id;
+        delete botDesc.revision;
+        delete botDesc.changelog;
+        for (const flow in botDesc.flows) {
+            if (botDesc.flows[flow]) {
+                for (const state in botDesc.flows[flow].states) {
+                    if (botDesc.flows[flow].states[state]) {
+                        delete botDesc.flows[flow].states[state].style;
+                    }
                 }
             }
-            if (found) {
-                // Get specific bot version
-                isGettingBot = true;
-                const botId = selectedBot.id + ":" + version;
-                const getBot = await this.helper.toPromise(this.api.botApi, this.api.botApi.botsBotIdGet, botId);
-                const botDesc = getBot.data;
-                this.helper.dumpYaml("./bot.yml", botDesc);
-                console.log(`SUCCESS PULL BOT ${name} WITH VERSION ${version}`);
-            } else {
-                console.log(`BOT NOT FOUND`);
-            }
-        } catch (e) {
-            if (isGettingBot) {
-                console.log(`CANNOT PULL BOT ${name} WITH VERSION ${version}`);
-            } else {
-                console.log(this.helper.wrapError(e));
-            }
         }
+
+        console.log(`Pull bot revision ${revision.substring(0, 6)} to bot.yml`);
+        this.helper.dumpYaml("./bot.yml", botDesc);
+
+        return;
     }
 
     private getProject() {
