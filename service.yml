@@ -115,6 +115,7 @@ commands:
         subcommands:
             create:
                 desc: Create a Deployment of the selected project
+                args: "[versionType]"
                 handler: deployment.create
                 alias: create-deployment
             list:
