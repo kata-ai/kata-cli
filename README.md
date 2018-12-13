@@ -25,7 +25,7 @@ Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
 `kata login [options]` | the parameter `options` can be `user` or `team`
 `kata whoami` | to see the current user login informations
-`kata pwd` | to change user's password
+`kata change-password` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
 
