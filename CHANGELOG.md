@@ -1,4 +1,14 @@
 # CHANGELOG
+## [2.0.2] - 2018/12/13
+### Fixed : 
+- Switch team error
+- Create team error namespace
+- Add or remove member to team
+
+### Added : 
+- Pull with revision
+- Version type when create-deployment
+
 ## [2.0.1] - 2018/12/05
 ### Fixed : 
 - Fix .gitignore

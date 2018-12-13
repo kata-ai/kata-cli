@@ -119,14 +119,22 @@ export default class User extends Component {
         try {
             const firstLogin = this.helper.getProp("first_login") as JsonObject;
             const currentType = this.helper.getProp("current_user_type");
+            const currentLogin = this.helper.getProp("current_login");
+            const username = name ? name : currentLogin;
 
-            if (currentType === type) {
-                throw new Error(`Unable to switch : already on ${type}`);
+            if (currentType === type && username === currentLogin) {
+                throw new Error(`Unable to switch : already on ${currentLogin} ${type}`);
             }
 
+
             if (type === "team") {
-                const info = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
-                const teams = info ? info.data.teams.filter((team: any) => team.username === name) : [];
+                const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
+
+                if (!response) {
+                    throw new Error("Unable to switch team");
+                }
+
+                const teams = response && response.body ? response.body.teams.filter((team: any) => team.username === name) : [];
                 if (teams.length > 0) {
                     const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.tokensPost, { type: "team", teamId: teams[0].teamId });
                     const token = result.data.id;
@@ -187,9 +195,6 @@ export default class User extends Component {
             const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: "teamAdmin" });
 
             if (response && response.body.id) {
-                const { data } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
-                const result = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, response.body.id, data.id, { roleId: "teamAdmin" });
-
                 console.log(`Team ${name} created !`);
             } else {
                 console.log(`Team ${name} exist !`);
