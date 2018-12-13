@@ -1,4 +1,8 @@
 # CHANGELOG
+## [2.0.4] - 2018/12/13
+### Fixed : 
+- Remove *.yml from .gitignore
+
 ## [2.0.3] - 2018/12/13
 ### Fixed : 
 - Fix vulnerabilities
