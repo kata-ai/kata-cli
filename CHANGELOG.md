@@ -1,5 +1,5 @@
 # CHANGELOG
-## [2.0.2] - 2018/12/05
+## [2.0.2] - 2018/12/13
 ### Fixed : 
 - Switch team error
 - Create team error namespace
