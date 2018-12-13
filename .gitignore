@@ -5,4 +5,3 @@ typings
 .nyc_output
 *.map
 .env
-*.yml
