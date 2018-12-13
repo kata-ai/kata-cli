@@ -28,10 +28,10 @@ We upgraded Kata-CLI version into 2.0 along with our Platform to 3.0. There are 
 ➜  npm i -g Kata-CLI
 ```
 
-or to be exact:
+or to be exact, you can add `@version-number`
 
 ```shell 
-➜  npm i -g Kata-CLI@2.0.4
+➜  npm i -g Kata-CLI@2.x.x
 ```
 
 Then, check kata-cli upgraded version.
