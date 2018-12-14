@@ -336,5 +336,11 @@ To train a nlu.
 ➜  kata nl-predict [-s <sentence>]
 ```
 
-*Contributing to the Documentation*
-Is something missing/incorrect? Please let us know by contacting support@kata.ai. If you know how to fix it straight away, don’t hesitate to create a pull request on this documentation’s GitHub repository.
+# Contributing
+Is something missing/incorrect? Please let us know by contacting support@kata.ai. If you know how to fix it straight away, don’t hesitate to create a pull request on this documentation’s GitHub repository by following these steps:
+1.  Fork this repository
+2.  Name your branch with prefix `feature/` if you added new feature, `hotfix/` if you fixed some bugs
+3.  Code, and dont forget to add test after added new feature
+4.  Commit your branch and pull request to base `develop` branch
+
+Happy contributing :)
