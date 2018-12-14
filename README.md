@@ -10,7 +10,7 @@ For more information, check our website (http://kata.ai/en).
 # Installation
 To install Kata-CLI in global mode, run this command in your terminal:
 ```shell
-npm install -g Kata-CLI
+npm install -g kata-cli
 ```
 This is the preferred method to install Kata-CLI, as it will always install the most recent stable release.
 
@@ -25,13 +25,13 @@ We upgraded Kata-CLI version into 2.0 along with our Platform to 3.0. There are 
 
 ```shell
 // upgrade kata-cli to the latest version
-➜  npm i -g Kata-CLI
+➜  npm i -g kata-cli
 ```
 
 or to be exact, you can add `@version-number`
 
 ```shell 
-➜  npm i -g Kata-CLI@2.x.x
+➜  npm i -g kata-cli@2.x.x
 ```
 
 Then, check kata-cli upgraded version.
@@ -299,12 +299,10 @@ To train a nlu.
 
 *Predict Sentences with NLU*
 
-```
+```shell
 ➜  kata nl-predict [-f <trainPath/filename.txt>]
 ➜  kata nl-predict [-s <sentence>]
 ```
 
 *Contributing to the Documentation*
 Is something missing/incorrect? Please let us know by contacting support@kata.ai. If you know how to fix it straight away, don’t hesitate to create a pull request on this documentation’s GitHub repository.
-
-```
