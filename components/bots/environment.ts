@@ -22,7 +22,7 @@ export default class Environment {
 
             const existEnvs = await this.listEnvironment();
             for (const existEnv of existEnvs) {
-                if (existEnv.name === name) {
+                if ((existEnv.name as string).toLowerCase() === name.toLowerCase()) {
                     throw new Error(
                         "Can not create environment with same name. " +
                         "Please use command update-environment.");
