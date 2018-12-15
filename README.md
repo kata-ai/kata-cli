@@ -1,4 +1,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5445d7e1a31740f8a4659e4774a168d9)](https://www.codacy.com?utm_source=git@bitbucket.org&amp;utm_medium=referral&amp;utm_content=yesboss/Kata-CLI&amp;utm_campaign=Badge_Grade)
+[![Known Vulnerabilities](https://snyk.io/test/github/kata-ai/kata-cli/badge.svg)](https://snyk.io/test/github/kata-ai/kata-cli)
+[![NPM version](https://img.shields.io/npm/v/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
+[![NPM downloads](https://img.shields.io/npm/dm/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 
 # Introduction to Kata-CLI 2.0
 Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
