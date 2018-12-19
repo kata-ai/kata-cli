@@ -172,10 +172,10 @@ import { IHelper } from "../../interfaces/main";
     @test async "function switch should switch team successfully with team name"() {
         const getTokenStub = stub(this.helper, "getCurrentToken").returns({ token: "token" });
         const getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
+            callback(null, this.teamObj, { body: this.teamObj });
         });
         const createTokenTeamStub = stub(this.api.authApi, "tokensPost").callsFake((body, callback) => {
-            callback(null, this.teamTokenObj);
+            callback(null, this.teamTokenObj), { body: this.teamTokenObj };
         });
         const setPropStub = stub(this.helper, "setProp");
         const getPropStub = stub(this.helper, "getProp");
@@ -190,7 +190,7 @@ import { IHelper } from "../../interfaces/main";
         createTokenTeamStub.restore();
         setPropStub.restore();
         getPropStub.restore();
-        consoleLogStub.restore();
+        // consoleLogStub.restore();
         assert.calledWith(setPropStub, "current_login", "team1");
         assert.calledWith(setPropStub, "token", { "team1": this.teamTokenObj.id });
     }
@@ -221,14 +221,16 @@ import { IHelper } from "../../interfaces/main";
         let getPropStub = stub(this.helper, "getProp");
 
         getPropStub.withArgs("first_login").returns({user: "user1", type: "user"});
+        getPropStub.withArgs("current_login").returns("user1");
         getPropStub.withArgs("current_user_type").returns("user");
+
 
         await this.user.switch("user");
 
         setPropStub.restore();
         getPropStub.restore();
         consoleLogStub.restore();
-        assert.calledWith(consoleLogStub, "Unable to switch : already on user");
+        assert.calledWith(consoleLogStub, "Unable to switch : already on user1 user");
     }
 
     @test async "function logout should logout successfully"() {
@@ -249,11 +251,11 @@ import { IHelper } from "../../interfaces/main";
         let consoleLogStub = stub(console, "log");
         let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({answer: "password"});
         let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
-            callback(null, {teams: []});
+            callback(null, {teams: []}), { body: {teams:[]} };
         });;
         let createUserStub = stub(this.api.userApi, "usersPost");
         createUserStub.callsFake((body, callback) => {
-            callback(null, {username: newUser});
+            callback(null, {username: newUser}, { body: { username: newUser } });
         });
         
 
@@ -270,11 +272,11 @@ import { IHelper } from "../../interfaces/main";
         let consoleLogStub = stub(console, "log");
         let inquirerPromptStub = stub(this.helper, "inquirerPrompt").returns({answer: "password"});
         let getUserInfoStub = stub(this.api.userApi, "usersUserIdGet").callsFake((userId, callback) => {
-            callback(null, {id: "test-id", teams: []});
+            callback(null, {id: "test-id", teams: []}, { body: {id: "test-id", teams: []} } );
         });;
         let createUserStub = stub(this.api.userApi, "usersPost");
         createUserStub.callsFake((body, callback) => {
-            callback(null, {username: newUser});
+            callback(null, {username: newUser}, { body: {username: newUser} });
         });
         
 
@@ -300,7 +302,7 @@ import { IHelper } from "../../interfaces/main";
             callback(null, null, {body: {id: "team1"}})
         })
         getUserInfoStub.callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamPostStub.callsFake((teamId, userId, roleId, callback) => {
             callback(null, null, {body: {team: this.teamObj}});
@@ -346,7 +348,7 @@ import { IHelper } from "../../interfaces/main";
             callback(null, null, false);
         })
         getUserInfoStub.callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamPostStub.callsFake((teamId, userId, roleId, callback) => {
             callback(null, null, {body: {team: this.teamObj}});

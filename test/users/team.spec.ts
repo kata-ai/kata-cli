@@ -76,10 +76,10 @@ import Team from "../../components/users/team";
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
         getUserInfoStub.withArgs("team1").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
+            callback(null, this.teamObj, { body: this.teamObj });
         });
         getUserInfoStub.withArgs("user2").callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamGetStub.callsFake((teamId, callback) => {
             callback(null, null, {body: [{userId: "anotherUserId"}]});
@@ -125,10 +125,10 @@ import Team from "../../components/users/team";
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
         getUserInfoStub.withArgs("team1").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
+            callback(null, this.teamObj, { body: this.teamObj });
         });
         getUserInfoStub.withArgs("user2").callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamGetStub.callsFake((teamId, callback) => {
             callback(null, null, {body: [{userId: this.userObj.id}]});
@@ -156,10 +156,10 @@ import Team from "../../components/users/team";
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
         getUserInfoStub.withArgs("team1").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
+            callback(null, this.teamObj, { body: this.teamObj });
         });
         getUserInfoStub.withArgs("user2").callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamGetStub.callsFake((teamId, callback) => {
             callback(null, null, {body: [{userId: this.userObj.id}]});
@@ -209,10 +209,10 @@ import Team from "../../components/users/team";
         getPropStub.withArgs("current_login").returns("team1");
         getPropStub.withArgs("current_user_type").returns("team"); 
         getUserInfoStub.withArgs("team1").callsFake((userId, callback) => {
-            callback(null, this.teamObj);
+            callback(null, this.teamObj, { body: this.teamObj });
         });
         getUserInfoStub.withArgs("user2").callsFake((userId, callback) => {
-            callback(null, this.userObj);
+            callback(null, this.userObj, { body: this.userObj });
         });
         teamGetStub.callsFake((teamId, callback) => {
             callback(null, null, {body: [{userId: "anotherUserId"}]});
