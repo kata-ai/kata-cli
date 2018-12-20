@@ -19,7 +19,16 @@ export default class Environment {
             }
 
             const name = await this.askPredefinedEnvironmentName();
-            
+
+            const existEnvs = await this.listEnvironment();
+            for (const existEnv of existEnvs) {
+                if ((existEnv.name as string).toLowerCase() === name.toLowerCase()) {
+                    throw new Error(
+                        "Can not create environment with same name. " +
+                        "Please use command update-environment.");
+                }
+            }
+
             const postBody = {
                 depId: projectId,
                 depVersion: deployment.version,

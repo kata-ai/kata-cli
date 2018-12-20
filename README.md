@@ -1,20 +1,53 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5445d7e1a31740f8a4659e4774a168d9)](https://www.codacy.com?utm_source=git@bitbucket.org&amp;utm_medium=referral&amp;utm_content=yesboss/Kata-CLI&amp;utm_campaign=Badge_Grade)
+[![Known Vulnerabilities](https://snyk.io/test/github/kata-ai/kata-cli/badge.svg)](https://snyk.io/test/github/kata-ai/kata-cli)
+[![NPM version](https://img.shields.io/npm/v/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
+[![NPM downloads](https://img.shields.io/npm/dm/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 
 # Introduction to Kata-CLI 2.0
 Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
 For more information, check our website (http://kata.ai/en).
 
-Soon, we will implement Kata-CLI 2.0 because of our updated platform to 3.0. In Kata-CLI 2.0, we introduce Project Environment on the top of the Bots. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on. 
-
-# Changelog 
+# Changelog
 - [Changelog](CHANGELOG.md)
 
 # Installation
 To install Kata-CLI in global mode, run this command in your terminal:
 ```shell
-npm install -g Kata-CLI
+npm install -g kata-cli
 ```
 This is the preferred method to install Kata-CLI, as it will always install the most recent stable release.
+
+# Upgrading to 2.0
+We upgraded Kata-CLI version into 2.0 along with our Platform to 3.0. There are a number of small backwards incompatible changes with version 2.0. See the full descriptions [here](CHANGELOG.md). *Make sure to update Kata-CLI to our latest stable version before doing some fun with your Bot*.
+
+```shell
+// check kata-cli current version
+➜  kata --version
+   Kata CLI version 1.2.3
+```
+
+```shell
+// upgrade kata-cli to the latest version
+➜  npm i -g kata-cli
+```
+
+or to be exact, you can add `@version-number`
+
+```shell
+➜  npm i -g kata-cli@2.x.x
+```
+
+Then, check kata-cli upgraded version.
+```shell
+➜  kata --version
+   Kata CLI version 2.0.4
+```
+
+In Kata-CLI 2.0, we introduce Project Environment on the top of the Bots, NLU and CMS. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on using this command.
+
+```
+➜  kata select-project
+```
 
 # Command Listings
 Use `kata --help` into your command line to see the list of commands offered by Kata-CLI.
@@ -25,7 +58,7 @@ Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
 `kata login [options]` | the parameter `options` can be `user` or `team`
 `kata whoami` | to see the current user login informations
-`kata pwd` | to change user's password
+`kata change-password` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
 
@@ -33,7 +66,7 @@ This command is accessible by user with role as **admin** :
 
 Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
-`kata create-user` | to set spesific role and create user 
+`kata create-user` | to set spesific role and create user
 
 Command as **team** :
 
@@ -42,10 +75,10 @@ Commands  | Functionalities
 `kata add-member <userName> [options] --admin` | to assign user as the teammember
 `kata remove-member <userName>` | to remove member from the team
 
-The list of command below is accessible by user with role as **user** and **team**:   
+The list of command below is accessible by user with role as **user** and **team**:
 
-**Project environment related command**  
-We implement several new commands to manage Project: 
+**Project environment related command**
+We implement several new commands to manage Project:
 
 Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -53,7 +86,7 @@ Commands  | Functionalities
 `kata list-project` | to display current projects that you have
 `kata select-project` | to select project that you want to use, any bot operation will be related to that project
 
-**Bot related command**  
+**Bot related command**
 Please notice that there are also updated commands from the Bot Environment:
 
 Commands  | Functionalities
@@ -65,7 +98,7 @@ Commands  | Functionalities
 `kata push` | to push the bot revision
 `kata pull [revision]` | to pull the bot with specified name and version
 `kata remove-bot` | to delete selected bot
-`kata test [fileName]` | to run a test for the bot 
+`kata test [fileName]` | to run a test for the bot
 `kata console [revision]` | to converse with the bot
 `kata create-deployment` | Create a Deployment
 `kata list-deployment` | List Deployments
@@ -75,8 +108,8 @@ Commands  | Functionalities
 `kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
 `kata list-channel` | List channels of the selected environment
 `kata remove-channel <channelName>` | Remove the channel named channelName from the selected environment
-`kata drop <botName>` | to drop bot 
-`kata set <prop> <value>` | 
+`kata drop <botName>` | to drop bot
+`kata set <prop> <value>` |
 `kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 **Deprecated Commands**
@@ -90,10 +123,9 @@ _Permanently deprecated:_
 * `kata session-delete <id> [deploymentId]`
 
 # Best Practice
-We hope that you can get a smooth experience in working with Kata-CLI by following several best practice steps: 
+We hope that you can get a smooth experience in working with Kata-CLI by following several best practice steps:
 
 **1. Login to the platform**
-
 
 First of all, we need to login into platform using `kata login`
 
@@ -117,8 +149,8 @@ Welcome to your workspace. Now, it is time to create a project on it.
 ? Is private Nlu? Yes
 Project "your-project-name" (5c9ea2b9-ab79-4aa8-aaa0-a831bbb175de) is successfully created
 ```
-Voila, your first project is there. To see the list of your project, run this command:  
-``` shell 
+Voila, your first project is there. To see the list of your project, run this command:
+``` shell
 ➜ kata select-project
 ```
 then select the existing projects that you're gonna working on.
@@ -130,9 +162,9 @@ Once the project is selected, then it is the turn to build the bot!
 ```shell
 ➜ kata init your-bot-name
 ```
-This command will generate a `bot.yml` file containing a simple hi-bot, as the first revision of your bot. 
+This command will generate a `bot.yml` file containing a simple hi-bot, as the first revision of your bot.
 
-To see the list of bot revisions, run this command: 
+To see the list of bot revisions, run this command:
 ```shell
 ➜ kata-revisions
 ```
@@ -140,7 +172,7 @@ To see the list of bot revisions, run this command:
 **4. Push your bot changes**
 
 
-Customize your bot on `bot.yml` file, then push the bot: 
+Customize your bot on `bot.yml` file, then push the bot:
 ```shell
 ➜ kata push
 Push Bot Success. Revision : 6bb61b7
@@ -181,7 +213,7 @@ your-bot-name>
 (To exit, press ^C again or type .exit)
 ```
 
-Kata-CLI will create a session that alive along the conversation and generate a `.katasession` file in your home directory for further debugging (if needed). 
+Kata-CLI will create a session that alive along the conversation and generate a `.katasession` file in your home directory for further debugging (if needed).
 
 To view your current session, you can either run this command:
 
@@ -190,7 +222,7 @@ To view your current session, you can either run this command:
 {"id":"test~from~console","states":{},"contexes":{},"history":[],"current":null,"meta":{"lastFlow":"hello","lastState":"other","end":true},"timestamp":0,"data":{}}%
 ```
 
-or this command, for a better JSON alignment: 
+or this command, for a better JSON alignment:
 
 ```shell
 ➜  `kata console`
@@ -207,8 +239,111 @@ or this command, for a better JSON alignment:
 
 **6. Logout**
 
-
 Congratulations that you finish your first revision of the bot. Now, it is the time to logout from the platform.
 ```shell
-➜  kata logout 
+➜  kata logout
 ```
+
+
+# Deploy your Project
+
+Follow these following steps to deploy your project to messaging channels.
+
+**1. Create a Deployment**
+
+Create a new deployment version using these command. If you do not specificy the major/minor/patch, it will automatically create a deployment with patch.
+
+```shell
+➜  kata create-deployment [major | minor | patch]
+```
+
+**2. Add and Update Environment**
+
+After having the deployment, create an environment. We provide 3 environment (Development, Staging, Production) that you can choose upon creating an environment.
+
+```shell
+➜  kata create-environment <slug>
+```
+
+If you already have environment, simply update them with the newer deployment version. Select the environment that you want to update from the list provided in command line.
+
+```shell
+➜  kata update-environment <newDeploymentVersion>
+```
+
+**3. Add Channels**
+
+We now can create messaging channels after you have environment. Add channel with your custom channel name. Choose the environment and channel type from the command line.
+
+```shell
+➜  kata add-channel <channelName>
+```
+
+
+# NLU Project
+An NLU must be under a project. Therefore, we need to define a project, before we create an NLU.
+
+## Command listings
+
+Commands | Functionalities
+---------|-----------------
+`kata nl-init` | to initialize nl definition
+`kata nl-push` | to push nl changes
+`kata nl-pull` | to pull nl changes from remote
+`kata nl-train [options]` | to train a sentence or a batch of sentences. `[options]` can be `-f <trainPath/fileName.txt>`
+`kata nl-predict [options]` | to predict a sentence. `[options]` can be `[-f <predictPath/fileName.txt>]`
+`kata list-profiles` | to list all profiles
+`kata nl-snapshot` | to save the nlu snapshot
+
+## NLU Project Best Practice
+
+*Initialize NLU Project*
+
+It would create a new file `nlu.yml` in which the nlu structure can be defined.
+
+```shell
+# initialize a nlu project
+➜  kata nl-init
+```
+
+*Push NLU*
+
+To use push command to create and update the NLU
+
+```shell
+# push current nlu project
+➜  kata nl-push
+```
+
+*List Profiles*
+
+To list all profiles
+
+```shell
+➜  kata list-profiles
+```
+
+*Train NLU*
+
+To train a nlu.
+
+```shell
+➜  kata nl-train [-f <trainPath/filename.txt>]
+➜  kata nl-train [-s <sentence>]
+```
+
+*Predict Sentences with NLU*
+
+```shell
+➜  kata nl-predict [-f <trainPath/filename.txt>]
+➜  kata nl-predict [-s <sentence>]
+```
+
+# Contributing
+Is something missing/incorrect? Please let us know by contacting support@kata.ai. If you know how to fix it straight away, don’t hesitate to create a pull request on this documentation’s GitHub repository by following these steps:
+1.  Fork this repository
+2.  Name your branch with prefix `feature/` if you added new feature, `hotfix/` if you fixed some bugs
+3.  Code, and dont forget to add test after added new feature
+4.  Commit your branch and pull request to base `develop` branch
+
+Happy contributing :)
