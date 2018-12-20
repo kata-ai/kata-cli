@@ -121,7 +121,6 @@ export default class Deployment {
                 console.log(table.toString());
             }
         } catch (e) {
-            console.log(e);
             console.error("Error");
             console.log(this.helper.wrapError(e));
         }
