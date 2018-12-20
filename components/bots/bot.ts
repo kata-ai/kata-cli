@@ -202,7 +202,7 @@ export default class Bot extends Component {
         try {
             botDesc.id = projectId;
             const result = await this.helper.toPromise(this.api.botApi,
-                this.api.botApi.projectsProjectIdBotRevisionsPost, projectId, botDesc);
+                this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, projectId, latestBotRevision, botDesc);
             console.log(`Push Bot Success. Revision : ${result.data.revision.substring(0, 7)}`);
         } catch (e) {
             console.log(this.helper.wrapError(e));
