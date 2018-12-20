@@ -1,4 +1,14 @@
 # CHANGELOG
+## [2.0.5] - 2018/12/20
+### Fixed : 
+- Restrict create-environment when name exist
+- Change Project Push endpoint
+
+### Added : 
+- NL docs on README
+- Move CONTRIBUTING to README
+
+# CHANGELOG
 ## [2.0.4] - 2018/12/13
 ### Fixed : 
 - Remove *.yml from .gitignore
@@ -88,6 +98,7 @@
 - Handle Deployment Management
 - Handle User & Team Management
 
+[2.0.5]: https://github.com/kata-ai/kata-cli/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/kata-ai/kata-cli/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/kata-ai/kata-cli/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/kata-ai/kata-cli/compare/v2.0.1...v2.0.2
