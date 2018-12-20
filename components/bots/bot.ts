@@ -183,8 +183,23 @@ export default class Bot extends Component {
             return;
         }
 
+        const projectId = this.getProject();
+
+        let latestBotRevision: string;
+        // get bot latestRevision
+        // TODO: find a better way to get the latest bot revision
         try {
-            const projectId = this.getProject();
+            const { response: {body: data} } = await this.helper.toPromise(this.api.botApi, 
+                this.api.botApi.projectsProjectIdBotRevisionsGet, projectId);
+            if (data.data && data.data[0]) {
+                latestBotRevision = data.data[0].revision;
+            } 
+        } catch (e) {
+            console.error("Error");
+            console.log(this.helper.wrapError(e));
+        }
+
+        try {
             botDesc.id = projectId;
             const result = await this.helper.toPromise(this.api.botApi,
                 this.api.botApi.projectsProjectIdBotRevisionsPost, projectId, botDesc);
