@@ -1,6 +1,6 @@
 {
   "name": "kata-cli",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Kata AI Command Line Tools",
   "main": "index.js",
   "bin": {
@@ -55,9 +55,8 @@
     "lodash": "^4.17.11",
     "merapi": "^0.17.1",
     "merapi-proxy": "^0.1.7",
-    "superagent": "^3.8.2",
     "uuid": "^3.2.1",
-    "zaun": "^2.1.0"
+    "zaun": "^2.0.2"
   },
   "devDependencies": {
     "@types/inquirer": "0.0.43",

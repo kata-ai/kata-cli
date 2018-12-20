@@ -1,4 +1,8 @@
 # CHANGELOG
+## [2.0.6] - 2018/12/20
+### Fixed : 
+- Remove warning http2
+
 ## [2.0.5] - 2018/12/20
 ### Fixed : 
 - Restrict create-environment when name exist
@@ -98,6 +102,7 @@
 - Handle Deployment Management
 - Handle User & Team Management
 
+[2.0.6]: https://github.com/kata-ai/kata-cli/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/kata-ai/kata-cli/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/kata-ai/kata-cli/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/kata-ai/kata-cli/compare/v2.0.2...v2.0.3
