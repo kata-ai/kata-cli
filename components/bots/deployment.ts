@@ -20,20 +20,9 @@ export default class Deployment {
 
         try {
             const { response: {body: data} } = await this.helper.toPromise(this.api.botApi, 
-                this.api.botApi.projectsProjectIdBotRevisionsGet, projectId);
-            if (data.data && data.data[0]) {
-                botRevision = data.data[0].revision;
-            } 
-        } catch (e) {
-            console.error("Error");
-            console.log(this.helper.wrapError(e));
-        }
-
-        try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
-                this.api.projectApi.projectsProjectIdNluRevisionsGet, projectId);
-            if (data.data && data.data[0]) {
-                nluRevision = data.data[0].revision;
+                this.api.botApi.projectsProjectIdBotGet, projectId);
+            if (data.revision) {
+                botRevision = data.revision;
             }
         } catch (e) {
             console.error("Error");
@@ -42,9 +31,20 @@ export default class Deployment {
 
         try {
             const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
-                this.api.projectApi.projectsProjectIdCmsRevisionsGet, projectId);
-            if (data.data && data.data[0]) {
-                cmsRevision = data.data[0].revision;
+                this.api.projectApi.projectsProjectIdNluGet, projectId);                
+            if (data.snapshot) {
+                nluRevision = data.snapshot;
+            }
+        } catch (e) {
+            console.error("Error");
+            console.log(this.helper.wrapError(e));
+        }
+
+        try {
+            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
+                this.api.projectApi.projectsProjectIdCmsGet, projectId);
+            if (data.revision) {
+                cmsRevision = data.revision;
             } 
         } catch (e) {
             console.error("Error");
