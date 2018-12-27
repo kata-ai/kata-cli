@@ -186,11 +186,9 @@ export default class Bot extends Component {
         const projectId = this.getProject();
 
         let latestBotRevision: string;
-        // get bot latestRevision
-        // TODO: find a better way to get the latest bot revision
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.botApi, 
-                this.api.botApi.projectsProjectIdBotGet, projectId);
+            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
+                this.api.projectApi.projectsProjectIdBotGet, projectId);
             if (data.revision) {
                 latestBotRevision = data.revision;
             } 

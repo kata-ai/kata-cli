@@ -19,8 +19,8 @@ export default class Deployment {
         let cmsRevision: string;
 
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.botApi, 
-                this.api.botApi.projectsProjectIdBotGet, projectId);
+            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
+                this.api.projectApi.projectsProjectIdBotGet, projectId);
             if (data.revision) {
                 botRevision = data.revision;
             }
@@ -91,9 +91,9 @@ export default class Deployment {
             );
 
 
-            console.log(`Bot Revision: ${botRevision.substring(0, 6)}`);
-            console.log(`NLU Revision: ${nluRevision.substring(0, 6)}`);
-            console.log(`CMS Revision: ${cmsRevision.substring(0, 6)}`);
+            console.log(`Bot Revision: ${botRevision.substring(0, 7)}`);
+            console.log(`NLU Revision: ${nluRevision.substring(0, 7)}`);
+            console.log(`CMS Revision: ${cmsRevision.substring(0, 7)}`);
             console.log(`Succesfully create Deployment to version ${targetVersion}`);
         } catch (e) {
             console.error("Error");
