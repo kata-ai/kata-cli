@@ -1,4 +1,10 @@
 # CHANGELOG
+## [2.0.8] - 2018/12/20
+### Fixed : 
+- Fix nl-pull for entity type dictionary 
+- Latest bot, nlu, and cms revision endpoint
+- Remove yarn.lock
+
 ## [2.0.6] - 2018/12/20
 ### Fixed : 
 - Remove warning http2
@@ -12,7 +18,6 @@
 - NL docs on README
 - Move CONTRIBUTING to README
 
-# CHANGELOG
 ## [2.0.4] - 2018/12/13
 ### Fixed : 
 - Remove *.yml from .gitignore
@@ -102,6 +107,7 @@
 - Handle Deployment Management
 - Handle User & Team Management
 
+[2.0.8]: https://github.com/kata-ai/kata-cli/compare/v2.0.6...v2.0.8
 [2.0.6]: https://github.com/kata-ai/kata-cli/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/kata-ai/kata-cli/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/kata-ai/kata-cli/compare/v2.0.3...v2.0.4
