@@ -1,7 +1,9 @@
 # CHANGELOG
 ## [2.0.8] - 2018/12/20
 ### Fixed : 
--  Latest bot, nlu, and cms revision endpoint
+- Fix nl-pull for entity type dictionary 
+- Latest bot, nlu, and cms revision endpoint
+- Remove yarn.lock
 
 ## [2.0.6] - 2018/12/20
 ### Fixed : 
