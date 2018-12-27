@@ -105,18 +105,39 @@ export default class Nlu extends Component {
     }
 
     public async pull() {
+
         const projectId = this.helper.getProp("projectId");
+        let nluDesc;
+
         try {
-            const { response: { body } } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdNluGet, projectId);
+            const { response: { body } } = await this.helper.toPromise(this.api.projectApi,
+                this.api.projectApi.projectsProjectIdNluGet, projectId);
             const {name, lang, visibility, entities} = body;
-            const nluDesc = {name, lang, visibility, entities};
-            const nluYml = yaml.dump(nluDesc);
-            console.log("Writing to nlu.yml...");
-            fs.writeFileSync("nlu.yml", nluYml);
+            nluDesc = {name, lang, visibility, entities};
         } catch (error) {
             console.log("Error: ", this.helper.wrapError(error));
             return;
         }
+        for (const entity in nluDesc.entities) {
+            if (nluDesc.entities[entity] && nluDesc.entities[entity].type === "dict") {
+                // get dictionary
+                try {
+                    const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
+                        this.api.nluApi.projectsProjectIdNlusNluNameEntitiesEntityNameGet,
+                        projectId, nluDesc.name, entity);
+                    if (body.dictionary) {
+                        nluDesc.entities[entity].dictionary = body.dictionary;
+                    }
+                } catch (error) {
+                    console.log("Error: ", this.helper.wrapError(error));
+                    return;
+                }
+            }
+        }
+
+        const nluYml = yaml.dump(nluDesc);
+        console.log("Writing to nlu.yml...");
+        fs.writeFileSync("nlu.yml", nluYml);
     }
 
     public async push() {

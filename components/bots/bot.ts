@@ -190,9 +190,9 @@ export default class Bot extends Component {
         // TODO: find a better way to get the latest bot revision
         try {
             const { response: {body: data} } = await this.helper.toPromise(this.api.botApi, 
-                this.api.botApi.projectsProjectIdBotRevisionsGet, projectId);
-            if (data.data && data.data[0]) {
-                latestBotRevision = data.data[0].revision;
+                this.api.botApi.projectsProjectIdBotGet, projectId);
+            if (data.revision) {
+                latestBotRevision = data.revision;
             } 
         } catch (e) {
             console.error("Error");
