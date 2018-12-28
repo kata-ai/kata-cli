@@ -188,8 +188,8 @@ export default class Nlu extends Component {
                             } else {
                                 // Create new entity
                                 if ((key as string).length > 20) {
-                                    console.log("Failed to push. Entity name must not be longer than 20 characters.");
-                                    return;
+                                    console.log(`Failed to create ${key}. Entity name must not be longer than 20 characters.`);
+                                    continue;
                                 }
                                 await this.helper.toPromise(this.api.nluApi,
                                     this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
@@ -227,8 +227,8 @@ export default class Nlu extends Component {
                         if (nluDesc.entities[key]) {
                             // create new entity
                             if ((key as string).length > 20) {
-                                console.log("Failed to push. Entity name must not be longer than 20 characters.");
-                                return;
+                                console.log(`Failed to create ${key}. Entity name must not be longer than 20 characters.`);
+                                continue;
                             }
                             await this.helper.toPromise(this.api.nluApi,
                                 this.api.nluApi.projectsProjectIdNlusNluNameEntitiesPost,
