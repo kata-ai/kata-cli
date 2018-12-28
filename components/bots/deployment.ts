@@ -52,13 +52,16 @@ export default class Deployment {
         }
 
         let targetVersion;
+        let major = 0;
+        let minor = 0;
+        let patch = 0;
 
         try {
             // get previous deployment version
             const { response: { body: latestDeployment } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdDeploymentGet, projectId);
             const prevVersion = latestDeployment.version;
-            let [major, minor, patch] = prevVersion.split(".");
+            [major, minor, patch] = prevVersion.split(".");
 
             if (versionType === "major") {
                 major = Number(major) + 1;
@@ -70,11 +73,22 @@ export default class Deployment {
             } else {
                 patch = Number(patch) + 1;
             }
-            targetVersion = `${major}.${minor}.${patch}`;
             
         } catch (e) {
-            targetVersion = "0.0.1";
+            // initial deployment
+            if (versionType === "major") {
+                major = Number(major) + 1;
+                minor = 0;
+                patch = 0;
+            } else if (versionType === "minor") {
+                minor = Number(minor) + 1;
+                patch = 0;
+            } else {
+                patch = Number(patch) + 1;
+            }
         }
+        
+        targetVersion = `${major}.${minor}.${patch}`;
 
         try {
             const postBody = {
@@ -90,11 +104,10 @@ export default class Deployment {
                 postBody, projectId,
             );
 
-
             console.log(`Bot Revision: ${botRevision.substring(0, 7)}`);
             console.log(`NLU Revision: ${nluRevision.substring(0, 7)}`);
             console.log(`CMS Revision: ${cmsRevision.substring(0, 7)}`);
-            console.log(`Succesfully create Deployment to version ${targetVersion}`);
+            console.log(`Succesfully create a deployment to version ${targetVersion}`);
         } catch (e) {
             console.error("Error");
             console.log(this.helper.wrapError(e));
