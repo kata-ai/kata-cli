@@ -2,11 +2,28 @@
 import { Component, JsonObject, Json, IConfig } from "merapi";
 import * as _ from "lodash";
 
+const Catch = require("catch-decorator");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
+
+export const CatchError = Catch(Error, (error: any) => {
+    let errorMessage;
+
+    if (error.response && error.response.body && error.response.body.message) {
+        errorMessage = error.response.body.message;
+    } else if (error.response && error.response.body) {
+        errorMessage = error.response.body;
+    } else {
+        errorMessage = error.message;
+    }
+
+    console.log("Error");
+    console.error(errorMessage);
+});
+
 
 export default class Helper extends Component {
 
