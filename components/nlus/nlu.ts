@@ -85,6 +85,8 @@ const template: any = {
     }
 };
 
+const errorFileLog = "training.error.log";
+
 export default class Nlu extends Component {
 
     constructor(private helper: IHelper, private api: any) {
@@ -259,7 +261,7 @@ export default class Nlu extends Component {
             return;
         }
         try {
-            let opts = {};
+            let opts: any = {};
             if (options.file) {
                 console.log(`Training.. (input file: ${options.file})`);
                 opts = {
@@ -274,7 +276,24 @@ export default class Nlu extends Component {
 
             const trainResult = await this.helper.toPromise(this.api.nluApi,
                 this.api.nluApi.projectsProjectIdNlusNluNameTrainPost, projectId, nluName, opts);
-            console.log(`Success: ${trainResult.data.count} data trained !`);
+
+            // Print result
+            const count = trainResult.data.count;
+            const successCount = trainResult.data.rowIds ? trainResult.data.rowIds.length : 0;
+            const errorCount = trainResult.data.errRows ? trainResult.data.errRows.length : 0;
+            console.log(`Success: ${successCount} data trained !`);
+            if (errorCount) {
+                const trainingData = opts.file.toString().split("\n");
+                let errData = "";
+                for (const i of trainResult.data.errRows) {
+                    errData += trainingData[i] + "\n";
+                }
+                fs.writeFile(errorFileLog, errData, (err: any) => {
+                    if (err) { throw err; }
+                    console.log(`Error training ${errorCount} data. See details ${errorFileLog}`);
+                });
+            }
+
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
