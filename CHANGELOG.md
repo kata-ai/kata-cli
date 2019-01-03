@@ -114,6 +114,7 @@
 - Handle Deployment Management
 - Handle User & Team Management
 
+[2.0.11]: https://github.com/kata-ai/kata-cli/compare/v2.0.8...v2.0.11
 [2.0.8]: https://github.com/kata-ai/kata-cli/compare/v2.0.6...v2.0.8
 [2.0.6]: https://github.com/kata-ai/kata-cli/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/kata-ai/kata-cli/compare/v2.0.4...v2.0.5
