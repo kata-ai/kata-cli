@@ -2,11 +2,32 @@
 import { Component, JsonObject, Json, IConfig } from "merapi";
 import * as _ from "lodash";
 
+const Catch = require("catch-decorator");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
+
+function wrapError(error: any) {
+    let errorMessage;
+
+    if (error.response && error.response.body && error.response.body.message) {
+        errorMessage = error.response.body.message;
+    } else if (error.response && error.response.body) {
+        errorMessage = error.response.body;
+    } else {
+        errorMessage = error.message;
+    }
+
+    return errorMessage;
+}
+
+export const CatchError = Catch(Error, (error: any) => {
+    console.log("Error");
+    console.error(wrapError(error));
+});
+
 
 export default class Helper extends Component {
 
@@ -152,20 +173,8 @@ export default class Helper extends Component {
     }
 
     public wrapError(error : any) {
-        let errorMessage;
-
-        if (error.response && error.response.body && error.response.body.message) {
-            errorMessage = error.response.body.message;
-        } else if (error.response && error.response.body) {
-            errorMessage = error.response.body;
-        } else {
-            errorMessage = error.message;
-        }
-
-        return errorMessage;
+        return wrapError(error);
     }
-
-    public printError = (error : any) => console.error(this.wrapError(error));
 
     public difference(object : any, base : any) {
         function changes(object : any, base : any) {
