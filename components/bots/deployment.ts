@@ -94,9 +94,9 @@ export default class Deployment {
             );
 
 
-            console.log(`Bot Revision: ${botRevision.substring(0, 6)}`);
-            console.log(`NLU Revision: ${nluRevision.substring(0, 6)}`);
-            console.log(`CMS Revision: ${cmsRevision.substring(0, 6)}`);
+            console.log(`Bot Revision: ${botRevision.substring(0, 7)}`);
+            console.log(`NLU Revision: ${nluRevision.substring(0, 7)}`);
+            console.log(`CMS Revision: ${cmsRevision.substring(0, 7)}`);
             console.log(`Succesfully create Deployment to version ${targetVersion}`);
         } catch (e) {
             console.error("Error");
