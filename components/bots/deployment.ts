@@ -19,8 +19,11 @@ export default class Deployment {
         let cmsRevision: string;
 
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
-                this.api.projectApi.projectsProjectIdBotGet, projectId);
+            const { response: { body: data } } = await this.helper.toPromise(
+                this.api.projectApi,
+                this.api.projectApi.projectsProjectIdBotGet, projectId
+            );
+
             if (data.revision) {
                 botRevision = data.revision;
             }

@@ -2,11 +2,11 @@
 import { ICompile, IHelper, ITester } from "interfaces/main";
 import { Component, Config, IHash, JsonObject } from "merapi";
 import { v4 as uuid } from "uuid";
+import { CatchError } from "../scripts/helper";
 
 const colors = require("colors");
 const repl = require("repl");
 const util = require("util");
-const Table = require("cli-table");
 const os = require("os");
 const fs = require("fs");
 const deasync = require("deasync");
@@ -167,6 +167,7 @@ export default class Bot extends Component {
         }
     }
 
+    @CatchError
     public async push(options: JsonObject) {
         const desc = this.helper.loadYaml("./bot.yml");
         desc.tag = options.tag || null;
@@ -185,26 +186,17 @@ export default class Bot extends Component {
 
         const projectId = this.getProject();
 
-        let latestBotRevision: string;
-        try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
-                this.api.projectApi.projectsProjectIdBotGet, projectId);
-            if (data.revision) {
-                latestBotRevision = data.revision;
-            } 
-        } catch (e) {
-            console.error("Error");
-            console.log(this.helper.wrapError(e));
-        }
-
-        try {
             botDesc.id = projectId;
-            const result = await this.helper.toPromise(this.api.botApi,
-                this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, projectId, latestBotRevision, botDesc);
-            console.log(`Push Bot Success. Revision : ${result.data.revision.substring(0, 7)}`);
-        } catch (e) {
-            console.log(this.helper.wrapError(e));
-        }
+            const { data: newBot } = await this.helper.toPromise(
+                this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsPost, 
+                projectId, botDesc
+            );
+            const { data: project } = await this.helper.toPromise(
+                this.api.projectApi,
+                this.api.projectApi.projectsProjectIdGet, projectId
+            );
+
+            console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
 
         this.helper.dumpYaml("./bot.yml", desc);
     }

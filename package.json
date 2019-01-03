@@ -1,6 +1,6 @@
 {
   "name": "kata-cli",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "Kata AI Command Line Tools",
   "main": "index.js",
   "bin": {
@@ -47,6 +47,7 @@
   "license": "ISC",
   "homepage": "https://github.com/kata-ai/kata-cli#readme",
   "dependencies": {
+    "catch-decorator": "^2.0.0",
     "cli-table": "^0.3.1",
     "commander": "^2.14.1",
     "deasync": "^0.1.14",
