@@ -1,4 +1,11 @@
 # CHANGELOG
+## [2.0.11] - 2019/01/03
+### Fixed : 
+- Create new revision on push (#102)
+- Fix get latest revision (#101)
+- Limit new entity name to 20 chars and add detailed error messages (#98)
+- Set substring to 7 (#97)
+
 ## [2.0.8] - 2018/12/20
 ### Fixed : 
 - Fix nl-pull for entity type dictionary 
