@@ -9,7 +9,7 @@ const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
 
-export const CatchError = Catch(Error, (error: any) => {
+function wrapError(error: any) {
     let errorMessage;
 
     if (error.response && error.response.body && error.response.body.message) {
@@ -20,8 +20,12 @@ export const CatchError = Catch(Error, (error: any) => {
         errorMessage = error.message;
     }
 
+    return errorMessage;
+}
+
+export const CatchError = Catch(Error, (error: any) => {
     console.log("Error");
-    console.error(errorMessage);
+    console.error(wrapError(error));
 });
 
 
@@ -169,20 +173,8 @@ export default class Helper extends Component {
     }
 
     public wrapError(error : any) {
-        let errorMessage;
-
-        if (error.response && error.response.body && error.response.body.message) {
-            errorMessage = error.response.body.message;
-        } else if (error.response && error.response.body) {
-            errorMessage = error.response.body;
-        } else {
-            errorMessage = error.message;
-        }
-
-        return errorMessage;
+        return wrapError(error);
     }
-
-    public printError = (error : any) => console.error(this.wrapError(error));
 
     public difference(object : any, base : any) {
         function changes(object : any, base : any) {
