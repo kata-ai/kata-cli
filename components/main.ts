@@ -28,6 +28,7 @@ export default class Main extends Component {
             commander.parse([argv[0], argv[1], '-h']);
         }
 
+        this.sendNotificationTracking()
         this.sendDataAnalytics(argv[2])
     }
 
@@ -100,7 +101,7 @@ export default class Main extends Component {
         }
     }
 
-    async sendDataAnalytics(command:string) {
+    private sendDataAnalytics(command:string) {
         let firstLogin = this.helper.getProp("first_login") as JsonObject;
         let projectId = this.helper.getProp("projectId") as string;
         let projectName = this.helper.getProp("projectName") as string;
@@ -124,5 +125,13 @@ export default class Main extends Component {
         this.google.event('commands', 'track', JSON.stringify(data), (err:any) => {
             if (err) console.log(this.helper.wrapError(err));
         })
+    }
+
+    private sendNotificationTracking() {
+        const notifTrack = this.helper.getProp("notif_track") as boolean;
+        if (!notifTrack) {
+            console.log('You are being tracked !')
+            this.helper.setProp('notif_track', true)
+        }
     }
 }
