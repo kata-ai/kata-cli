@@ -1,15 +1,21 @@
-import { Command, CommandDescriptor, CommandList } from "interfaces/main";
-import { Component, IConfigReader, IInjector } from "merapi";
+import { Command, CommandDescriptor, CommandList, IHelper } from "interfaces/main";
+import { Component, IConfigReader, IInjector, Json, JsonObject } from "merapi";
 
 const commander = require("commander");
+const analytics = require('universal-analytics');
 
 export default class Main extends Component {
 
+    private google:any;
+
     constructor(
         private config : IConfigReader,
-        private injector : IInjector
+        private injector : IInjector,
+        private helper : IHelper
         ) {
         super();
+
+        this.google = analytics(this.config.default('config.trackingId', ''));
     }
 
     async start(argv:string[]) {
@@ -21,6 +27,8 @@ export default class Main extends Component {
         if (argv.length === 2 || validCommands.indexOf(argv[2]) === -1) {
             commander.parse([argv[0], argv[1], '-h']);
         }
+
+        this.sendDataAnalytics(argv[2])
     }
 
     async compile(commands: CommandList, program: Command, currKey : string = "") {
@@ -90,5 +98,31 @@ export default class Main extends Component {
 
             handlerMethod(...args);
         }
+    }
+
+    async sendDataAnalytics(command:string) {
+        let firstLogin = this.helper.getProp("first_login") as JsonObject;
+        let projectId = this.helper.getProp("projectId") as string;
+        let projectName = this.helper.getProp("projectName") as string;
+        const version = this.config.default("version", "1.0.0")
+
+        if (!firstLogin) firstLogin = { id: null, username: null, type: null }
+        if (!projectId) projectId = null
+        if (!projectName) projectName = null
+
+        const data = {
+            userId: firstLogin.id,
+            username: firstLogin.username,
+            currentUserType: firstLogin.type,
+            activeProjectId: projectId,
+            activeProjectName: projectName,
+            command: command,
+            versionCLI: version,
+            timestamp: new Date().getTime()
+        }
+
+        this.google.event('commands', 'track', JSON.stringify(data), (err:any) => {
+            if (err) console.log(this.helper.wrapError(err));
+        })
     }
 }
