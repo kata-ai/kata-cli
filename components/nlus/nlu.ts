@@ -274,24 +274,34 @@ export default class Nlu extends Component {
                 };
             }
 
-            const trainResult = await this.helper.toPromise(this.api.nluApi,
+            const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
                 this.api.nluApi.projectsProjectIdNlusNluNameTrainPost, projectId, nluName, opts);
+            const trainResult = body;
 
             // Print result
-            const count = trainResult.data.count;
-            const successCount = trainResult.data.rowIds ? trainResult.data.rowIds.length : 0;
-            const errorCount = trainResult.data.errRows ? trainResult.data.errRows.length : 0;
-            console.log(`Success: ${successCount} data trained !`);
+            const count = trainResult.count;
+            const successCount = trainResult.rowIds ? trainResult.rowIds.length : 0;
+            if (successCount) {
+                console.log(`Success: ${successCount} data trained !`);
+            }
+
+            // Write error to file
+            const errorCount = trainResult.errRows ? trainResult.errRows.length : 0;
             if (errorCount) {
-                const trainingData = opts.file.toString().split("\n");
-                let errData = "";
-                for (const i of trainResult.data.errRows) {
-                    errData += trainingData[i] + "\n";
+                if (options.file) {
+                    const rawData = fs.readFileSync(options.file).toString("utf8");
+                    const trainingData = rawData.split("\n");
+                    let errData = "";
+                    for (const i of trainResult.errRows) {
+                        errData += trainingData[i] + "\n";
+                    }
+                    fs.writeFile(errorFileLog, errData, (err: any) => {
+                        if (err) { throw err; }
+                        console.log(`Error training ${errorCount} data. See details on ${errorFileLog}`);
+                    });
+                } else if (options.sentence) {
+                    console.log(`Error training data`);
                 }
-                fs.writeFile(errorFileLog, errData, (err: any) => {
-                    if (err) { throw err; }
-                    console.log(`Error training ${errorCount} data. See details ${errorFileLog}`);
-                });
             }
 
         } catch (error) {
