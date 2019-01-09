@@ -8,6 +8,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
+const analytics = require('universal-analytics');
 
 function wrapError(error: any) {
     let errorMessage;
@@ -30,9 +31,12 @@ export const CatchError = Catch(Error, (error: any) => {
 
 
 export default class Helper extends Component {
+    private google:any;
 
     constructor(private config : IConfig) {
         super();
+
+        this.google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'));
     }
 
     public getFiles(dir : string, ending : string) : string[] {
@@ -173,7 +177,13 @@ export default class Helper extends Component {
     }
 
     public wrapError(error : any) {
-        return wrapError(error);
+        const errorMessage:string = wrapError(error);
+
+        const commands:JsonObject[] = this.getCommandSession()
+        this.sendGoogleAnalytics('commands', 'debug', '', commands, errorMessage)
+        this.clearCommandSession()
+
+        return errorMessage
     }
 
     public difference(object : any, base : any) {
@@ -244,5 +254,34 @@ export default class Helper extends Component {
         const jsonPath = `${os.homedir()}/.katacommand`;
 
         fs.writeFileSync(jsonPath, "[]", "utf8");
+    }
+
+    public sendGoogleAnalytics(event:string, action:string, command:string, lastSession?:JsonObject[], errorMessage?:string): void {
+        let firstLogin = this.getProp("first_login") as JsonObject;
+        let projectId = this.getProp("projectId") as string;
+        let projectName = this.getProp("projectName") as string;
+        const version = this.config.default("version", "1.0.0")
+
+        if (!firstLogin) firstLogin = { id: null, username: null, type: null }
+        if (!projectId) projectId = null
+        if (!projectName) projectName = null
+
+        const data:JsonObject = {
+            userId: firstLogin.id,
+            username: firstLogin.username,
+            currentUserType: firstLogin.type,
+            activeProjectId: projectId,
+            activeProjectName: projectName,
+            command: command,
+            versionCLI: version,
+            timestamp: new Date().getTime()
+        }
+
+        if (lastSession) data.lastSession = lastSession
+        if (errorMessage) data.errorMessage = errorMessage
+
+        this.google.event(event, action, JSON.stringify(data), (err:any) => {
+            if (err) console.log(this.wrapError(err));
+        })
     }
 }

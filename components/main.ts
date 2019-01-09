@@ -2,11 +2,8 @@ import { Command, CommandDescriptor, CommandList, IHelper } from "interfaces/mai
 import { Component, IConfigReader, IInjector, Json, JsonObject } from "merapi";
 
 const commander = require("commander");
-const analytics = require('universal-analytics');
 
 export default class Main extends Component {
-
-    private google:any;
 
     constructor(
         private config : IConfigReader,
@@ -14,8 +11,6 @@ export default class Main extends Component {
         private helper : IHelper
         ) {
         super();
-
-        this.google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'));
     }
 
     async start(argv:string[]) {
@@ -104,29 +99,8 @@ export default class Main extends Component {
 
     private sendDataAnalytics(argv:string[]) {
         const command = Object.assign([], argv)
-        let firstLogin = this.helper.getProp("first_login") as JsonObject;
-        let projectId = this.helper.getProp("projectId") as string;
-        let projectName = this.helper.getProp("projectName") as string;
-        const version = this.config.default("version", "1.0.0")
 
-        if (!firstLogin) firstLogin = { id: null, username: null, type: null }
-        if (!projectId) projectId = null
-        if (!projectName) projectName = null
-
-        const data = {
-            userId: firstLogin.id,
-            username: firstLogin.username,
-            currentUserType: firstLogin.type,
-            activeProjectId: projectId,
-            activeProjectName: projectName,
-            command: command.splice(2).join(' '),
-            versionCLI: version,
-            timestamp: new Date().getTime()
-        }
-
-        this.google.event('commands', 'track', JSON.stringify(data), (err:any) => {
-            if (err) console.log(this.helper.wrapError(err));
-        })
+        this.helper.sendGoogleAnalytics('commands', 'track', command.splice(2).join(' '))
     }
 
     private sendNotificationTracking() {

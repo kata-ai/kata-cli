@@ -304,6 +304,7 @@ export interface IHelper {
     addCommandSession(command:string): void;
     getCommandSession(): JsonObject[];
     clearCommandSession(): void;
+    sendGoogleAnalytics(event:string, action:string, data:string): void;
 }
 
 export interface ITester {
