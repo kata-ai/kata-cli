@@ -1,5 +1,5 @@
 # CHANGELOG
-## [2.0.8] - 2018/12/20
+## [2.0.8] - 2019/01/21
 ### Added : 
 - Tracking Analytics
 
