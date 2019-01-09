@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 [![NPM downloads](https://img.shields.io/npm/dm/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 
-# Introduction to Kata-CLI 2.0
+# Introduction to Kata-CLI 2.1
 Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
 For more information, check our website (http://kata.ai/en).
 
@@ -17,8 +17,10 @@ npm install -g kata-cli
 ```
 This is the preferred method to install Kata-CLI, as it will always install the most recent stable release.
 
-# Upgrading to 2.0
-We upgraded Kata-CLI version into 2.0 along with our Platform to 3.0. There are a number of small backwards incompatible changes with version 2.0. See the full descriptions [here](CHANGELOG.md). *Make sure to update Kata-CLI to our latest stable version before doing some fun with your Bot*.
+# Upgrading to 2.1
+We upgraded Kata-CLI version into 2.1 along with our Platform to 3.0. There are a number of small backwards incompatible changes with version 2.1. See the full descriptions [here](CHANGELOG.md). *Make sure to update Kata-CLI to our latest stable version before doing some fun with your Bot*.
+
+> Starting from Kata CLI v2.1.0, we added analytics to Kata CLI that will collect usage data every time you typed a command. To learn about what we collect and how we use it, visit https://privacy.kata.ai/kata-cli-analytics
 
 ```shell
 // check kata-cli current version
@@ -40,10 +42,10 @@ or to be exact, you can add `@version-number`
 Then, check kata-cli upgraded version.
 ```shell
 ➜  kata --version
-   Kata CLI version 2.0.4
+   Kata CLI version 2.1.0
 ```
 
-In Kata-CLI 2.0, we introduce Project Environment on the top of the Bots, NLU and CMS. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on using this command.
+In Kata-CLI 2.1, we introduce Project Environment on the top of the Bots, NLU and CMS. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on using this command.
 
 ```
 ➜  kata select-project

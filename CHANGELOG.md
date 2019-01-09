@@ -1,5 +1,9 @@
 # CHANGELOG
 ## [2.0.8] - 2018/12/20
+### Added : 
+- Tracking Analytics
+
+## [2.0.8] - 2018/12/20
 ### Fixed : 
 - Fix nl-pull for entity type dictionary 
 - Latest bot, nlu, and cms revision endpoint
