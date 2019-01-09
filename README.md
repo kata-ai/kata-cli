@@ -96,7 +96,6 @@ Commands  | Functionalities
 `kata init <botName>` | to initialize the bot
 `kata revisions` | to list the revisions of the bot
 `kata config-view` | to view user configurations
-`kata list-bots` | to list the bots
 `kata push` | to push the bot revision
 `kata pull [revision]` | to pull the bot with specified name and version
 `kata remove-bot` | to delete selected bot
