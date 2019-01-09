@@ -300,6 +300,7 @@ export interface IHelper {
     delete() : Boolean;
     wrapError(error : any) : string;
     difference(object: any, base: any): Object;
+    checkNotificationStatus() : Boolean;
 }
 
 export interface ITester {

@@ -15,7 +15,7 @@ export default class Main extends Component {
         ) {
         super();
 
-        this.google = analytics(this.config.default('config.trackingId', ''));
+        this.google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'));
     }
 
     async start(argv:string[]) {
@@ -29,7 +29,7 @@ export default class Main extends Component {
         }
 
         this.sendNotificationTracking()
-        this.sendDataAnalytics(argv[2])
+        this.sendDataAnalytics(argv)
     }
 
     async compile(commands: CommandList, program: Command, currKey : string = "") {
@@ -101,7 +101,7 @@ export default class Main extends Component {
         }
     }
 
-    private sendDataAnalytics(command:string) {
+    private sendDataAnalytics(command:string[]) {
         let firstLogin = this.helper.getProp("first_login") as JsonObject;
         let projectId = this.helper.getProp("projectId") as string;
         let projectName = this.helper.getProp("projectName") as string;
@@ -117,7 +117,7 @@ export default class Main extends Component {
             currentUserType: firstLogin.type,
             activeProjectId: projectId,
             activeProjectName: projectName,
-            command: command,
+            command: command.splice(2).join(' '),
             versionCLI: version,
             timestamp: new Date().getTime()
         }
@@ -128,10 +128,7 @@ export default class Main extends Component {
     }
 
     private sendNotificationTracking() {
-        const notifTrack = this.helper.getProp("notif_track") as boolean;
-        if (!notifTrack) {
-            console.log('You are being tracked !')
-            this.helper.setProp('notif_track', true)
-        }
+        const status:Boolean = this.helper.checkNotificationStatus();
+        if (!status) console.log(`\nStarting from Kata CLI v${this.config.default("version", "1.0.0")}, we added analytics to Kata CLI that will collect usage data every time you typed a command. To learn about what we collect and how we use it, visit https://privacy.kata.ai/kata-cli-analytics\n`)
     }
 }

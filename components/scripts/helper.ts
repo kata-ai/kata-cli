@@ -201,4 +201,15 @@ export default class Helper extends Component {
 
         console.log(jsonProp);
     }
+
+    public checkNotificationStatus(): Boolean {
+        const jsonPath = `${os.homedir()}/.katanotif`;
+
+        if (fs.existsSync(jsonPath)) {
+            return true
+        } else {
+            fs.writeFileSync(jsonPath, "true", "utf8");
+            return false
+        }
+    }
 }
