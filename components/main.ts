@@ -30,6 +30,7 @@ export default class Main extends Component {
 
         this.sendNotificationTracking()
         this.sendDataAnalytics(argv)
+        this.saveCommandSession(argv)
     }
 
     async compile(commands: CommandList, program: Command, currKey : string = "") {
@@ -101,7 +102,8 @@ export default class Main extends Component {
         }
     }
 
-    private sendDataAnalytics(command:string[]) {
+    private sendDataAnalytics(argv:string[]) {
+        const command = Object.assign([], argv)
         let firstLogin = this.helper.getProp("first_login") as JsonObject;
         let projectId = this.helper.getProp("projectId") as string;
         let projectName = this.helper.getProp("projectName") as string;
@@ -130,5 +132,11 @@ export default class Main extends Component {
     private sendNotificationTracking() {
         const status:Boolean = this.helper.checkNotificationStatus();
         if (!status) console.log(`\nStarting from Kata CLI v${this.config.default("version", "1.0.0")}, we added analytics to Kata CLI that will collect usage data every time you typed a command. To learn about what we collect and how we use it, visit https://privacy.kata.ai/kata-cli-analytics\n`)
+    }
+
+    private saveCommandSession(argv:string[]) {
+        const command = Object.assign([], argv)
+
+        this.helper.addCommandSession(command.splice(2).join(' '))
     }
 }

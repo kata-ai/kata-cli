@@ -212,4 +212,37 @@ export default class Helper extends Component {
             return false
         }
     }
+
+    public addCommandSession(command:string): void {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+        let jsonData:JsonObject[] = [];
+
+        if (fs.existsSync(jsonPath)) jsonData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+        if (jsonData.length > 0) {
+            const lastData:JsonObject = jsonData[jsonData.length - 1]
+            const diff:number = Math.abs(Number(lastData.timestamp) - new Date().getTime()) / 36e5;
+            
+            if (diff >= 1) jsonData = [] //Lebih dari 1 jam ?
+        }
+
+        jsonData.push({ timestamp: new Date().getTime(), command: command })
+
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonData), "utf8");
+    }
+
+    public getCommandSession(): JsonObject[] {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+        let jsonData:JsonObject[] = [];
+
+        if (fs.existsSync(jsonPath)) jsonData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+        return jsonData
+    }
+
+    public clearCommandSession(): void {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+
+        fs.writeFileSync(jsonPath, "[]", "utf8");
+    }
 }

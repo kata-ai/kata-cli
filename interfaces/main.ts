@@ -301,6 +301,9 @@ export interface IHelper {
     wrapError(error : any) : string;
     difference(object: any, base: any): Object;
     checkNotificationStatus() : Boolean;
+    addCommandSession(command:string): void;
+    getCommandSession(): JsonObject[];
+    clearCommandSession(): void;
 }
 
 export interface ITester {
