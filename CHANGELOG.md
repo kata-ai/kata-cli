@@ -1,8 +1,4 @@
 # CHANGELOG
-## [2.1.0] - 2019/01/21
-### Added : 
-- Tracking Analytics
-
 ## [2.0.8] - 2018/12/20
 ### Fixed : 
 - Fix nl-pull for entity type dictionary 
