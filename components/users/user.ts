@@ -109,7 +109,8 @@ export default class User extends Component {
             } else {
                 console.log("Please log in first");
             }
-
+            
+            this.helper.clearCommandSession();
         } catch (e) {
             console.log(this.helper.wrapError(e));
         }

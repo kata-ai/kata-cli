@@ -300,6 +300,11 @@ export interface IHelper {
     delete() : Boolean;
     wrapError(error : any) : string;
     difference(object: any, base: any): Object;
+    checkNotificationStatus() : Boolean;
+    addCommandSession(command:string): void;
+    getCommandSession(): JsonObject[];
+    clearCommandSession(): void;
+    sendGoogleAnalytics(event:string, action:string, data:string): void;
 }
 
 export interface ITester {
