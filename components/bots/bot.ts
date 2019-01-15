@@ -186,17 +186,37 @@ export default class Bot extends Component {
 
         const projectId = this.getProject();
 
-            botDesc.id = projectId;
-            const { data: newBot } = await this.helper.toPromise(
-                this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsPost, 
-                projectId, botDesc
-            );
-            const { data: project } = await this.helper.toPromise(
+        botDesc.id = projectId;
+
+        let latestBotRevision;
+        try {
+            // 
+            const { response: { body: data } } = await this.helper.toPromise(
                 this.api.projectApi,
-                this.api.projectApi.projectsProjectIdGet, projectId
+                this.api.projectApi.projectsProjectIdBotGet, botDesc.id
             );
 
-            console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+            if (data.revision) {
+                latestBotRevision = data.revision;
+
+                const { data: newBot } = await this.helper.toPromise(
+                    this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, 
+                    projectId, latestBotRevision, botDesc
+                );
+                const { data: project } = await this.helper.toPromise(
+                    this.api.projectApi,
+                    this.api.projectApi.projectsProjectIdGet, projectId
+                );
+
+                console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+
+            } else {
+                throw Error("Could not find latest bot revision from this project.");
+            }
+        } catch (e) {
+            console.error("Error");
+            console.log(this.helper.wrapError(e));
+        }
 
         this.helper.dumpYaml("./bot.yml", desc);
     }
