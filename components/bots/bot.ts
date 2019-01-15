@@ -190,7 +190,6 @@ export default class Bot extends Component {
 
         let latestBotRevision;
         try {
-            // 
             const { response: { body: data } } = await this.helper.toPromise(
                 this.api.projectApi,
                 this.api.projectApi.projectsProjectIdBotGet, botDesc.id
