@@ -100,7 +100,7 @@ export default class Main extends Component {
     private sendDataAnalytics(argv:string[]) {
         const command = Object.assign([], argv)
 
-        this.helper.sendGoogleAnalytics('commands', 'track', command.splice(2).join(' '))
+        this.helper.sendGoogleAnalytics('track', argv[2], command.splice(2).join(' '))
     }
 
     private sendNotificationTracking() {

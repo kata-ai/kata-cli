@@ -176,7 +176,10 @@ export default class Helper extends Component {
         const errorMessage:string = wrapError(error);
 
         const commands:JsonObject[] = this.getCommandSession()
-        this.sendGoogleAnalytics('commands', 'debug', '', commands, errorMessage)
+        const lastCommand:string = commands[commands.length - 1].command as string
+        const mainCommand:string = lastCommand.split(' ')[0]
+
+        this.sendGoogleAnalytics('debug', mainCommand, lastCommand, commands, errorMessage)
         this.clearCommandSession()
 
         return errorMessage
