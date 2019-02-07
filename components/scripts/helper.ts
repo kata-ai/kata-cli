@@ -31,12 +31,8 @@ export const CatchError = Catch(Error, (error: any) => {
 
 
 export default class Helper extends Component {
-    private google:any;
-
     constructor(private config : IConfig) {
         super();
-
-        this.google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'));
     }
 
     public getFiles(dir : string, ending : string) : string[] {
@@ -180,7 +176,10 @@ export default class Helper extends Component {
         const errorMessage:string = wrapError(error);
 
         const commands:JsonObject[] = this.getCommandSession()
-        this.sendGoogleAnalytics('commands', 'debug', '', commands, errorMessage)
+        const lastCommand:string = commands[commands.length - 1].command as string
+        const mainCommand:string = lastCommand.split(' ')[0]
+
+        this.sendGoogleAnalytics('debug', mainCommand, lastCommand, commands, errorMessage)
         this.clearCommandSession()
 
         return errorMessage
@@ -261,6 +260,7 @@ export default class Helper extends Component {
         let projectId = this.getProp("projectId") as string;
         let projectName = this.getProp("projectName") as string;
         const version = this.config.default("version", "1.0.0")
+        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
 
         if (!firstLogin) firstLogin = { id: null, username: null, type: null }
         if (!projectId) projectId = null
@@ -280,7 +280,7 @@ export default class Helper extends Component {
         if (lastSession) data.lastSession = lastSession
         if (errorMessage) data.errorMessage = errorMessage
 
-        this.google.event(event, action, JSON.stringify(data), (err:any) => {
+        google.event(event, action, JSON.stringify(data), (err:any) => {
             if (err) console.log(this.wrapError(err));
         })
     }
