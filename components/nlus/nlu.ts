@@ -85,6 +85,8 @@ const template: any = {
     }
 };
 
+const errorFileLog = "training.error.log";
+
 export default class Nlu extends Component {
 
     constructor(private helper: IHelper, private api: any) {
@@ -267,7 +269,7 @@ export default class Nlu extends Component {
             return;
         }
         try {
-            let opts = {};
+            let opts: any = {};
             if (options.file) {
                 console.log(`Training.. (input file: ${options.file})`);
                 opts = {
@@ -280,9 +282,36 @@ export default class Nlu extends Component {
                 };
             }
 
-            const trainResult = await this.helper.toPromise(this.api.nluApi,
+            const { response: { body } } = await this.helper.toPromise(this.api.nluApi,
                 this.api.nluApi.projectsProjectIdNlusNluNameTrainPost, projectId, nluName, opts);
-            console.log(`Success: ${trainResult.data.count} data trained !`);
+            const trainResult = body;
+
+            // Print result
+            const count = trainResult.count;
+            const successCount = trainResult.rowIds ? trainResult.rowIds.length : 0;
+            if (successCount) {
+                console.log(`Success: ${successCount} data trained !`);
+            }
+
+            // Write error to file
+            const errorCount = trainResult.errRows ? trainResult.errRows.length : 0;
+            if (errorCount) {
+                if (options.file) {
+                    const rawData = fs.readFileSync(options.file).toString("utf8");
+                    const trainingData = rawData.split("\n");
+                    let errData = "";
+                    for (const i of trainResult.errRows) {
+                        errData += trainingData[i] + "\n";
+                    }
+                    fs.writeFile(errorFileLog, errData, (err: any) => {
+                        if (err) { throw err; }
+                        console.log(`Error training ${errorCount} data. See details on ${errorFileLog}`);
+                    });
+                } else if (options.sentence) {
+                    console.log(`Error training data`);
+                }
+            }
+
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
