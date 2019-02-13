@@ -259,12 +259,13 @@ export default class Helper extends Component {
         let firstLogin = this.getProp("first_login") as JsonObject;
         let projectId = this.getProp("projectId") as string;
         let projectName = this.getProp("projectName") as string;
-        const version = this.config.default("version", "1.0.0")
-        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
 
         if (!firstLogin) firstLogin = { id: null, username: null, type: null }
         if (!projectId) projectId = null
         if (!projectName) projectName = null
+
+        const version = this.config.default("version", "1.0.0")
+        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
 
         const data:JsonObject = {
             userId: firstLogin.id,
