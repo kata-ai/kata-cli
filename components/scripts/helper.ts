@@ -8,6 +8,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
+const analytics = require('universal-analytics');
 
 function wrapError(error: any) {
     let errorMessage;
@@ -30,7 +31,6 @@ export const CatchError = Catch(Error, (error: any) => {
 
 
 export default class Helper extends Component {
-
     constructor(private config : IConfig) {
         super();
     }
@@ -173,7 +173,16 @@ export default class Helper extends Component {
     }
 
     public wrapError(error : any) {
-        return wrapError(error);
+        const errorMessage:string = wrapError(error);
+
+        const commands:JsonObject[] = this.getCommandSession()
+        const lastCommand:string = commands[commands.length - 1].command as string
+        const mainCommand:string = lastCommand.split(' ')[0]
+
+        this.sendGoogleAnalytics('debug', mainCommand, lastCommand, commands, errorMessage)
+        this.clearCommandSession()
+
+        return errorMessage
     }
 
     public difference(object : any, base : any) {
@@ -200,5 +209,80 @@ export default class Helper extends Component {
         }
 
         console.log(jsonProp);
+    }
+
+    public checkNotificationStatus(): Boolean {
+        const jsonPath = `${os.homedir()}/.katanotif`;
+
+        if (fs.existsSync(jsonPath)) {
+            return true
+        } else {
+            fs.writeFileSync(jsonPath, "true", "utf8");
+            return false
+        }
+    }
+
+    public addCommandSession(command:string): void {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+        let jsonData:JsonObject[] = [];
+
+        if (fs.existsSync(jsonPath)) jsonData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+        if (jsonData.length > 0) {
+            const lastData:JsonObject = jsonData[jsonData.length - 1]
+            const diff:number = Math.abs(Number(lastData.timestamp) - new Date().getTime()) / 36e5;
+            
+            if (diff >= 1) jsonData = [] //Lebih dari 1 jam ?
+        }
+
+        jsonData.push({ timestamp: new Date().getTime(), command: command })
+
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonData), "utf8");
+    }
+
+    public getCommandSession(): JsonObject[] {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+        let jsonData:JsonObject[] = [];
+
+        if (fs.existsSync(jsonPath)) jsonData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+        return jsonData
+    }
+
+    public clearCommandSession(): void {
+        const jsonPath = `${os.homedir()}/.katacommand`;
+
+        fs.writeFileSync(jsonPath, "[]", "utf8");
+    }
+
+    public sendGoogleAnalytics(event:string, action:string, command:string, lastSession?:JsonObject[], errorMessage?:string): void {
+        let firstLogin = this.getProp("first_login") as JsonObject;
+        let projectId = this.getProp("projectId") as string;
+        let projectName = this.getProp("projectName") as string;
+
+        if (!firstLogin) firstLogin = { id: null, username: null, type: null }
+        if (!projectId) projectId = null
+        if (!projectName) projectName = null
+
+        const version = this.config.default("version", "1.0.0")
+        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
+
+        const data:JsonObject = {
+            userId: firstLogin.id,
+            username: firstLogin.username,
+            currentUserType: firstLogin.type,
+            activeProjectId: projectId,
+            activeProjectName: projectName,
+            command: command,
+            versionCLI: version,
+            timestamp: new Date().getTime()
+        }
+
+        if (lastSession) data.lastSession = lastSession
+        if (errorMessage) data.errorMessage = errorMessage
+
+        google.event(event, action, JSON.stringify(data), (err:any) => {
+            if (err) console.log(this.wrapError(err));
+        })
     }
 }

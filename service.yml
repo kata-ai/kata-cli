@@ -35,6 +35,7 @@ components:
 
 
 config:
+    trackingId: "UA-131926842-1"
     channels:
         type:
             - line

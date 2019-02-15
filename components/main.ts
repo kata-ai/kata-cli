@@ -1,5 +1,5 @@
-import { Command, CommandDescriptor, CommandList } from "interfaces/main";
-import { Component, IConfigReader, IInjector } from "merapi";
+import { Command, CommandDescriptor, CommandList, IHelper } from "interfaces/main";
+import { Component, IConfigReader, IInjector, Json, JsonObject } from "merapi";
 
 const commander = require("commander");
 
@@ -7,7 +7,8 @@ export default class Main extends Component {
 
     constructor(
         private config : IConfigReader,
-        private injector : IInjector
+        private injector : IInjector,
+        private helper : IHelper
         ) {
         super();
     }
@@ -21,6 +22,10 @@ export default class Main extends Component {
         if (argv.length === 2 || validCommands.indexOf(argv[2]) === -1) {
             commander.parse([argv[0], argv[1], '-h']);
         }
+
+        this.sendNotificationTracking()
+        this.sendDataAnalytics(argv)
+        this.saveCommandSession(argv)
     }
 
     async compile(commands: CommandList, program: Command, currKey : string = "") {
@@ -90,5 +95,22 @@ export default class Main extends Component {
 
             handlerMethod(...args);
         }
+    }
+
+    private sendDataAnalytics(argv:string[]) {
+        const command = Object.assign([], argv)
+
+        this.helper.sendGoogleAnalytics('track', argv[2], command.splice(2).join(' '))
+    }
+
+    private sendNotificationTracking() {
+        const status:Boolean = this.helper.checkNotificationStatus();
+        if (!status) console.log(`\nStarting from Kata CLI v2.1.0, we added analytics to Kata CLI that will collect usage data every time you typed a command. To learn about what we collect and how we use it, visit https://privacy.kata.ai/kata-cli-analytics\n`)
+    }
+
+    private saveCommandSession(argv:string[]) {
+        const command = Object.assign([], argv)
+
+        this.helper.addCommandSession(command.splice(2).join(' '))
     }
 }

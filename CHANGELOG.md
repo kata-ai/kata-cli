@@ -1,4 +1,12 @@
 # CHANGELOG
+## [2.1.0] - 2019/02/14
+### Fixed : 
+- Change endpoint API for command `push` (#109)
+- Check job training status on command `nl-train` (#108)
+- Add training error detail for command `nl-train` (#107)
+- Fix endpoint API for command `nl-snapshot` (#106)
+- Add Google Analytics for command tracking (#105)
+
 ## [2.0.11] - 2019/01/03
 ### Fixed : 
 - Create new revision on push (#102)

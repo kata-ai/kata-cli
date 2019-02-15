@@ -111,6 +111,7 @@ export default class Project {
                     },
                 ]);
                 this.helper.setProp("projectId", project.id);
+                this.helper.setProp("projectName", project.name);
                 console.log(colors.green(`Project "${project.name}" (${project.id}) is successfully selected`));
                 return;
             }
