@@ -1,5 +1,5 @@
 # CHANGELOG
-## [2.0.12] - 2019/02/14
+## [2.1.0] - 2019/02/14
 ### Fixed : 
 - Change endpoint API for command `push` (#109)
 - Check job training status on command `nl-train` (#108)
