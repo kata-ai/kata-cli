@@ -66,8 +66,55 @@ export default class Environment {
         }
     }
 
+    private async askDeploymentId(prop: { message?: string } = {}): Promise<string> {
+        const projectId = this.helper.getProjectId();
+        
+        let page = 1;
+        while (true) {
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, {
+                    page
+                }
+            );
+            const choices = body.data.map((row: any) => ({ name: `(${row.version})`, value: row.version }));
+            
+            if (body.total > body.page * body.limit) {
+                choices.push({name: "Load More", value: -1});
+            }
+
+            const { deploymentVersion } = await inquirer.prompt<any>([
+                {
+                    type: "list",
+                    name: "deploymentVersion",
+                    message: prop.message || "Select Deployment:",
+                    paginated: false,
+                    choices
+                },
+            ]);
+            if (deploymentVersion === -1) {
+                page++;
+                continue;
+            }
+            return deploymentVersion;
+        }
+    }
+
     public async update(newDeploymentVersion: string) {
         const projectId = this.helper.getProjectId();
+        if (!newDeploymentVersion) {
+            newDeploymentVersion = await this.askDeploymentId();
+        }
+        if (!/[0-9]+\.[0-9]+\.[0-9]+/.test(newDeploymentVersion)) {
+            console.error("error: Deployment version must be in the format of <0-9>.<0-9>.<0-9>");
+            return;
+        }
+        const { response: { body } } = await this.helper.toPromise(
+            this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: 1000000 }
+        );
+        if (!body.data.find((data: any) => data.version === newDeploymentVersion)) {
+            console.error(`error: There are no deployment with version ${newDeploymentVersion}`);
+            return;
+        }
 
         try {
             const environmentId = await this.askEnvironmentId({

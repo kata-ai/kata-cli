@@ -5,3 +5,5 @@ typings
 .nyc_output
 *.map
 .env
+.DS_Store
+.idea

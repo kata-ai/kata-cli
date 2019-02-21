@@ -139,7 +139,7 @@ commands:
                 alias: list-environment
             update:
                 desc: Update an environment of the selected project
-                args: <newDeploymentVersion>
+                args: "[newDeploymentVersion]"
                 handler: environment.update
                 alias: update-environment
 
