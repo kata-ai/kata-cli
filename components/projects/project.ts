@@ -13,13 +13,25 @@ export default class Project {
     ) { }
 
     public async create() {
-        const projectData = await this.helper.inquirerPrompt([
+        let projectData: Record<string, any> = {name : ""};
+        while (true) {
+          projectData = await this.helper.inquirerPrompt([
             {
-                type: "text",
-                name: "name",
-                message: "Project name:",
+              type: "text",
+              name: "name",
+              message: "Project name:",
             },
-        ]);
+          ]);
+          if (projectData.name.length > 20) {
+              console.error("error: Project name length can not exceed 20 characters");
+          }
+          else if (!/^[A-Za-z][A-Za-z0-9_-]*[A-Za-z0-9]$/.test(projectData.name)) {
+              console.error("error: Project name must start with alphabet characters and contains only aplhanumeric character, dash, or underscore");
+          }
+          else {
+              break;
+          }
+        }
         const inquiredOptions = await this.helper.inquirerPrompt([
             {
                 type: "number",
