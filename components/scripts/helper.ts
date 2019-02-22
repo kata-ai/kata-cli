@@ -172,17 +172,21 @@ export default class Helper extends Component {
         return inquirer.prompt(questions);
     }
 
-    public wrapError(error : any) {
-        const errorMessage:string = wrapError(error);
+    public wrapError(error: any) {
+        const errorMessage: string = wrapError(error);
 
-        const commands:JsonObject[] = this.getCommandSession()
-        const lastCommand:string = commands[commands.length - 1].command as string
-        const mainCommand:string = lastCommand.split(' ')[0]
+        const commands: JsonObject[] = this.getCommandSession();
+        // Note: error might happen even after clearCommandSession is called
+        // this might results in an empty command, we do not want to track empty command error
+        if (commands.length > 0) {
+          const lastCommand: string = commands[commands.length - 1].command as string;
+          const mainCommand: string = lastCommand.split(" ")[0];
 
-        this.sendGoogleAnalytics('debug', mainCommand, lastCommand, commands, errorMessage)
-        this.clearCommandSession()
+          this.sendGoogleAnalytics("debug", mainCommand, lastCommand, commands, errorMessage);
+          this.clearCommandSession();
+        }
 
-        return errorMessage
+        return errorMessage;
     }
 
     public difference(object : any, base : any) {
