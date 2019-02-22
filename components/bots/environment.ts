@@ -12,6 +12,11 @@ export default class Environment {
     public async create(slug: string) {
         const projectId = this.helper.getProjectId();
 
+        if (slug.length > 20) {
+            console.error("error: Namespace length can not exceed 20 characters");
+            return;
+        }
+
         try {
             const deployment = await this.getLatestDeployment();
             if (!deployment) {
