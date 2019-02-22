@@ -3,6 +3,7 @@ import { IHelper } from "interfaces/main";
 import { JsonObject } from "merapi";
 const Table = require("cli-table");
 
+
 export default class Deployment {
     constructor(private helper: IHelper, private api: any) {
     }
@@ -103,6 +104,8 @@ export default class Deployment {
             console.log(this.helper.wrapError(e));
         }
     }
+
+   
 
     public async list(options: JsonObject) {
         const projectId = this.helper.getProjectId();
