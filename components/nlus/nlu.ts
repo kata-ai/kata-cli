@@ -145,7 +145,17 @@ export default class Nlu extends Component {
     public async push() {
 
         const projectId = this.helper.getProp("projectId");
-        const nluDesc: any = this.helper.loadYaml("./nlu.yml");
+        let nluDesc: any = null;
+        try {
+          nluDesc = this.helper.loadYaml("./nlu.yml");
+        } catch (error) {
+            if (error.code === "ENOENT") {
+                console.log(
+                    "error: NLU file 'nlu.yml' does not exist, try calling 'kata nl-pull' to fetch 'nlu.yml' from the server"
+                );
+            }
+            return;
+        }
 
         let nlu;
         let entities;
