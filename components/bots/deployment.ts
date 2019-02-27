@@ -34,11 +34,12 @@ export default class Deployment {
         }
 
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
-                this.api.projectApi.projectsProjectIdNluGet, projectId);                
-            if (data.snapshot) {
-                nluRevision = data.snapshot;
-            }
+            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi,
+                this.api.projectApi.projectsProjectIdNluRevisionsGet, projectId);
+
+          if (data.data[0] && data.data[0].revision) {
+              nluRevision = data.data[0].revision;
+          }
         } catch (e) {
             console.error("Error");
             console.log(this.helper.wrapError(e));
