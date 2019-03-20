@@ -1,4 +1,14 @@
 # CHANGELOG
+
+## [2.2.0] - 2019/03/20
+- Improved user experience for update-environment command (#114)
+- Add 20 character limit validation for environment URL and project name (#115)
+- Improved error message for missing NLU.yml (#117)
+- Fixed bug on create-deployment command not choosing the correct NLU revision (#118)
+
+## [2.1.1] - 2019/03/01
+- Change analytics message (#119)
+
 ## [2.1.0] - 2019/02/14
 ### Fixed : 
 - Change endpoint API for command `push` (#109)
