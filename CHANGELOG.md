@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [2.3.0] - 2019/04/16
+- Improved user experience for update-environment command (#120)
+
 ## [2.2.0] - 2019/03/20
 - Improved user experience for update-environment command (#114)
 - Add 20 character limit validation for environment URL and project name (#115)
