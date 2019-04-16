@@ -108,27 +108,54 @@ export default class Project {
 
     public async select() {
         try {
-            const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, { limit: 50 });
+            let page =  1;
+            const pageLimit = 10;
+            while (true) {
+                const { response } = await this.helper.toPromise(
+                    this.api.projectApi,
+                    this.api.projectApi.projectsGet,
+                    { limit: pageLimit, page}
+                );
 
-            if (response && response.body && response.body.data) {
-                const projectList: object[] = response.body.data;
-                const choices = projectList.map((projectRow: any) => ({ name: projectRow.name, value: projectRow }));
-                const { project } = await inquirer.prompt<any>([
-                    {
-                        type: "list",
-                        name: "project",
-                        message: "Select project:",
-                        paginated: true,
-                        choices
-                    },
-                ]);
-                this.helper.setProp("projectId", project.id);
-                this.helper.setProp("projectName", project.name);
-                console.log(colors.green(`Project "${project.name}" (${project.id}) is successfully selected`));
-                return;
+                if (response && response.body && response.body.data) {
+
+                    const maxPage = Math.ceil(response.body.total / pageLimit);
+
+                    const projectList: object[] = response.body.data;
+                    const choices = projectList.map((projectRow: any) => ({
+                        name: projectRow.name,
+                        value: projectRow
+                    }));
+
+                    const body = response.body;
+
+                    if (body.total > body.page * body.limit) {
+                        choices.push({name: "(Load More)", value: -1});
+                    }
+
+                    const { project } = await inquirer.prompt<any>([
+                        {
+                            type: "list",
+                            name: "project",
+                            message: `Select project (page ${ page } / ${ maxPage })`,
+                            paginated: false,
+                            pageSize: pageLimit + 1,
+                            choices
+                        },
+                    ]);
+
+                    if (project === -1) {
+                        page++;
+                        continue;
+                    }
+
+                    this.helper.setProp("projectId", project.id);
+                    this.helper.setProp("projectName", project.name);
+                    console.log(colors.green(`Project "${ project.name }" (${ project.id }) is successfully selected`));
+                    return;
+                }
+                console.error("Failed to list projects");
             }
-            console.error("Failed to list projects");
-
         } catch (e) {
             console.error(this.helper.wrapError(e));
         }
