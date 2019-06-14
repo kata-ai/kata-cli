@@ -1,6 +1,7 @@
 import { Component, JsonObject } from "merapi";
 import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
+const colors = require("colors");
 
 export default class User extends Component {
 
@@ -250,6 +251,54 @@ export default class User extends Component {
             console.log(`New user ${newUser.data.username} created !`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async impersonate(userName: string) {
+        // TODO : dibuat seperti login, pake inquirer.
+        try {
+            if (!userName) {
+                throw new Error(`username is required`);
+            }
+
+            const currentLogin = this.helper.getProp("current_login");
+            if (currentLogin !== "admin") {
+                throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
+            }
+
+            if (currentLogin === userName) {
+                throw new Error(`Unable to impersonate : already on ${currentLogin}`);
+            } else {
+                const currToken = this.helper.getCurrentToken().token;
+                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
+
+                // get user id from username
+                const limit: number = 1;
+                const { response } = await this.helper.toPromise(
+                    this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
+                );
+                const data = response.body;
+                const name = data.map( (datum: any) => datum.username )[0];
+                const id = data.map( (datum: any) => datum.userId )[0];
+
+                if ( userName !== name ) {
+                    throw new Error(`Sorry, username is not exist.`);
+                }
+
+                // impersonate function
+                await this.helper.toPromise(
+                    this.api.authApi, this.api.authApi.impersonatePost, 
+                    {
+                        userId: id,
+                        namespace: "platform"
+                    }
+                );
+                console.log(`Succesfully impersonate as ${colors.green(name)}`);
+            }
+
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+
         }
     }
 

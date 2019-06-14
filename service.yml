@@ -314,6 +314,10 @@ commands:
                 args: <username>
                 handler: team.removeMember
                 alias: remove-member
+            impersonate:
+                desc: impersonate as certain user
+                handler: user.impersonate
+                alias: impersonate
     nlu:
         type: group
         desc: command for nlu management
