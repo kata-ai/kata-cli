@@ -117,15 +117,18 @@ export default class Helper extends Component {
         if (fs.existsSync(jsonPath)) {
             jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
             // if userName token exist 
-            if (userName in jsonProp) {
+            if (userName in jsonProp.token) {
+                jsonProp.current_login = "admin";
                 delete jsonProp.token[userName];
+                delete jsonProp.projectId;
+                delete jsonProp.projectName;
             } else {
                 return new Error(`Failed to unimpersonate ${(userName)}`);
             }
         } else {
             jsonProp = {};
         }
-
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");
         return jsonProp;
     }
 
