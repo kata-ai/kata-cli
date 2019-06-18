@@ -318,6 +318,10 @@ commands:
                 desc: impersonate as certain user
                 handler: user.impersonate
                 alias: impersonate
+            unimpersonate:
+                desc: unimpersonate current user, set back to admin
+                handler: user.unimpersonate
+                alias: unimpersonate
     nlu:
         type: group
         desc: command for nlu management
