@@ -269,8 +269,8 @@ export default class User extends Component {
             if (currentLogin === userName) {
                 throw new Error(`Unable to impersonate : already on ${currentLogin}`);
             } else {
-                const currToken = this.helper.getCurrentToken().token;
-                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currToken}`;
+                const currentToken = this.helper.getCurrentToken().token;
+                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
 
                 // get user id from username
                 const limit: number = 1;
@@ -308,6 +308,17 @@ export default class User extends Component {
 
         }
     }
+
+    // unimpersonate command
+    public async unimpersonate(userName?: string) {
+        try {
+            const currentLogin = this.helper.getProp("current_login");
+            console.log(`Succesfully unimpersonate user. Now your current login is ${colors.green(currentLogin)}`);
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
 
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
