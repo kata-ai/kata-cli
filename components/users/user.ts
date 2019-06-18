@@ -280,19 +280,26 @@ export default class User extends Component {
                 const data = response.body;
                 const name = data.map( (datum: any) => datum.username )[0];
                 const id = data.map( (datum: any) => datum.userId )[0];
-
+                
                 if ( userName !== name ) {
                     throw new Error(`Sorry, username is not exist.`);
                 }
-
+                
+                console.log(name, id);
                 // impersonate function
-                await this.helper.toPromise(
+                const result = await this.helper.toPromise(
                     this.api.authApi, this.api.authApi.impersonatePost, 
                     {
                         userId: id,
                         namespace: "platform"
                     }
                 );
+
+                const impersonateToken = result.data.id;
+                const type = result.data.type;
+                this.setToken({ name, type }, impersonateToken);
+
+                // use impersonate token
                 console.log(`Succesfully impersonate as ${colors.green(name)}`);
             }
 
