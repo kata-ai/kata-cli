@@ -110,6 +110,25 @@ export default class Helper extends Component {
         return false;
     }
 
+    public deleteKeyToken(userName: string) {
+        const jsonPath = `${os.homedir()}/.katajson`;
+        let jsonProp;
+
+        if (fs.existsSync(jsonPath)) {
+            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            // if userName token exist 
+            if (userName in jsonProp) {
+                delete jsonProp.token[userName];
+            } else {
+                return new Error(`Failed to unimpersonate ${(userName)}`);
+            }
+        } else {
+            jsonProp = {};
+        }
+
+        return jsonProp;
+    }
+
     public toPromise(ctx : any, func : any, ...args : any[]) : Promise<any> {
         return new Promise((resolve, reject) => {
             args.push((error : Error, data : any, response : Response) => {
