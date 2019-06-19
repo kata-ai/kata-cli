@@ -257,7 +257,6 @@ export default class User extends Component {
     public async impersonate(userName: string) {
         // TODO : dibuat seperti login, pake inquirer.
         try {
-            userName = userName.toLowerCase();
             if (!userName) {
                 throw new Error(`username is required`);
             }
@@ -312,13 +311,12 @@ export default class User extends Component {
     // unimpersonate command
     public async unimpersonate(userName?: string) {
         try {
-            const name = userName.toLowerCase();
             let currentLogin = this.helper.getProp("current_login");
-            if (name !== currentLogin) {
+            if (userName !== currentLogin) {
                 throw new Error(`Failed to unimpersonate. Please check your current username.`);
             }
             // helper to remove userName key from katajson
-            this.helper.deleteKeyToken(name);
+            this.helper.deleteKeyToken(userName);
             // get updated currentLogin
             currentLogin = this.helper.getProp("current_login");
             console.log(`Succesfully unimpersonate user. Now your current login is ${colors.green(currentLogin)}`);
