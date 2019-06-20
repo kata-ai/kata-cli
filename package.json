@@ -58,7 +58,7 @@
     "merapi-proxy": "^0.1.7",
     "universal-analytics": "^0.4.20",
     "uuid": "^3.2.1",
-    "zaun": "^2.0.4"
+    "zaun": "^2.0.5"
   },
   "devDependencies": {
     "@types/inquirer": "0.0.43",
