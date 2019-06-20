@@ -257,50 +257,43 @@ export default class User extends Component {
     public async impersonate(userName: string) {
         // TODO : dibuat seperti login, pake inquirer.
         try {
-            if (!userName) {
-                throw new Error(`username is required`);
-            }
-
-            const currentLogin = this.helper.getProp("current_login");
+            const currentLogin: string = this.helper.getProp("current_login").toString();
             if (currentLogin !== "admin") {
                 throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
+            } 
+            
+            // set header bearer token
+            const currentToken: string = this.helper.getCurrentToken().token.toString();
+            this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
+
+            // get user id from username
+            const limit: number = 1;
+            const { response } = await this.helper.toPromise(
+                this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
+            );
+            const users = response.body;
+            const name: string = users.map( (user: any) => user.username )[0].toString();
+            const id: string = users.map( (user: any) => user.userId )[0].toString();
+            
+            if ( userName !== name ) {
+                throw new Error(`Sorry, username is not exist.`);
             }
-
-            if (currentLogin === userName) {
-                throw new Error(`Unable to impersonate : already on ${currentLogin}`);
-            } else {
-                const currentToken = this.helper.getCurrentToken().token;
-                this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
-
-                // get user id from username
-                const limit: number = 1;
-                const { response } = await this.helper.toPromise(
-                    this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
-                );
-                const data = response.body;
-                const name = data.map( (datum: any) => datum.username )[0];
-                const id = data.map( (datum: any) => datum.userId )[0];
-                
-                if ( userName !== name ) {
-                    throw new Error(`Sorry, username is not exist.`);
+            
+            // impersonate function
+            const result = await this.helper.toPromise(
+                this.api.authApi, this.api.authApi.impersonatePost, 
+                {
+                    userId: id,
+                    namespace: "platform"
                 }
-                
-                // impersonate function
-                const result = await this.helper.toPromise(
-                    this.api.authApi, this.api.authApi.impersonatePost, 
-                    {
-                        userId: id,
-                        namespace: "platform"
-                    }
-                );
+            );
 
-                const impersonateToken = result.data.id;
-                const type = result.data.type;
-                this.setToken({ name, type }, impersonateToken);
+            // set value on .katajson
+            const impersonateToken: string = result.data.id.toString();
+            const type: string = result.data.type.toString();
+            this.setToken({ name, type }, impersonateToken);
 
-                // use impersonate token
-                console.log(`Succesfully impersonate as ${colors.green(name)}`);
-            }
+            console.log(`Succesfully impersonate as ${colors.green(name)}`);
 
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -309,16 +302,11 @@ export default class User extends Component {
     }
 
     // unimpersonate command
-    public async unimpersonate(userName?: string) {
+    public async unimpersonate() {
         try {
-            let currentLogin = this.helper.getProp("current_login");
-            if (userName !== currentLogin) {
-                throw new Error(`Failed to unimpersonate. Please check your current username.`);
-            }
-            // helper to remove userName key from katajson
+            const userName: string = this.helper.getProp("current_login").toString();
             this.helper.deleteKeyToken(userName);
-            // get updated currentLogin
-            currentLogin = this.helper.getProp("current_login");
+            const currentLogin: string = this.helper.getProp("current_login").toString();
             console.log(`Succesfully unimpersonate user. Now your current login is ${colors.green(currentLogin)}`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
