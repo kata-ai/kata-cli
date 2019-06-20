@@ -316,6 +316,7 @@ commands:
                 alias: remove-member
             impersonate:
                 desc: impersonate as certain user
+                args: <username>
                 handler: user.impersonate
                 alias: impersonate
             unimpersonate:
