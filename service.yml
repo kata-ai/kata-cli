@@ -92,15 +92,6 @@ commands:
                         type: string
                 handler: bot.discard
                 alias: discard
-            # delete:
-            #     desc: delete bot
-            #     handler: bot.delete
-            #     alias: remove-bot
-            # test:
-            #     desc: running test file
-            #     args: "[file]"
-            #     handler: bot.test
-            #     alias: test
             console:
                 desc: kata-cli interactive command
                 params:
@@ -110,6 +101,10 @@ commands:
                         short: s
                 handler: bot.console
                 alias: console
+            errors:
+                desc: bot error log
+                handler: bot.errors
+                alias: errors
     deployment:
         type: group
         desc: Commands for deployment bot
@@ -123,6 +118,10 @@ commands:
                 desc: list all deployment by bot id
                 handler: deployment.list
                 alias: list-deployment
+            rollback:
+                desc: rollback deployment
+                handler: deployment.rollback
+                alias: rollback-deployment
 
     environment:
         type: group
@@ -166,6 +165,16 @@ commands:
                 args: <channelName>
                 handler: channel.removeChannel
                 alias: remove-channel
+            updateChannel:
+                desc: Update a channel from selected environment
+                args: <channelName>
+                params:
+                    data:
+                        type: json
+                        desc: channel json data
+                        short: d
+                handler: channel.updateChannel
+                alias: update-channel
 
     project:
         type: group
@@ -183,6 +192,16 @@ commands:
                 desc: list all project
                 handler: project.list
                 alias: list-project
+            delete:
+                desc: delete project
+                args: "[projectId]"
+                handler: project.delete
+                alias: delete-project
+            update:
+                desc: update project
+                args: "[projectId]"
+                handler: project.update
+                alias: update-project
 
     session:
         type: group
@@ -286,6 +305,11 @@ commands:
                 desc: logout from kata
                 handler: user.logout
                 alias: logout
+            forgotpassword:
+                desc: forgot password
+                args: "[username]"
+                handler: user.forgot
+                alias: forgot-password
             whoami:
                 desc: identify current user
                 handler: user.whoami
@@ -294,6 +318,14 @@ commands:
                 desc: change current user password
                 handler: user.changePassword
                 alias: change-password
+            listTeam:
+                desc: list team
+                handler: user.listTeam
+                alias: list-team
+            listTeamUser:
+                desc: list team user
+                handler: user.listTeamUser
+                alias: list-team-user
             createTeam:
                 desc: create team
                 args: <name>
@@ -368,6 +400,36 @@ commands:
                 desc: snapshot profiles
                 handler: nlu.snapshot
                 alias: nl-snapshot
+            listTraining:
+                desc: list training
+                handler: nlu.listTraining
+                params:
+                    page:
+                        type: number
+                        desc: Number page
+                        short: p
+                alias: nl-list-training
+            listPrediction:
+                desc: list prediction log
+                handler: nlu.listPrediction
+                params:
+                    page:
+                        type: number
+                        desc: Number page
+                        short: p
+                alias: nl-list-prediction
+            listRevision:
+                desc: list revision
+                handler: nlu.listRevision
+                alias: nl-list-revision
+            issueToken:
+                desc: get issue token
+                handler: nlu.issueToken
+                alias: nl-issue-token
+            detail:
+                desc: get NL detail
+                handler: nlu.detail
+                alias: nl-detail
 
 # entry point
 main: main

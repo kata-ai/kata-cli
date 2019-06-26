@@ -1,5 +1,5 @@
 import { IHelper } from "interfaces/main";
-import { Component, JsonObject } from "merapi";
+import { Component, JsonObject, JsonArray } from "merapi";
 const Table = require("cli-table");
 const fs = require("fs");
 const yaml = require("js-yaml");
@@ -428,4 +428,148 @@ export default class Nlu extends Component {
         }
     }
 
+    public async listTraining(params?:any) {
+        try {
+            const projectId = this.helper.getProp("projectId");
+            const projectName = this.helper.getProp("projectName");
+            const username = this.helper.getProp("current_login");
+
+            const { response } = await this.helper.toPromise(
+                this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameTrainingDataGet,
+                projectId,
+                `${username}:${projectName}`,
+                { page: params.page || 1 }
+            );
+
+            if (response && response.body && response.body.data) {
+                const table = new Table({
+                    head: ["Train Data", "Entities"],
+                    colWidths: [50, 50]
+                });
+
+                response.body.data.forEach((data: any) => {
+                    const entities: JsonArray = data.entities.map((e:any) => {
+                        return `(${e.entity}:${e.label}) ${e.value}`
+                    })
+                    table.push([data.input, entities.join('\n')]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log('Failed when trying list train data')
+            }
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async listPrediction(params?:any) {
+        try {
+            const projectId = this.helper.getProp("projectId");
+            const projectName = this.helper.getProp("projectName");
+            const username = this.helper.getProp("current_login");
+
+            const { response } = await this.helper.toPromise(
+                this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameLogGet,
+                projectId,
+                `${username}:${projectName}`,
+                { page: params.page || 1, limit: 10 }
+            );
+
+            if (response && response.body && response.body.result) {
+                const table = new Table({
+                    head: ["Prediction Log"]
+                });
+
+                response.body.result.forEach((data: any) => {
+                    table.push([data.corrected]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log('Failed when trying list prediction log')
+            }
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async listRevision() {
+        try {
+            const projectId = this.helper.getProp("projectId");
+            
+            const { response } = await this.helper.toPromise(
+                this.api.projectApi,
+                this.api.projectApi.projectsProjectIdNluRevisionsGet,
+                projectId
+            );
+
+            if (response && response.body && response.body.data) {
+                const table = new Table({
+                    head: ["Snapshot", "Date"],
+                    colWidths: [50, 25]
+                });
+
+                response.body.data.forEach((data: any) => {
+                    table.push([data.revision, new Date(data.created_at).toLocaleString()]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log('Failed when trying get revision list')
+            }
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async detail() {
+        try {
+            const projectId = this.helper.getProp("projectId");
+
+            const { response } = await this.helper.toPromise(
+                this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNluGet,
+                projectId
+            );
+
+            if (response && response.body) {
+                const table = new Table({
+                    head: ["NLU Name", "NLU ID", "Language", "Token"]
+                });
+
+                const language = (response.body.lang == "id") ? "Bahasa Indonesia" : "English"
+
+                table.push([response.body.name, response.body.id, language, response.body.token]);
+
+                console.log(table.toString());
+            } else {
+                console.log('Failed when trying get NL detail')
+            }
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
+    public async issueToken() {
+        try {
+            const projectId = this.helper.getProp("projectId");
+            const projectName = this.helper.getProp("projectName");
+            const username = this.helper.getProp("current_login");
+
+            const { response } = await this.helper.toPromise(
+                this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameIssueTokenGet,
+                projectId,
+                `${username}:${projectName}`
+            );
+
+            if (response && response.body) {
+                console.log(response.body.toString())
+            } else {
+                console.log('Failed when trying issue token')
+            }
+        } catch (error) {
+            console.log(this.helper.wrapError(error));   
+        }
+    }
 }

@@ -1,6 +1,7 @@
 import { Component, JsonObject } from "merapi";
 import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
+const Table = require("cli-table");
 
 export default class User extends Component {
 
@@ -322,5 +323,79 @@ export default class User extends Component {
         ]);
 
         return answer;
+    }
+
+    public async forgot(username: string) {
+        try {
+            const current_login = this.helper.getProp('current_login')
+            if (!current_login) {
+                const { response } = await this.helper.toPromise(this.api.authApi, this.api.authApi.forgotPost, { username });
+                if (response && response.body & response.body.message) {
+                    console.log(response.body.message)
+                }
+            } else {
+                console.log(`Please log out first`)
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
+    }
+
+    public async listTeam() {
+        try {
+            const current_login = this.helper.getProp('current_login')
+            if (current_login) {
+                const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
+                const table = new Table({
+                    head: ["Team Name", "Projects", "Members", "Bots"],
+                    colWidths: [50, 15, 15, 15]
+                });
+                response.body.forEach((team: JsonObject) => {
+                    table.push([team.username, team.projects, team.members, team.bots]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log("Please log in first");
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
+    }
+
+    public async listTeamUser() {
+        try {
+            const current_login = this.helper.getProp('current_login')
+            if (current_login) {
+                const dataTeams = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
+                const teams: object[] = dataTeams.response.body;
+                const choices = teams.map((team: any) => ({
+                    name: team.username,
+                    value: team.teamId
+                }));
+
+                const { teamId } = await inquirer.prompt([
+                    {
+                        type: "list",
+                        name: "teamId",
+                        message: "Team:",
+                        choices: choices
+                    }
+                ]);
+
+                const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamId);
+                const table = new Table({
+                    head: ["Username", "Role"],
+                    colWidths: [50, 25]
+                });
+                response.body.forEach((user: JsonObject) => {
+                    table.push([user.username, user.roleName]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log("Please log in first");
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
     }
 }

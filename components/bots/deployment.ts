@@ -2,7 +2,7 @@
 import { IHelper } from "interfaces/main";
 import { JsonObject } from "merapi";
 const Table = require("cli-table");
-
+import inquirer = require("inquirer");
 
 export default class Deployment {
     constructor(private helper: IHelper, private api: any) {
@@ -106,8 +106,6 @@ export default class Deployment {
         }
     }
 
-   
-
     public async list(options: JsonObject) {
         const projectId = this.helper.getProjectId();
 
@@ -129,6 +127,80 @@ export default class Deployment {
             }
         } catch (e) {
             console.error("Error");
+            console.log(this.helper.wrapError(e));
+        }
+    }
+
+    public async rollback() {
+        try {
+            let page =  1;
+            const pageLimit = 10;
+            while (true) {
+                const projectId = this.helper.getProjectId();
+                const author = this.helper.getProp('current_login');
+
+                const { response: { body } } = await this.helper.toPromise(
+                    this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: pageLimit, page}
+                );
+
+                if (body) {
+                    const deployments: object[] = body.data;
+                    const choicesDeployments = deployments.map((deployment: any) => ({ name: deployment.version, value: { version: deployment.version, id: deployment.id }}));
+                    choicesDeployments.push({ name: '(Load More)', value: null})
+                    const maxPage = Math.ceil(body.total / pageLimit);
+
+                    let { version } = await inquirer.prompt<any>([
+                        {
+                            type: "list",
+                            name: "version",
+                            message: `Select version (page ${ page } / ${ maxPage })`,
+                            paginated: false,
+                            pageSize: pageLimit + 1,
+                            choices: choicesDeployments
+                        }
+                    ]);
+
+                    if (!version) {
+                        page++;
+                        continue;
+                    }
+
+                    let { changelog, confirm } = await inquirer.prompt<any>([
+                        {
+                            type: "text",
+                            name: "changelog",
+                            message: "Changelog:",
+                        },
+                        {
+                            type: "confirm",
+                            name: "confirm",
+                            message: `IMPORTANT: Existing NL training data will also be rolled back to version ${version.version}`,
+                            default: true,
+                        }
+                    ]);
+
+                    const requestBody = {
+                        author,
+                        changelog,
+                        version: version.version
+                    }
+
+                    if (confirm) {
+                        const { response } = await this.helper.toPromise(
+                            this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost, version.id, requestBody
+                        );
+        
+                        if (response && response.body) {
+                            console.log(`Successfully rolled back to version ${version.version}`)
+                        } else {
+                            console.log(`Error when trying to rollback to version ${version.version}`)
+                        }
+                    }
+
+                    return
+                }
+            }
+        } catch (e) {
             console.log(this.helper.wrapError(e));
         }
     }
