@@ -2,6 +2,7 @@ import { Component, JsonObject } from "merapi";
 import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
 const Table = require("cli-table");
+const colors = require("colors");
 
 export default class User extends Component {
 
@@ -253,6 +254,66 @@ export default class User extends Component {
             console.log(this.helper.wrapError(error));
         }
     }
+
+    public async impersonate(userName: string) {
+        // TODO : dibuat seperti login, pake inquirer.
+        try {
+            const currentLogin: string = this.helper.getProp("current_login").toString();
+            if (currentLogin !== "admin") {
+                throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
+            } 
+            
+            // set header bearer token
+            const currentToken: string = this.helper.getCurrentToken().token.toString();
+            this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
+
+            // get user id from username
+            const limit: number = 1;
+            const { response } = await this.helper.toPromise(
+                this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
+            );
+            const users = response.body;
+            const name: string = users.map( (user: any) => user.username )[0].toString();
+            const id: string = users.map( (user: any) => user.userId )[0].toString();
+            
+            if ( userName !== name ) {
+                throw new Error(`Sorry, username is not exist.`);
+            }
+            
+            // impersonate function
+            const result = await this.helper.toPromise(
+                this.api.authApi, this.api.authApi.impersonatePost, 
+                {
+                    userId: id,
+                    namespace: "platform"
+                }
+            );
+
+            // set value on .katajson
+            const impersonateToken: string = result.data.id.toString();
+            const type: string = result.data.type.toString();
+            this.setToken({ name, type }, impersonateToken);
+
+            console.log(`Succesfully impersonate as ${colors.green(name)}`);
+
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+
+        }
+    }
+
+    // unimpersonate command
+    public async unimpersonate() {
+        try {
+            const userName: string = this.helper.getProp("current_login").toString();
+            this.helper.deleteKeyToken(userName);
+            const currentLogin: string = this.helper.getProp("current_login").toString();
+            console.log(`Succesfully unimpersonate user. Now your current login is ${colors.green(currentLogin)}`);
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
 
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
