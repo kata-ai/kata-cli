@@ -29,6 +29,9 @@ components:
     helper: scripts/Helper
     tester: scripts/Tester
 
+    # command deprecated
+    deprecated: deprecated/Deprecated
+
     # api
     api: api/Api
     zaun: api/Zaun
@@ -60,49 +63,49 @@ commands:
         desc: Commands for bot management
         subcommands:
             init:
-                desc: initialize new bot.yml file
+                desc: Initialize new bot.yml file
                 args: "<name>"
                 params:
                     config:
                         type: string
-                        desc: param string
+                        desc: Parameter string
                 handler: bot.init
                 alias: init
             revisions:
-                desc: list all bot revision
+                desc: Get list bot revision
                 handler: bot.revisions
                 alias: revisions
             push:
-                desc: push and update version bot
+                desc: Push and update reversion bot
                 params:
                     tag:
                         type: string
-                        desc: tag version for deployment
+                        desc: Tag version for deployment
                 handler: bot.push
                 alias: push
             pull:
-                desc: pull bot with specific revision
+                desc: Pull bot with specific revision
                 args: "[revision]"
                 handler: bot.pull
                 alias: pull
             discard:
-                desc: discard bot
+                desc: Discard bot
                 params:
                     draft:
                         type: string
                 handler: bot.discard
                 alias: discard
             console:
-                desc: kata-cli interactive command
+                desc: Interactive command
                 params:
                     session:
                         type: string
-                        desc: session id to use in console
+                        desc: Session id to use in console
                         short: s
                 handler: bot.console
                 alias: console
             errors:
-                desc: bot error log
+                desc: Get list error log
                 handler: bot.errors
                 alias: errors
     deployment:
@@ -115,21 +118,20 @@ commands:
                 handler: deployment.create
                 alias: create-deployment
             list:
-                desc: list all deployment by bot id
+                desc: Get List deployment
                 handler: deployment.list
                 alias: list-deployment
             rollback:
-                desc: rollback deployment
+                desc: Rollback deployment by bot version
                 handler: deployment.rollback
                 alias: rollback-deployment
-
     environment:
         type: group
         desc: Commands for environment bot
         subcommands:
             create:
                 desc: Create an environment on the selected project
-                args: <slug>
+                args: "<slug>"
                 handler: environment.create
                 alias: create-environment
             list:
@@ -141,276 +143,223 @@ commands:
                 args: "[newDeploymentVersion]"
                 handler: environment.update
                 alias: update-environment
-
     channels:
         type: group
         desc: Commands for channel
         subcommands:
-            addChannel:
-                args: <channelName>
+            create:
+                args: "<channelName>"
                 desc: Create a channel on the selected environment
                 params:
                     data:
                         type: json
-                        desc: channel json data
+                        desc: Channel json data
                         short: d
                 handler: channel.addChannel
-                alias: add-channel
+                alias: create-channel
             list:
-                desc: List channels of the selected environment
+                desc: Get list channels of the selected environment
                 handler: channel.list
                 alias: list-channel
-            removeChannel:
-                desc: Remove a channel from the selected environment
-                args: <channelName>
+            delete:
+                desc: Delete a channel from the selected environment
+                args: "<channelName>"
                 handler: channel.removeChannel
-                alias: remove-channel
-            updateChannel:
+                alias: delete-channel
+            update:
                 desc: Update a channel from selected environment
-                args: <channelName>
+                args: "<channelName>"
                 params:
                     data:
                         type: json
-                        desc: channel json data
+                        desc: Channel json data
                         short: d
                 handler: channel.updateChannel
                 alias: update-channel
-
     project:
         type: group
         desc: Commands for bot projects
         subcommands:
             create:
-                desc: create project
+                desc: Create a project
                 handler: project.create
                 alias: create-project
             select:
-                desc: select project
+                desc: Select a project
                 handler: project.select
                 alias: select-project
             list:
-                desc: list all project
+                desc: Get list project
                 handler: project.list
                 alias: list-project
             delete:
-                desc: delete project
+                desc: Delete project by project id
                 args: "[projectId]"
                 handler: project.delete
                 alias: delete-project
             update:
-                desc: update project
+                desc: Update project by project id
                 args: "[projectId]"
                 handler: project.update
                 alias: update-project
-
-    session:
-        type: group
-        desc: Commands for session management
-        subcommands:
-            get:
-                desc: get session
-                args: "<id> [deploymentId]"
-                handler: session.get
-            create:
-                desc: create session
-                args: "[id] [deploymentId]"
-                params:
-                    data:
-                        type: json
-                        desc: session json object
-                        short: d
-                    file:
-                        type: file
-                        desc: file yaml or json contains session
-                        short: f
-                handler: session.create
-            update:
-                desc: update session
-                args: "<id> [deploymentId]"
-                params:
-                    data:
-                        type: json
-                        desc: session json object
-                        short: d
-                    file:
-                        type: file
-                        desc: file yaml or json contains session
-                        short: f
-                handler: session.update
-            delete:
-                desc: delete session
-                args: "<id> [deploymentId]"
-                handler: session.delete
-
     config:
         type: group
         desc: Command for config management
         subcommands:
             view:
-                desc: view config stored in .katajson file
+                desc: View config stored in .katajson file
                 handler: helper.viewConfig
-
+                alias: view-config
     set:
         type: command
         desc: Command for set property value
         args: "<prop> <value>"
         handler: helper.setProp
-
-    timestamp:
-        type: command
-        desc: Command for get timestamp
-        handler: session.timestamp
-
     user:
         type: group
-        desc: user management
+        desc: Commands for user management
         subcommands:
             createUser:
-                desc: create new user
-                args: <username>
+                desc: Create new user
+                args: "<username>"
                 params:
                     admin:
                         type: boolean
-                        desc: label admin
+                        desc: Label admin
                         short: a
                     internal:
                         type: boolean
-                        desc: label internal
+                        desc: Label internal
                         short: i
                 handler: user.createUser
                 alias: create-user
             switch:
-                desc: switch between team and user
-                args: <type> [name]
+                desc: Switch between team and user
+                args: "<type> [name]"
                 handler: user.switch
                 alias: switch
             login:
-                desc: login to kata
+                desc: Login to kata
                 params:
                     user:
                         type: string
-                        desc: username login
+                        desc: Username login
                         short: u
                     password:
                         type: string
-                        desc: password login
+                        desc: Password login
                         short: p
                     token:
                         type: string
-                        desc: token login
+                        desc: Token login
                         short: t
                 handler: user.login
                 alias: login
             logout:
-                desc: logout from kata
+                desc: Logout from kata
                 handler: user.logout
                 alias: logout
             forgotpassword:
-                desc: forgot password
+                desc: Forgot password
                 args: "[username]"
                 handler: user.forgot
                 alias: forgot-password
             whoami:
-                desc: identify current user
+                desc: Identify current user
                 handler: user.whoami
                 alias: whoami
             changePassword:
-                desc: change current user password
+                desc: Change current user password
                 handler: user.changePassword
                 alias: change-password
             listTeam:
-                desc: list team
+                desc: Get list all team
                 handler: user.listTeam
                 alias: list-team
             listTeamUser:
-                desc: list team user
+                desc: Get list all team user
                 handler: user.listTeamUser
                 alias: list-team-user
             createTeam:
-                desc: create team
-                args: <name>
+                desc: Create team
+                args: "<name>"
                 handler: user.createTeam
                 alias: create-team
-            addMember:
-                desc: add member to team
-                args: <username>
+            inviteMember:
+                desc: Invite member to team
+                args: "<username>"
                 handler: team.addMember
                 params:
                     admin:
                         type: boolean
-                        desc: admin label for new member
+                        desc: Admin label for new member
                         short: a
-                alias: add-member
-            removeMember:
-                desc: remove member from team
-                args: <username>
-                handler: team.removeMember
-                alias: remove-member
+                alias: invite-member
             impersonate:
-                desc: impersonate as certain user
-                args: <username>
+                desc: Impersonate as certain user
+                args: "<username>"
                 handler: user.impersonate
                 alias: impersonate
             unimpersonate:
-                desc: unimpersonate current user, set back to admin
+                desc: Unimpersonate current user, set back to admin
                 handler: user.unimpersonate
                 alias: unimpersonate
     nlu:
         type: group
-        desc: command for nlu management
+        desc: Command for nlu management
         subcommands:
             pull:
-                desc: pull nlu from server
+                desc: Pull nlu from server
                 handler: nlu.pull
                 alias: nl-pull
             push:
-                desc: create or update nlu
+                desc: Create or update nlu
                 handler: nlu.push
                 alias: nl-push
             init:
-                desc: init nlu file
+                desc: Init nlu file
                 handler: nlu.pull
                 alias: nl-init
             train:
-                desc: train nlu
+                desc: Train nlu
                 handler: nlu.train
                 params:
                     file:
                         type: string
-                        desc: file path contain data training
+                        desc: File path contain data training
                         short: f
                     sentence:
                         type: string
-                        desc: string to train
+                        desc: String to train
                         short: s
                 alias: nl-train
             predict:
-                desc: predict
+                desc: Predict NL
                 handler: nlu.predict
                 params:
                     file:
                         type: string
-                        desc: file path contain data to predict
+                        desc: File path contain data to predict
                         short: f
                     sentence:
                         type: string
-                        desc: string to predict
+                        desc: String to predict
                         short: s
                     nlu:
                         type: string
-                        desc: nlu to use
+                        desc: NLU to use
                         short: nlu
                 alias: nl-predict
             listProfiles:
-                desc: list default profiles
+                desc: Get list default profiles
                 handler: nlu.listProfiles
                 alias: list-profiles
             snapshot:
-                desc: snapshot profiles
+                desc: Snapshot profiles
                 handler: nlu.snapshot
                 alias: nl-snapshot
             listTraining:
-                desc: list training
+                desc: Get list training
                 handler: nlu.listTraining
                 params:
                     page:
@@ -419,7 +368,7 @@ commands:
                         short: p
                 alias: nl-list-training
             listPrediction:
-                desc: list prediction log
+                desc: Get list prediction log
                 handler: nlu.listPrediction
                 params:
                     page:
@@ -428,17 +377,36 @@ commands:
                         short: p
                 alias: nl-list-prediction
             listRevision:
-                desc: list revision
+                desc: Get list revision
                 handler: nlu.listRevision
                 alias: nl-list-revision
             issueToken:
-                desc: get issue token
+                desc: Issue token
                 handler: nlu.issueToken
                 alias: nl-issue-token
             detail:
-                desc: get NL detail
+                desc: Get NL detail
                 handler: nlu.detail
                 alias: nl-detail
-
+    deprecated:
+        type: group
+        desc: Command for deprecated management
+        subcommands:
+            addChannel:
+                desc: This command is deprecated, please user insert-channel
+                handler: deprecated.addChannel
+                alias: add-channel
+            removeChannel:
+                desc: This command is deprecated, please user delete-channel
+                handler: deprecated.removeChannel
+                alias: remove-channel
+            configView:
+                desc: This command is deprecated, please user view-config
+                handler: deprecated.configView
+                alias: config-view
+            addMember:
+                desc: This command is deprecated, please user invite-member
+                handler: deprecated.addMember
+                alias: add-member
 # entry point
 main: main
