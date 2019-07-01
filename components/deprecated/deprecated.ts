@@ -2,18 +2,18 @@ import { Component } from "merapi";
 
 export default class Deprecated extends Component {
     addChannel() {
-        console.log('This command is deprecated, please user insert-channel')
+        console.log('This command is deprecated, please use insert-channel')
     }
 
     removeChannel() {
-        console.log('This command is deprecated, please user delete-channel')
+        console.log('This command is deprecated, please use delete-channel')
     }
 
     configView() {
-        console.log('This command is deprecated, please user view-config')
+        console.log('This command is deprecated, please use view-config')
     }
 
     addMember() {
-        console.log('This command is deprecated, please user invite-member')
+        console.log('This command is deprecated, please use invite-member')
     }
 }

@@ -548,93 +548,100 @@ export default class Bot extends Component {
     public async errors() {
         try {
             const projectId = this.helper.getProp("projectId");
-
-            const dataEnvironments = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsGet , projectId, null);
-            const environments: object[] = dataEnvironments.response.body.data;
-            const choicesEnvironment = environments.map((environment: any) => ({
-                name: environment.name,
-                value: environment.id
-            }));
-    
-            let { environmentId } = await inquirer.prompt<any>([
-                {
-                    type: "list",
-                    name: "environmentId",
-                    message: "Environment:",
-                    choices: choicesEnvironment
-                }
-            ]);
-    
-            const dataChannels = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet , projectId, environmentId, null);
-            const channels: object[] = dataChannels.response.body;
-            const choicesChannel = channels.map((channel: any) => ({
-                name: channel.name,
-                value: channel.id
-            }));
-    
-            let { channelId } = await inquirer.prompt<any>([
-                {
-                    type: "list",
-                    name: "channelId",
-                    message: "Channel:",
-                    choices: choicesChannel
-                }
-            ]);
+            if (projectId) {
+                const dataEnvironments = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsGet , projectId, null);
+                if (dataEnvironments && dataEnvironments.response && dataEnvironments.response.body && dataEnvironments.response.body.data) {
+                    const environments: object[] = dataEnvironments.response.body.data;
+                    const choicesEnvironment = environments.map((environment: any) => ({
+                        name: environment.name,
+                        value: environment.id
+                    }));
             
-            let { start, end, error } = await inquirer.prompt<any>([
-                {
-                    type: "text",
-                    name: "start",
-                    message: "Date Start:"
-                },
-                {
-                    type: "text",
-                    name: "end",
-                    message: "Date End:"
-                },
-                {
-                    type: "list",
-                    name: "error",
-                    message: "Error Group:",
-                    choices: [
+                    let { environmentId } = await inquirer.prompt<any>([
                         {
-                            name: "User Error",
-                            value: {"group": 1000, "code":"1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021,1022,1023,1024,1025,1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1036,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055,1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071,1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100"}
+                            type: "list",
+                            name: "environmentId",
+                            message: "Environment:",
+                            choices: choicesEnvironment
+                        }
+                    ]);
+            
+                    const dataChannels = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet , projectId, environmentId, null);
+                    const channels: object[] = dataChannels.response.body;
+                    const choicesChannel = channels.map((channel: any) => ({
+                        name: channel.name,
+                        value: channel.id
+                    }));
+            
+                    let { channelId } = await inquirer.prompt<any>([
+                        {
+                            type: "list",
+                            name: "channelId",
+                            message: "Channel:",
+                            choices: choicesChannel
+                        }
+                    ]);
+                    
+                    let { start, end, error } = await inquirer.prompt<any>([
+                        {
+                            type: "text",
+                            name: "start",
+                            message: "Date Start:"
                         },
                         {
-                            name: "System Error",
-                            value: {"group": 4000, "code":"4001,4002,4003,4004,4005,4006,4007,4008,4009,4010,4011,4012,4013,4014,4015,4016,4017,4018,4019,4020,4021,4022,4023,4024,4025,4026,4027,4028,4029,4030,4031,4032,4033,4034,4035,4036,4037,4038,4039,4040,4041,4042,4043,4044,4045,4046,4047,4048,4049,4050,4051,4052,4053,4054,4055,4056,4057,4058,4059,4060,4061,4062,4063,4064,4065,4066,4067,4068,4069,4070,4071,4072,4073,4074,4075,4076,4077,4078,4079,4080,4081,4082,4083,4084,4085,4086,4087,4088,4089,4090,4091,4092,4093,4094,4095,4096,4097,4098,4099,4100"}
-                        }
-                    ]
-                },
-            ]);
-    
-            if (isDate(start) == false) {
-                start = new Date().setHours(0,0,0)
+                            type: "text",
+                            name: "end",
+                            message: "Date End:"
+                        },
+                        {
+                            type: "list",
+                            name: "error",
+                            message: "Error Group:",
+                            choices: [
+                                {
+                                    name: "User Error",
+                                    value: {"group": 1000, "code":"1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021,1022,1023,1024,1025,1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1036,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055,1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,1070,1071,1072,1073,1074,1075,1076,1077,1078,1079,1080,1081,1082,1083,1084,1085,1086,1087,1088,1089,1090,1091,1092,1093,1094,1095,1096,1097,1098,1099,1100"}
+                                },
+                                {
+                                    name: "System Error",
+                                    value: {"group": 4000, "code":"4001,4002,4003,4004,4005,4006,4007,4008,4009,4010,4011,4012,4013,4014,4015,4016,4017,4018,4019,4020,4021,4022,4023,4024,4025,4026,4027,4028,4029,4030,4031,4032,4033,4034,4035,4036,4037,4038,4039,4040,4041,4042,4043,4044,4045,4046,4047,4048,4049,4050,4051,4052,4053,4054,4055,4056,4057,4058,4059,4060,4061,4062,4063,4064,4065,4066,4067,4068,4069,4070,4071,4072,4073,4074,4075,4076,4077,4078,4079,4080,4081,4082,4083,4084,4085,4086,4087,4088,4089,4090,4091,4092,4093,4094,4095,4096,4097,4098,4099,4100"}
+                                }
+                            ]
+                        },
+                    ]);
+            
+                    if (isDate(start) == false) {
+                        start = new Date().setHours(0,0,0)
+                    } else {
+                        start = new Date(start).setHours(0,0,0)
+                    }
+                    if (isDate(end) == false) {
+                        end = new Date().setHours(23,59,59)
+                    } else {
+                        end = new Date(end).setHours(23,59,59)
+                    }
+            
+                    const errorGroup = error.group
+                    const errorCode = error.code
+            
+                    const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdErrorsGet , projectId, environmentId, channelId, errorGroup, errorCode, new Date(start).toISOString(), new Date(end).toISOString());
+                
+                    if (response && response.body && response.body.data) {
+                        const table = new Table({
+                            head: ["Time", "Error Code", "Error Message"],
+                            colWidths: [25, 15, 75]
+                        });
+                        response.body.data.forEach((project: JsonObject) => {
+                            table.push([project.timestamp, project.errorCode, project.errorMessage]);
+                        });
+                        console.log(table.toString());
+                    }
+                } else {
+                    console.log('Failed when trying get environment data')
+                }
             } else {
-                start = new Date(start).setHours(0,0,0)
-            }
-            if (isDate(end) == false) {
-                end = new Date().setHours(23,59,59)
-            } else {
-                end = new Date(end).setHours(23,59,59)
-            }
-    
-            const errorGroup = error.group
-            const errorCode = error.code
-    
-            const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdErrorsGet , projectId, environmentId, channelId, errorGroup, errorCode, new Date(start).toISOString(), new Date(end).toISOString());
-        
-            if (response && response.body && response.body.data) {
-                const table = new Table({
-                    head: ["Time", "Error Code", "Error Message"],
-                    colWidths: [25, 15, 75]
-                });
-                response.body.data.forEach((project: JsonObject) => {
-                    table.push([project.timestamp, project.errorCode, project.errorMessage]);
-                });
-                console.log(table.toString());
-            }   
+                console.log('Please select project first')
+            }               
         } catch (e) {
             console.error(this.helper.wrapError(e));
         }
