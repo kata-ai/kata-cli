@@ -392,7 +392,7 @@ export default class User extends Component {
             if (!current_login) {
                 const { response } = await this.helper.toPromise(this.api.authApi, this.api.authApi.forgotPost, { username });
                 if (response && response.body & response.body.message) {
-                    console.log(response.body.message)
+                    console.log('Please check your email to reset your password.')
                 }
             } else {
                 console.log(`Please log out first`)

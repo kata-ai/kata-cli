@@ -261,7 +261,7 @@ commands:
                 alias: logout
             forgotpassword:
                 desc: Forgot password
-                args: "[username]"
+                args: "<username>"
                 handler: user.forgot
                 alias: forgot-password
             whoami:
