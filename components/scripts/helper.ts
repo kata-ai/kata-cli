@@ -8,7 +8,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
-const analytics = require('universal-analytics');
+const analytics = require("universal-analytics");
 
 function wrapError(error: any) {
     let errorMessage;
@@ -291,7 +291,7 @@ export default class Helper extends Component {
         if (!projectName) projectName = null
 
         const version = this.config.default("version", "1.0.0")
-        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
+        const google = analytics(this.config.default("config.trackingId", "UA-131926842-1"), firstLogin.id);
 
         const data:JsonObject = {
             userId: firstLogin.id,

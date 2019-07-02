@@ -453,14 +453,14 @@ export default class Nlu extends Component {
                         const entities: JsonArray = data.entities.map((e:any) => {
                             return `(${e.entity}:${e.label}) ${e.value}`
                         })
-                        table.push([data.input, entities.join('\n')]);
+                        table.push([data.input, entities.join("\n")]);
                     });
                     console.log(table.toString());
                 } else {
-                    console.log('Failed when trying list train data')
+                    console.log("Failed when trying list train data")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -492,10 +492,10 @@ export default class Nlu extends Component {
                     });
                     console.log(table.toString());
                 } else {
-                    console.log('Failed when trying list prediction log')
+                    console.log("Failed when trying list prediction log")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -523,10 +523,10 @@ export default class Nlu extends Component {
                     });
                     console.log(table.toString());
                 } else {
-                    console.log('Failed when trying get revision list')
+                    console.log("Failed when trying get revision list")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -554,10 +554,10 @@ export default class Nlu extends Component {
     
                     console.log(table.toString());
                 } else {
-                    console.log('Failed when trying get NL detail')
+                    console.log("Failed when trying get NL detail")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }            
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -581,10 +581,10 @@ export default class Nlu extends Component {
                 if (response && response.body) {
                     console.log(response.body.toString())
                 } else {
-                    console.log('Failed when trying issue token')
+                    console.log("Failed when trying issue token")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }    
         } catch (error) {
             console.log(this.helper.wrapError(error));   

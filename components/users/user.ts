@@ -388,11 +388,11 @@ export default class User extends Component {
 
     public async forgot(username: string) {
         try {
-            const current_login = this.helper.getProp('current_login')
+            const current_login = this.helper.getProp("current_login")
             if (!current_login) {
                 const { response } = await this.helper.toPromise(this.api.authApi, this.api.authApi.forgotPost, { username });
-                if (response && response.body & response.body.message) {
-                    console.log('Please check your email to reset your password.')
+                if (response && response.body && response.body.message) {
+                    console.log("Please check your email to reset your password.")
                 }
             } else {
                 console.log(`Please log out first`)
@@ -404,7 +404,7 @@ export default class User extends Component {
 
     public async listTeam() {
         try {
-            const current_login = this.helper.getProp('current_login')
+            const current_login = this.helper.getProp("current_login")
             if (current_login) {
                 const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
                 const table = new Table({
@@ -425,7 +425,7 @@ export default class User extends Component {
 
     public async listTeamUser() {
         try {
-            const current_login = this.helper.getProp('current_login')
+            const current_login = this.helper.getProp("current_login")
             if (current_login) {
                 const dataTeams = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
                 const teams: object[] = dataTeams.response.body;

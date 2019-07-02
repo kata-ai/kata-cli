@@ -137,7 +137,7 @@ export default class Deployment {
             const pageLimit = 10;
             while (true) {
                 const projectId = this.helper.getProjectId();
-                const author = this.helper.getProp('current_login');
+                const author = this.helper.getProp("current_login");
 
                 const { response: { body } } = await this.helper.toPromise(
                     this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: pageLimit, page}

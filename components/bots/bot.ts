@@ -637,10 +637,10 @@ export default class Bot extends Component {
                         console.log(table.toString());
                     }
                 } else {
-                    console.log('Failed when trying get environment data')
+                    console.log("Failed when trying get environment data")
                 }
             } else {
-                console.log('Please select project first')
+                console.log("Please select project first")
             }               
         } catch (e) {
             console.error(this.helper.wrapError(e));

@@ -132,7 +132,7 @@ export default class Project {
             if (response && response.body) {
                 console.log(`Project ${chosen.name} has been updated.`)
             } else {
-                console.log('Failed when trying update project')
+                console.log("Failed when trying update project")
             }
         }
     }
@@ -234,9 +234,9 @@ export default class Project {
                     const deleteProject = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdDelete, chosen.id);
                     if (deleteProject && deleteProject.response && deleteProject.response.body) {
                         if (deleteProject.response.body) {
-                            console.log('Project has been deleted.')    
+                            console.log("Project has been deleted.")    
                         } else {
-                            console.log('Failed when trying delete project')
+                            console.log("Failed when trying delete project")
                         }
                     }   
                 }  
