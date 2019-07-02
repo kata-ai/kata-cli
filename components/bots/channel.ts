@@ -256,10 +256,14 @@ export default class Channel {
     }
 
     public async updateChannel(channelName: string, options: JsonObject) {
-        const projectId = this.helper.getProjectId();
-        const environmentId = await this.environment.askEnvironmentId();
-
         try {
+            const projectId = this.helper.getProjectId();
+            if (projectId) {
+                throw new Error("Please select project first");
+            }
+            
+            const environmentId = await this.environment.askEnvironmentId();
+
             const { response: { body: channelsBody } } = await this.helper.toPromise(
                 this.api.deploymentApi,
                 this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet,
@@ -267,9 +271,13 @@ export default class Channel {
             );
 
             const channels: { name: string; id: string }[] = channelsBody;
+            if (channels.length == 0) {
+                throw new Error("Channel not found");
+            }
+
             const channelFound = channels.find((row) => row.name === channelName);
             if (!channelFound) {
-                throw new Error("CHANNEL NOT FOUND");
+                throw new Error("Channel not found");
             }
 
             if (!options.data) {
@@ -291,7 +299,7 @@ export default class Channel {
             console.log(result.response.body);
             const channel = result.response.body;
 
-            console.log("CHANNEL ADDED SUCCESSFULLY");
+            console.log("Channel added successfully");
             console.log(`Paste this url to ${channelData.type} webhook : ${channel.webhook}`);
             if (channelData.type === "fbmessenger") {
                 const channelOptions = JSON.parse(channel.options as string) as JsonObject;

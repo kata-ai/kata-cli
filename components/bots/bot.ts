@@ -550,7 +550,7 @@ export default class Bot extends Component {
             const projectId = this.helper.getProp("projectId");
             if (projectId) {
                 const dataEnvironments = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsGet , projectId, null);
-                if (dataEnvironments && dataEnvironments.response && dataEnvironments.response.body && dataEnvironments.response.body.data) {
+                if (dataEnvironments && dataEnvironments.response && dataEnvironments.response.body && dataEnvironments.response.body.data && dataEnvironments.response.body.data.length > 0) {
                     const environments: object[] = dataEnvironments.response.body.data;
                     const choicesEnvironment = environments.map((environment: any) => ({
                         name: environment.name,
