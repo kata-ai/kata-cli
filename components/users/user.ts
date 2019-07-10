@@ -423,7 +423,7 @@ export default class User extends Component {
         }
     }
 
-    public async listTeamUser() {
+    public async listTeamUser(teamName?: string) {
         try {
             const current_login = this.helper.getProp("current_login")
             if (current_login) {
@@ -432,16 +432,27 @@ export default class User extends Component {
                 const choices = teams.map((team: any) => ({
                     name: team.username,
                     value: team.teamId
-                }));
+                }));                
+                let teamId = null
 
-                const { teamId } = await inquirer.prompt([
-                    {
-                        type: "list",
-                        name: "teamId",
-                        message: "Team:",
-                        choices: choices
+                if (teamName) {
+                    const sameName = choices.find((choice: any) => choice.name === teamName);
+                    if (sameName) {
+                        teamId = sameName.value
                     }
-                ]);
+                } else {
+                    const choice = await inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "teamId",
+                            message: "Team:",
+                            choices: choices
+                        }
+                    ]);
+
+                    teamId = choice.teamId
+                }
+                
 
                 const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamId);
                 const table = new Table({

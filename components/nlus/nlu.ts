@@ -484,11 +484,15 @@ export default class Nlu extends Component {
 
                 if (response && response.body && response.body.result) {
                     const table = new Table({
-                        head: ["Prediction Log"]
+                        head: ["Prediction Log", "Entities"]
                     });
 
                     response.body.result.forEach((data: any) => {
-                        table.push([data.corrected]);
+                        const entities: JsonArray = data.corrected.entities.map((e:any) => {
+                            return `(${e.entity}:${e.label}) ${e.value}`
+                        })
+                        
+                        table.push([data.corrected.input, entities.join("\n")]);
                     });
                     console.log(table.toString());
                 } else {

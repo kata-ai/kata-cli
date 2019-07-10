@@ -87,14 +87,11 @@ export default class Project {
         }
     }
 
-    public async update(projecId?:string) {
+    public async update(projectName?:string) {
         let chosen = null
 
-        if (projecId) {
-            const detail = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdGet, projecId);
-            if (detail && detail.response && detail.response.body) {
-                chosen = detail.response.body                
-            }
+        if (projectName) {
+            chosen = await this.getDataByName(projectName)
         } else {
             chosen = await this.choose()
         }
@@ -134,6 +131,8 @@ export default class Project {
             } else {
                 console.log("Failed when trying update project")
             }
+        } else {
+            console.log(`Project ${projectName} is not found`)
         }
     }
 
@@ -153,6 +152,18 @@ export default class Project {
             }
         } catch (e) {
             console.error(this.helper.wrapError(e));
+        }
+    }
+
+    private async getDataByName(projectName: string) {
+        const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, {});
+
+        if (response && response.body && response.body.data) {
+            const projects = response.body.data
+            const sameName = projects.find((project: any) => project.name === projectName);
+            if (sameName) {
+                return sameName
+            }
         }
     }
 
@@ -217,9 +228,9 @@ export default class Project {
         }
     }
 
-    public async delete(projecId?: string) {
+    public async delete(projectName?: string) {
         try {
-            const chosen = projecId ? { id : projecId } : await this.choose()
+            const chosen = projectName ? await this.getDataByName(projectName) : await this.choose()
             if (chosen) {
                 const { yes } = await inquirer.prompt<any>([
                     {
@@ -240,6 +251,8 @@ export default class Project {
                         }
                     }   
                 }  
+            } else {
+                console.log(`Project ${projectName} is not found`)
             }
         } catch (e) {
             console.error(this.helper.wrapError(e));

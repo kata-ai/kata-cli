@@ -131,77 +131,52 @@ export default class Deployment {
         }
     }
 
-    public async rollback() {
+    public async rollback(version: string) {
         try {
-            let page =  1;
-            const pageLimit = 10;
-            while (true) {
-                const projectId = this.helper.getProjectId();
-                const author = this.helper.getProp("current_login");
+            const projectId = this.helper.getProjectId();
+            const author = this.helper.getProp("current_login");
 
-                const { response: { body } } = await this.helper.toPromise(
-                    this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: pageLimit, page}
-                );
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: 1000000, page: 1}
+            );
 
-                if (body) {
-                    const deployments: object[] = body.data;
-                    const choicesDeployments = deployments.map((deployment: any) => ({ name: deployment.version, value: { version: deployment.version, id: deployment.id }}));
-                    if (choicesDeployments.length > 0) {
-                        choicesDeployments.push({ name: '(Load More)', value: null})
-                        const maxPage = Math.ceil(body.total / pageLimit);
+            if (body && body.data) {
+                const deployments: object[] = body.data;
+                const versionData: any = deployments.find((deployment: any) => deployment.version === version);
+                if (!versionData) {
+                    throw new Error("Version not found");
+                }
 
-                        let { version } = await inquirer.prompt<any>([
-                            {
-                                type: "list",
-                                name: "version",
-                                message: `Select version (page ${ page } / ${ maxPage })`,
-                                paginated: false,
-                                pageSize: pageLimit + 1,
-                                choices: choicesDeployments
-                            }
-                        ]);
-
-                        if (!version) {
-                            page++;
-                            continue;
-                        }
-
-                        let { changelog, confirm } = await inquirer.prompt<any>([
-                            {
-                                type: "text",
-                                name: "changelog",
-                                message: "Changelog:",
-                            },
-                            {
-                                type: "confirm",
-                                name: "confirm",
-                                message: `IMPORTANT: Existing NL training data will also be rolled back to version ${version.version}`,
-                                default: true,
-                            }
-                        ]);
-
-                        const requestBody = {
-                            author,
-                            changelog,
-                            version: version.version
-                        }
-
-                        if (confirm) {
-                            const { response } = await this.helper.toPromise(
-                                this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost, version.id, requestBody
-                            );
-            
-                            if (response && response.body) {
-                                console.log(`Successfully rolled back to version ${version.version}`)
-                            } else {
-                                console.log(`Error when trying to rollback to version ${version.version}`)
-                            }
-                        }
-                    } else {
-                        console.log(`List Deployment is empty`)
+                let { changelog, confirm } = await inquirer.prompt<any>([
+                    {
+                        type: "text",
+                        name: "changelog",
+                        message: "Changelog:",
+                    },
+                    {
+                        type: "confirm",
+                        name: "confirm",
+                        message: `IMPORTANT: Existing NL training data will also be rolled back to version ${versionData.version}`,
+                        default: true,
                     }
-                    
-                    return
+                ]);
+
+                const requestBody = {
+                    author,
+                    changelog,
+                    version: versionData.version
+                }
+
+                if (confirm) {
+                    const { response } = await this.helper.toPromise(
+                        this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost, versionData.id, requestBody
+                    );
+    
+                    if (response && response.body) {
+                        console.log(`Successfully rolled back to version ${versionData.version}`)
+                    } else {
+                        console.log(`Error when trying to rollback to version ${versionData.version}`)
+                    }
                 }
             }
         } catch (e) {

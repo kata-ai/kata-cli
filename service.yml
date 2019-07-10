@@ -123,6 +123,7 @@ commands:
                 alias: list-deployment
             rollback:
                 desc: Rollback deployment by bot version
+                args: "<version>"
                 handler: deployment.rollback
                 alias: rollback-deployment
     environment:
@@ -194,12 +195,12 @@ commands:
                 alias: list-project
             delete:
                 desc: Delete project by project id
-                args: "[projectId]"
+                args: "[projectName]"
                 handler: project.delete
                 alias: delete-project
             update:
                 desc: Update project by project id
-                args: "[projectId]"
+                args: "[projectName]"
                 handler: project.update
                 alias: update-project
     config:
@@ -278,6 +279,7 @@ commands:
                 alias: list-team
             listTeamUser:
                 desc: Get list all team user
+                args: "[teamName]"
                 handler: user.listTeamUser
                 alias: list-team-user
             createTeam:

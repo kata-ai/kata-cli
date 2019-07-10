@@ -586,12 +586,12 @@ export default class Bot extends Component {
                         {
                             type: "text",
                             name: "start",
-                            message: "Date Start:"
+                            message: "Date Start (yyyy-mm-dd):"
                         },
                         {
                             type: "text",
                             name: "end",
-                            message: "Date End:"
+                            message: "Date End (yyyy-mm-dd):"
                         },
                         {
                             type: "list",

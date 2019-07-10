@@ -258,7 +258,7 @@ export default class Channel {
     public async updateChannel(channelName: string, options: JsonObject) {
         try {
             const projectId = this.helper.getProjectId();
-            if (projectId) {
+            if (!projectId) {
                 throw new Error("Please select project first");
             }
             
