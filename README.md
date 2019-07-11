@@ -49,9 +49,9 @@ Commands  | Functionalities
 `kata change-password` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
-* `kata forgot-password <userName>` | to set new password when user forgot
-* `kata list-team` | to list user's team
-* `kata list-team-user [teamName]` | to list user's team member
+(*) `kata forgot-password <userName>` | to set new password when user forgot
+(*) `kata list-team` | to list user's team
+(*) `kata list-team-user [teamName]` | to list user's team member
 
 This command is accessible by user with role as **admin** :
 
@@ -77,8 +77,8 @@ Commands  | Functionalities
 `kata create-project` | to create a project
 `kata list-project` | to display current projects that you have
 `kata select-project` | to select project that you want to use, any bot operation will be related to that project
-* `kata delete-project [projectName]` | to delete project
-* `kata update-project [projectName]` | to update project details
+(*) `kata delete-project [projectName]` | to delete project
+(*) `kata update-project [projectName]` | to update project details
 
 ### Bot, Deployment, Environment and Channel Management Command
 
@@ -88,7 +88,7 @@ Here are list of commands to manage Bot, those with asterisk (*) are the the new
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
-* `kata view-config` | to view user configurations
+(*) `kata view-config` | to view user configurations
 `kata init <botName>` | to initialize the bot
 `kata revisions` | to list the revisions of the bot
 `kata list-bots` | to list the bots
@@ -99,7 +99,7 @@ Commands | Functionalities
 `kata console [revision]` | to converse with the bot, updated features: user can choose certain environment console
 `kata drop <botName>` | to drop bot
 `kata set <property> <value>` | to set configuration setting on Kata-CLI
-* `kata errors` | to list error log from a bot
+(*) `kata errors` | to list error log from a bot
 
 #### Deployment Management Command
 
@@ -109,7 +109,7 @@ Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
 `kata create-deployment` | to create a deployment
 `kata list-deployment` | to list deployments
-* `kata rollback-deployment <version>` | to rollback to certain deployment
+(*) `kata rollback-deployment <version>` | to rollback to certain deployment
 
 #### Environment Management Command
 
@@ -127,8 +127,8 @@ Here are list of commands to manage Channel, those with asterisk (*) are the the
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
-* `kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
-* `kata update-channel [options] <channelName>` | Update a channel on the selected environment
+(*) `kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
+(*) `kata update-channel [options] <channelName>` | Update a channel on the selected environment
 `kata list-channel` | List channels of the selected environment
 `kata remove-channel <channelName>` | Remove the channel named channelName from the selected environment
 
@@ -145,23 +145,23 @@ Commands | Functionalities
 `kata nl-predict [options]` | to predict a sentence. `[options]` can be `[-f <predictPath/fileName.txt>]`
 `kata list-profiles` | to list all profiles
 `kata nl-snapshot` | to save the nlu snapshot
-* `kata nl-list-training --page=<pageNumber>` | to list the training sentences
-* `kata nl-list-prediction --page=<pageNumber>` | to list the prediction log
-* `kata nl-list-revision` | to list the revision
-* `kata nl-issue-token` | to (re-)issue token
+(*) `kata nl-list-training --page=<pageNumber>` | to list the training sentences
+(*) `kata nl-list-prediction --page=<pageNumber>` | to list the prediction log
+(*) `kata nl-list-revision` | to list the revision
+(*) `kata nl-issue-token` | to (re-)issue token
 
 ### Deprecated Commands on Kata-CLI
 
 Here are the list of deprecated commands on version 2.3.0, please refer to [Changelog](Changelog.md) for the details.
 
 _Permanently deprecated:_
-* `kata deploy <name> [version]`
-* `kata session-get <id> [deploymentId]`
-* `kata session-create <id> [deploymentId]`
-* `kata session-update <id> [deploymentId]`
-* `kata session-delete <id> [deploymentId]`
+- `kata deploy <name> [version]`
+- `kata session-get <id> [deploymentId]`
+- `kata session-create <id> [deploymentId]`
+- `kata session-update <id> [deploymentId]`
+- `kata session-delete <id> [deploymentId]`
 <!-- deprecated command dan yang rename command -->
-* `kata timestamp`
+- `kata timestamp`
 
 ## Workflow
 
@@ -322,7 +322,7 @@ Let's create messaging channel under environment. The steps are: type the comman
   ➜  kata create-channel <channelName>
   ```
 
-* Notes:
+(*) Notes:
 Previously, the command to create channel is:
 `kata add-channel <channelName>`
 From this version above, the command is changed to:
