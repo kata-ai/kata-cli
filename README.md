@@ -5,11 +5,10 @@
 
 <!-- new documentation structure -->
 # Kata-CLI Overview and Command Reference
-Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
-For more information, check our website (http://kata.ai/en).
+Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems. For more information, check our website (http://kata.ai/en).
 
 ## Installing Kata-CLI
-Install Kata-CLI using the npm package manager. 
+Install Kata-CLI using the npm package manager.
 
 ```shell
 npm install -g kata-cli
@@ -41,8 +40,6 @@ you can add `@version-number` to be exact.
 
 Use `kata --help` into your command line to find out the list of commands offered by Kata-CLI with a short description.
 
-
-
 ### User Management
 The list of command below is accessible by user with role as **user** :
 
@@ -53,10 +50,10 @@ Commands  | Functionalities
 `kata change-password` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
-
-Forgot Password -> kata forgot-password <username>
-List Team -> kata list-team
-List User Team -> kata list-team-user [team name]
+<!-- new commands -->
+`kata forgot-password <userName>` | to set new password when user forgot
+`kata list-team` | to list user's team
+`kata list-team-user [teamName]` | to list user's team member
 
 This command is accessible by user with role as **admin** :
 
@@ -70,7 +67,6 @@ Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
 `kata add-member <userName> [options] --admin` | to assign user as the teammember
 `kata remove-member <userName>` | to remove member from the team
-
 `kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 
@@ -82,10 +78,9 @@ Commands  | Functionalities
 `kata create-project` | to create a project
 `kata list-project` | to display current projects that you have
 `kata select-project` | to select project that you want to use, any bot operation will be related to that project
-
-Delete Project -> kata delete-project [project name]
-Edit Project -> kata update-project [project name]
-
+<!-- new commands -->
+`kata delete-project [projectName]` | to delete project
+`kata update-project [projectName]` | to update project details
 
 ### Bot related command
 
@@ -93,8 +88,8 @@ Please notice that there are also updated commands from the Bot Environment:
 
 Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
-`kata config-view` | to view user configurations
-
+`kata view-config` | to view user configurations
+<!-- commands rename -->
 `kata init <botName>` | to initialize the bot
 `kata revisions` | to list the revisions of the bot
 `kata list-bots` | to list the bots
@@ -102,31 +97,30 @@ Commands  | Functionalities
 `kata pull [revision]` | to pull the bot with specified name and version
 `kata remove-bot` | to delete selected bot
 `kata test [fileName]` | to run a test for the bot
-`kata console [revision]` | to converse with the bot
+`kata console [revision]` | to converse with the bot, updated features: user can choose certain environment console
+<!-- new commands -->
+`kata errors` | to list error log
 
-Console with Select Environment -> kata console
-List Error Log -> kata errors
-
-`kata create-deployment` | Create a Deployment
-`kata list-deployment` | List Deployments
-Rollback Deployment -> kata rollback-deployment <version>
-
-
+<!-- deployment -->
+`kata create-deployment` | to create a deployment
+`kata list-deployment` | to list deployments
+`kata rollback-deployment <version>` | to rollback to certain deployment
 
 
 
+<!-- environment -->
 `kata create-environment <slug>` | Create an environment on the selected project
 `kata list-environment` | List environments of the selected project
 `kata update-environment <newDeploymentVersion>` | Update an environment of the selected project
 
+<!-- channel -->
 `kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
-Update Channel -> kata update-channel <channel name>
+Update Channel -> kata update-channel <channelName>
 `kata list-channel` | List channels of the selected environment
 `kata remove-channel <channelName>` | Remove the channel named channelName from the selected environment
 
 `kata drop <botName>` | to drop bot
-`kata set <prop> <value>` |
-
+`kata set <property> <value>` | to set configuration setting on Kata-CLI
 
 ### NLU Related Command
 
@@ -140,11 +134,11 @@ Commands | Functionalities
 `kata list-profiles` | to list all profiles
 `kata nl-snapshot` | to save the nlu snapshot
 
-List Training -> kata nl-list-training --page=1
-List Prediction -> kata nl-list-prediction --page=1
-List Revision -> kata nl-list-revision
-Issue Token -> kata nl-issue-token
-
+<!-- new commands -->
+`kata nl-list-training --page=<pageNumber>` | to list the training sentences
+`kata nl-list-prediction --page=<pageNumber>` | to list the prediction log
+`kata nl-list-revision` | to list the revision
+`kata nl-issue-token` | to (re-)issue token
 
 ### Deprecated Commands on Kata-CLI
 _Permanently deprecated:_
@@ -153,7 +147,8 @@ _Permanently deprecated:_
 * `kata session-create <id> [deploymentId]`
 * `kata session-update <id> [deploymentId]`
 * `kata session-delete <id> [deploymentId]`
-
+<!-- deprecated command dan yang rename command -->
+* `kata timestamp`
 
 ## Workflow
 ### Create Project Workspace
@@ -221,65 +216,67 @@ Customize your bot schema on `bot.yml` file, then push the bot to apply the chan
 
 Once you pushed the latest revision of your bot, meaning that you are ready to test a conversation with the bot. Run this command on your terminal:
 
-```shell
-➜ kata console
-```
+  ```shell
+  ➜ kata console
+  ```
 
 We'll enter the virtual environment (node shell) to do a chatting simulation with the bot.
 
-```shell
-  your-bot-name>text("hi")
-  { messages:
-    [ { type: 'text',
-        content: 'hi',
-        id: 'd5a1a010-fb60-42cf-96c8-c648fc557443',
-        intent: 'greeting',
-        attributes: {} } ],
-    responses:
-    [ { type: 'text',
-        content: 'hialo!',
-        action: 'text',
-        id: '1f7caf54-ee6f-4aa6-9696-bdcced9e406a',
-        refId: 'd5a1a010-fb60-42cf-96c8-c648fc557443',
-        flow: 'hello',
-        intent: 'greeting' } ],
-    session:
-    { id: 'test~from~console',
-      states: {},
-      contexes: {},
-      history: [],
-      current: null,
-      meta: { lastFlow: 'hello', lastState: 'greet', end: true },
-      timestamp: 0,
-      data: {} },
-    duration: 86 }
-  your-bot-name>
-  (To exit, press ^C again or type .exit)
-```
+  ```shell
+    your-bot-name>text("hi")
+    { messages:
+      [ { type: 'text',
+          content: 'hi',
+          id: 'd5a1a010-fb60-42cf-96c8-c648fc557443',
+          intent: 'greeting',
+          attributes: {} } ],
+      responses:
+      [ { type: 'text',
+          content: 'hialo!',
+          action: 'text',
+          id: '1f7caf54-ee6f-4aa6-9696-bdcced9e406a',
+          refId: 'd5a1a010-fb60-42cf-96c8-c648fc557443',
+          flow: 'hello',
+          intent: 'greeting' } ],
+      session:
+      { id: 'test~from~console',
+        states: {},
+        contexes: {},
+        history: [],
+        current: null,
+        meta: { lastFlow: 'hello', lastState: 'greet', end: true },
+        timestamp: 0,
+        data: {} },
+      duration: 86 }
+    your-bot-name>
+    (To exit, press ^C again or type .exit)
+  ```
 
 Kata-CLI will create a session that alive along the conversation and generate a `.katasession` file in your home directory for further debugging (if needed).
 
 To view your current session, you can either run this command:
 
-```shell
-➜  cat ~/.katasession
-{"id":"test~from~console","states":{},"contexes":{},"history":[],"current":null,"meta":{"lastFlow":"hello","lastState":"other","end":true},"timestamp":0,"data":{}}%
-```
+  ```shell
+  ➜  cat ~/.katasession
+  {"id":"test~from~console","states":{},"contexes":{},"history":[],"current":null,"meta":{"lastFlow":"hello","lastState":"other","end":true},"timestamp":0,"data":{}}%
+  ```
 
 or this command, for a better JSON alignment:
 
-```shell
-➜  `kata console`
-    your-bot-name>current()
-    { id: 'test~from~console',
-    states: {},
-    contexes: {},
-    history: [],
-    current: null,
-    meta: { lastFlow: 'hello', lastState: 'other', end: true },
-    timestamp: 0,
-    data: {} }
-```
+  ```shell
+  ➜   kata console
+      your-bot-name>current()
+        {
+          id: 'test~from~console',
+          states: {},
+          contexes: {},
+          history: [],
+          current: null,
+          meta: { lastFlow: 'hello', lastState: 'other', end: true },
+          timestamp: 0,
+          data: {}
+        }
+  ```
 
 Congratulations that you finish your first revision of the bot. Now it is the time to deploy your bot.
 
@@ -289,33 +286,33 @@ Follow these following steps to deploy your project to messaging channels.
 
 #### 1. Create a Deployment
 
-Create a new deployment version using these command. If you do not specificy the major/minor/patch, it will automatically create a deployment with patch.
+Create a new deployment version using these command. If you do not specificy the deployment types (`major`/`minor`/`patch`), it will automatically create a deployment with patch.
 
-```shell
-➜  kata create-deployment [major | minor | patch]
-```
+  ```shell
+  ➜  kata create-deployment [deploymentType]
+  ```
 
 #### 2. Create and Update Environment
 After having the deployment, we need to create an environment. Environment works like tier in which a your bot is deployed and executed. We provide three stages of environments: `Development`, `Staging`, `Production`.
 
-```shell
-➜  kata create-environment <slugName>
-```
+  ```shell
+  ➜  kata create-environment <slugName>
+  ```
 
 Your freshly created environment will auto-select the latest deployment version.
 
 If you already have environment, you can just simply update it with the newer deployment version using this command:
 
-```shell
-➜  kata update-environment <newDeploymentVersion>
-```
+  ```shell
+  ➜  kata update-environment <newDeploymentVersion>
+  ```
 
 #### 3. Create Channel
 Let's create messaging channel under environment. The steps are: type the command to create channel below, then choose the environment where it belongs to.
 
-```shell
-➜  kata create-channel <channelName>
-```
+  ```shell
+  ➜  kata create-channel <channelName>
+  ```
 
 * Notes:
 Previously, the command to create channel is:
@@ -331,43 +328,43 @@ An NLU must be under a project. Therefore, we need to define a project, before w
 
 It would create a new file `nlu.yml` in which the nlu structure can be defined.
 
-```shell
-# initialize a nlu project
-➜  kata nl-init
-```
+  ```shell
+  # initialize a nlu project
+  ➜  kata nl-init
+  ```
 
 #### 2. Push NLU
 
 To use push command to create and update the NLU
 
-```shell
-# push current nlu project
-➜  kata nl-push
-```
+  ```shell
+  # push current nlu project
+  ➜  kata nl-push
+  ```
 
 #### 3. List Profiles
 
 To list all profiles
 
-```shell
-➜  kata list-profiles
-```
+  ```shell
+  ➜  kata list-profiles
+  ```
 
 #### 4. Train NLU
 
 To train a nlu.
 
-```shell
-➜  kata nl-train [-f <trainPath/filename.txt>]
-➜  kata nl-train [-s <sentence>]
-```
+  ```shell
+  ➜  kata nl-train [-f <trainPath/filename.txt>]
+  ➜  kata nl-train [-s <sentence>]
+  ```
 
 #### 5. Predict Sentences with NLU
 
-```shell
-➜  kata nl-predict [-f <trainPath/filename.txt>]
-➜  kata nl-predict [-s <sentence>]
-```
+  ```shell
+  ➜  kata nl-predict [-f <trainPath/filename.txt>]
+  ➜  kata nl-predict [-s <sentence>]
+  ```
 
 ## Contributing
 
