@@ -3,7 +3,6 @@
 [![NPM version](https://img.shields.io/npm/v/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 [![NPM downloads](https://img.shields.io/npm/dm/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 
-<!-- new documentation structure -->
 # Kata-CLI Overview and Command Reference
 Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems. For more information, check our website (http://kata.ai/en).
 
@@ -38,7 +37,7 @@ you can add `@version-number` to be exact.
 
 ## Command Overview
 
-Use `kata --help` into your command line to find out the list of commands offered by Kata-CLI with a short description.
+Use `kata --help` into your command line to find out the list of commands offered by Kata-CLI with a short description. The new command in Kata-CLI is that with asterisk (*).
 
 ### User Management
 The list of command below is accessible by user with role as **user** :
@@ -50,10 +49,9 @@ Commands  | Functionalities
 `kata change-password` | to change user's password
 `kata create-team <teamName>` | to create team
 `kata logout` | to logout from the platform
-<!-- new commands -->
-`kata forgot-password <userName>` | to set new password when user forgot
-`kata list-team` | to list user's team
-`kata list-team-user [teamName]` | to list user's team member
+* `kata forgot-password <userName>` | to set new password when user forgot
+* `kata list-team` | to list user's team
+* `kata list-team-user [teamName]` | to list user's team member
 
 This command is accessible by user with role as **admin** :
 
@@ -70,26 +68,27 @@ Commands  | Functionalities
 `kata switch <roleType> [userName or teamName]` | to switch between `user` and `team` role. Parameter <roleType> must be `user` or `team`.
 
 
-### Project Management
-We implement several new commands to manage Project:
+### Project Management Command
+
+The new commands (on version 2.3.0) to manage Project are those with asterisk (*).
 
 Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
 `kata create-project` | to create a project
 `kata list-project` | to display current projects that you have
 `kata select-project` | to select project that you want to use, any bot operation will be related to that project
-<!-- new commands -->
-`kata delete-project [projectName]` | to delete project
-`kata update-project [projectName]` | to update project details
+* `kata delete-project [projectName]` | to delete project
+* `kata update-project [projectName]` | to update project details
 
-### Bot related command
+### Bot, Deployment, Environment and Channel Management Command
 
-Please notice that there are also updated commands from the Bot Environment:
+#### Bot Management Command
 
-Commands  | Functionalities
+Here are list of commands to manage Bot, those with asterisk (*) are the the new commands on version 2.3.0
+
+Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
-`kata view-config` | to view user configurations
-<!-- commands rename -->
+* `kata view-config` | to view user configurations
 `kata init <botName>` | to initialize the bot
 `kata revisions` | to list the revisions of the bot
 `kata list-bots` | to list the bots
@@ -98,31 +97,44 @@ Commands  | Functionalities
 `kata remove-bot` | to delete selected bot
 `kata test [fileName]` | to run a test for the bot
 `kata console [revision]` | to converse with the bot, updated features: user can choose certain environment console
-<!-- new commands -->
-`kata errors` | to list error log
+`kata drop <botName>` | to drop bot
+`kata set <property> <value>` | to set configuration setting on Kata-CLI
+* `kata errors` | to list error log from a bot
 
-<!-- deployment -->
+#### Deployment Management Command
+
+Here are list of commands to manage Deployment, those with asterisk (*) are the the new commands on version 2.3.0
+
+Commands | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata create-deployment` | to create a deployment
 `kata list-deployment` | to list deployments
-`kata rollback-deployment <version>` | to rollback to certain deployment
+* `kata rollback-deployment <version>` | to rollback to certain deployment
 
+#### Environment Management Command
 
+Here are list of commands to manage Environment, those with asterisk (*) are the the new commands on version 2.3.0
 
-<!-- environment -->
+Commands | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
 `kata create-environment <slug>` | Create an environment on the selected project
 `kata list-environment` | List environments of the selected project
 `kata update-environment <newDeploymentVersion>` | Update an environment of the selected project
 
-<!-- channel -->
-`kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
-Update Channel -> kata update-channel <channelName>
+#### Channel Management Command
+
+Here are list of commands to manage Channel, those with asterisk (*) are the the new commands on version 2.3.0
+
+Commands | Functionalities
+--------------------- | -------------------------------------------------------------------------------------------
+* `kata add-channel [options] <channelName>` | Create a channel with channelName on the selected environment
+* `kata update-channel [options] <channelName>` | Update a channel on the selected environment
 `kata list-channel` | List channels of the selected environment
 `kata remove-channel <channelName>` | Remove the channel named channelName from the selected environment
 
-`kata drop <botName>` | to drop bot
-`kata set <property> <value>` | to set configuration setting on Kata-CLI
-
 ### NLU Related Command
+
+Here are list of commands to manage NLU, those with asterisk (*) are the the new commands on version 2.3.0
 
 Commands | Functionalities
 ---------|-----------------
@@ -133,14 +145,15 @@ Commands | Functionalities
 `kata nl-predict [options]` | to predict a sentence. `[options]` can be `[-f <predictPath/fileName.txt>]`
 `kata list-profiles` | to list all profiles
 `kata nl-snapshot` | to save the nlu snapshot
-
-<!-- new commands -->
-`kata nl-list-training --page=<pageNumber>` | to list the training sentences
-`kata nl-list-prediction --page=<pageNumber>` | to list the prediction log
-`kata nl-list-revision` | to list the revision
-`kata nl-issue-token` | to (re-)issue token
+* `kata nl-list-training --page=<pageNumber>` | to list the training sentences
+* `kata nl-list-prediction --page=<pageNumber>` | to list the prediction log
+* `kata nl-list-revision` | to list the revision
+* `kata nl-issue-token` | to (re-)issue token
 
 ### Deprecated Commands on Kata-CLI
+
+Here are the list of deprecated commands on version 2.3.0, please refer to [Changelog](Changelog.md) for the details.
+
 _Permanently deprecated:_
 * `kata deploy <name> [version]`
 * `kata session-get <id> [deploymentId]`
@@ -151,17 +164,12 @@ _Permanently deprecated:_
 * `kata timestamp`
 
 ## Workflow
-### Create Project Workspace
-
-In Kata-CLI upto 2.0 version, we introduce Project Environment on the top of the Bots, NLU and CMS. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`, etc., user have to define the Project that they are working on using this command.
-
-  ```shell
-  ➜  kata select-project
-  ```
-
 
 We hope that you can get a smooth experience in working with Kata-CLI by following several best practice steps:
 
+### Project Workspace
+
+In Kata-CLI upto 2.0 version, we introduce Project Environment on the top of the Bots, Deployment, Environment, NLU and CMS. Hence, before running Kata-CLI main command, such as: `kata init`,`kata push`, `kata console`., user have to initiate and define the Project that they are going to work on.
 
 #### 1. Create the Project
 
