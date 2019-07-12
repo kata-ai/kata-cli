@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [2.3.0] - 2019/07/12
+- Add missing feature so that Kata-CLI is aligned with Platform. (#122)
+  - For the sake of consistency, we renamed several commands, such as:
+    - `kata add-channel` to `kata create-channel`
+    - `kata edit-channel` to `kata update-channel`
+    - `kata config-view` to `kata view-config`
+    - `kata add-member` to `kata invite-member`
+- Add feature: impersonate user when logging in as administrator (#121)
+
 ## [2.2.0] - 2019/03/20
 - Improved user experience for update-environment command (#114)
 - Add 20 character limit validation for environment URL and project name (#115)
