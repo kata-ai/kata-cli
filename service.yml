@@ -395,19 +395,19 @@ commands:
         desc: Command for deprecated management
         subcommands:
             addChannel:
-                desc: This command is deprecated, please user insert-channel
+                desc: This command is deprecated, please use create-channel
                 handler: deprecated.addChannel
                 alias: add-channel
             removeChannel:
-                desc: This command is deprecated, please user delete-channel
+                desc: This command is deprecated, please use delete-channel
                 handler: deprecated.removeChannel
                 alias: remove-channel
             configView:
-                desc: This command is deprecated, please user view-config
+                desc: This command is deprecated, please use view-config
                 handler: deprecated.configView
                 alias: config-view
             addMember:
-                desc: This command is deprecated, please user invite-member
+                desc: This command is deprecated, please use invite-member
                 handler: deprecated.addMember
                 alias: add-member
 # entry point
