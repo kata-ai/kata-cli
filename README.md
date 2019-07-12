@@ -149,18 +149,24 @@ Commands | Functionalities
 (*) `kata nl-list-revision` | to list the revision
 (*) `kata nl-issue-token` | to (re-)issue token
 
-### Deprecated Commands on Kata-CLI
+### Outdated Commands on Kata-CLI
 
-Here are the list of deprecated commands on version 2.3.0, please refer to [Changelog](Changelog.md) for the details.
+Here are the list of outdated commands on version 2.3.0, please refer to [Changelog](Changelog.md) for the details.
 
-_Permanently deprecated:_
+_List of Deprecated Command:_
+- `kata add-channel <channelName>`
+- `kata edit-channel <channelName>`
+- `kata config-view`
+- `kata add-member`
+
+_List of Permanently Deleted Command:_
 - `kata deploy <name> [version]`
 - `kata session-get <id> [deploymentId]`
 - `kata session-create <id> [deploymentId]`
 - `kata session-update <id> [deploymentId]`
 - `kata session-delete <id> [deploymentId]`
-<!-- deprecated command dan yang rename command -->
 - `kata timestamp`
+
 
 ## Workflow
 
