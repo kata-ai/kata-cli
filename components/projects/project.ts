@@ -219,13 +219,43 @@ export default class Project {
         }
     }
 
-    public async select() {
-        const chosen = await this.choose()
-        if (chosen) {
-            this.helper.setProp("projectId", chosen.id);
-            this.helper.setProp("projectName", chosen.name);
-            console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));    
+    public async select(projectName?: string) {
+        let chosen: any;
+        if (projectName || typeof projectName === "string") {
+            chosen = await this.getDataByName(projectName);
+            if (chosen !== undefined) {
+                // project name found
+                this.helper.setProp("projectId", chosen.id);
+                this.helper.setProp("projectName", chosen.name);
+            } else {
+                // project name not found, select through inquirer
+                console.log(`Project with name ${projectName} is not found. Instead, please choose listed project name below:`);
+                chosen = await this.choose()
+                if (chosen) {
+                    this.helper.setProp("projectId", chosen.id);
+                    this.helper.setProp("projectName", chosen.name);
+                }
+            }
+        } else {
+            // projectName is empty
+            chosen = await this.choose()
+            if (chosen) {
+                this.helper.setProp("projectId", chosen.id);
+                this.helper.setProp("projectName", chosen.name);
+            }
         }
+        console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));
+
+        if (!chosen || chosen === undefined) {
+            chosen = await this.choose()
+            if (chosen) {
+                this.helper.setProp("projectId", chosen.id);
+                this.helper.setProp("projectName", chosen.name);
+                console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));
+            }
+        }
+
+        
     }
 
     public async delete(projectName?: string) {
