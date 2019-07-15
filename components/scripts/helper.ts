@@ -8,7 +8,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const inquirer = require("inquirer");
-const analytics = require('universal-analytics');
+const analytics = require("universal-analytics");
 
 function wrapError(error: any) {
     let errorMessage;
@@ -108,6 +108,28 @@ export default class Helper extends Component {
         }
 
         return false;
+    }
+
+    public deleteKeyToken(userName: string) {
+        const jsonPath = `${os.homedir()}/.katajson`;
+        let jsonProp;
+
+        if (fs.existsSync(jsonPath)) {
+            jsonProp = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            // if userName token exist 
+            if (userName in jsonProp.token) {
+                jsonProp.current_login = "admin";
+                delete jsonProp.token[userName];
+                delete jsonProp.projectId;
+                delete jsonProp.projectName;
+            } else {
+                return new Error(`Failed to unimpersonate ${(userName)}`);
+            }
+        } else {
+            jsonProp = {};
+        }
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonProp), "utf8");
+        return jsonProp;
     }
 
     public toPromise(ctx : any, func : any, ...args : any[]) : Promise<any> {
@@ -269,7 +291,7 @@ export default class Helper extends Component {
         if (!projectName) projectName = null
 
         const version = this.config.default("version", "1.0.0")
-        const google = analytics(this.config.default('config.trackingId', 'UA-131926842-1'), firstLogin.id);
+        const google = analytics(this.config.default("config.trackingId", "UA-131926842-1"), firstLogin.id);
 
         const data:JsonObject = {
             userId: firstLogin.id,

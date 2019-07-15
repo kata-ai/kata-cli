@@ -254,4 +254,59 @@ export default class Channel {
         }
         return { ...res, ...answer };
     }
+
+    public async updateChannel(channelName: string, options: JsonObject) {
+        try {
+            const projectId = this.helper.getProjectId();
+            if (!projectId) {
+                throw new Error("Please select project first");
+            }
+            
+            const environmentId = await this.environment.askEnvironmentId();
+
+            const { response: { body: channelsBody } } = await this.helper.toPromise(
+                this.api.deploymentApi,
+                this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet,
+                projectId, environmentId, {},
+            );
+
+            const channels: { name: string; id: string }[] = channelsBody;
+            if (channels.length == 0) {
+                throw new Error("Channel not found");
+            }
+
+            const channelFound = channels.find((row) => row.name === channelName);
+            if (!channelFound) {
+                throw new Error("Channel not found");
+            }
+
+            if (!options.data) {
+                options.data = "{}";
+            }
+
+            let channelData = JSON.parse(options.data as string) as JsonObject;
+            channelData.name = channelName;
+            channelData = await this.inquireChannelData(channelData);
+
+            const result = await this.helper.toPromise(
+                this.api.deploymentApi,
+                this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsChannelIdPut,
+                projectId,
+                environmentId,
+                channelFound.id,
+                channelData,
+            );
+            console.log(result.response.body);
+            const channel = result.response.body;
+
+            console.log("Channel added successfully");
+            console.log(`Paste this url to ${channelData.type} webhook : ${channel.webhook}`);
+            if (channelData.type === "fbmessenger") {
+                const channelOptions = JSON.parse(channel.options as string) as JsonObject;
+                console.log(`And also this token : ${channelOptions.challenge} to your FB Challenge token.`);
+            }
+        } catch (e) {
+            console.log(this.helper.wrapError(e));
+        }
+    }
 }

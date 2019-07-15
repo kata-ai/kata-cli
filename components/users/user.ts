@@ -1,6 +1,8 @@
 import { Component, JsonObject } from "merapi";
 import { IHelper } from "interfaces/main";
 const inquirer = require("inquirer");
+const Table = require("cli-table");
+const colors = require("colors");
 
 export default class User extends Component {
 
@@ -253,6 +255,66 @@ export default class User extends Component {
         }
     }
 
+    public async impersonate(userName: string) {
+        // TODO : dibuat seperti login, pake inquirer.
+        try {
+            const currentLogin: string = this.helper.getProp("current_login").toString();
+            if (currentLogin !== "admin") {
+                throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
+            } 
+            
+            // set header bearer token
+            const currentToken: string = this.helper.getCurrentToken().token.toString();
+            this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
+
+            // get user id from username
+            const limit: number = 1;
+            const { response } = await this.helper.toPromise(
+                this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
+            );
+            const users = response.body;
+            const name: string = users.map( (user: any) => user.username )[0].toString();
+            const id: string = users.map( (user: any) => user.userId )[0].toString();
+            
+            if ( userName !== name ) {
+                throw new Error(`Sorry, username is not exist.`);
+            }
+            
+            // impersonate function
+            const result = await this.helper.toPromise(
+                this.api.authApi, this.api.authApi.impersonatePost, 
+                {
+                    userId: id,
+                    namespace: "platform"
+                }
+            );
+
+            // set value on .katajson
+            const impersonateToken: string = result.data.id.toString();
+            const type: string = result.data.type.toString();
+            this.setToken({ name, type }, impersonateToken);
+
+            console.log(`Succesfully impersonate as ${colors.green(name)}`);
+
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+
+        }
+    }
+
+    // unimpersonate command
+    public async unimpersonate() {
+        try {
+            const userName: string = this.helper.getProp("current_login").toString();
+            this.helper.deleteKeyToken(userName);
+            const currentLogin: string = this.helper.getProp("current_login").toString();
+            console.log(`Succesfully unimpersonate user. Now your current login is ${colors.green(currentLogin)}`);
+        } catch (error) {
+            console.log(this.helper.wrapError(error));
+        }
+    }
+
+
     private setToken(userInfo: JsonObject, token: string) {
         this.helper.setProp("current_login", userInfo.name);
         this.helper.setProp("current_user_type", userInfo.type);
@@ -322,5 +384,90 @@ export default class User extends Component {
         ]);
 
         return answer;
+    }
+
+    public async forgot(username: string) {
+        try {
+            const current_login = this.helper.getProp("current_login")
+            if (!current_login) {
+                const { response } = await this.helper.toPromise(this.api.authApi, this.api.authApi.forgotPost, { username });
+                if (response && response.body && response.body.message) {
+                    console.log("Please check your email to reset your password.")
+                }
+            } else {
+                console.log(`Please log out first`)
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
+    }
+
+    public async listTeam() {
+        try {
+            const current_login = this.helper.getProp("current_login")
+            if (current_login) {
+                const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
+                const table = new Table({
+                    head: ["Team Name", "Projects", "Members", "Bots"],
+                    colWidths: [50, 15, 15, 15]
+                });
+                response.body.forEach((team: JsonObject) => {
+                    table.push([team.username, team.projects, team.members, team.bots]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log("Please log in first");
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
+    }
+
+    public async listTeamUser(teamName?: string) {
+        try {
+            const current_login = this.helper.getProp("current_login")
+            if (current_login) {
+                const dataTeams = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdTeamsGet, current_login);
+                const teams: object[] = dataTeams.response.body;
+                const choices = teams.map((team: any) => ({
+                    name: team.username,
+                    value: team.teamId
+                }));                
+                let teamId = null
+
+                if (teamName) {
+                    const sameName = choices.find((choice: any) => choice.name === teamName);
+                    if (sameName) {
+                        teamId = sameName.value
+                    }
+                } else {
+                    const choice = await inquirer.prompt([
+                        {
+                            type: "list",
+                            name: "teamId",
+                            message: "Team:",
+                            choices: choices
+                        }
+                    ]);
+
+                    teamId = choice.teamId
+                }
+                
+
+                const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamId);
+                const table = new Table({
+                    head: ["Username", "Role"],
+                    colWidths: [50, 25]
+                });
+                response.body.forEach((user: JsonObject) => {
+                    table.push([user.username, user.roleName]);
+                });
+                console.log(table.toString());
+            } else {
+                console.log("Please log in first");
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
     }
 }

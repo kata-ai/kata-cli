@@ -2,7 +2,7 @@
 import { IHelper } from "interfaces/main";
 import { JsonObject } from "merapi";
 const Table = require("cli-table");
-
+import inquirer = require("inquirer");
 
 export default class Deployment {
     constructor(private helper: IHelper, private api: any) {
@@ -106,8 +106,6 @@ export default class Deployment {
         }
     }
 
-   
-
     public async list(options: JsonObject) {
         const projectId = this.helper.getProjectId();
 
@@ -129,6 +127,59 @@ export default class Deployment {
             }
         } catch (e) {
             console.error("Error");
+            console.log(this.helper.wrapError(e));
+        }
+    }
+
+    public async rollback(version: string) {
+        try {
+            const projectId = this.helper.getProjectId();
+            const author = this.helper.getProp("current_login");
+
+            const { response: { body } } = await this.helper.toPromise(
+                this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: 1000000, page: 1}
+            );
+
+            if (body && body.data) {
+                const deployments: object[] = body.data;
+                const versionData: any = deployments.find((deployment: any) => deployment.version === version);
+                if (!versionData) {
+                    throw new Error("Version not found");
+                }
+
+                let { changelog, confirm } = await inquirer.prompt<any>([
+                    {
+                        type: "text",
+                        name: "changelog",
+                        message: "Changelog:",
+                    },
+                    {
+                        type: "confirm",
+                        name: "confirm",
+                        message: `IMPORTANT: Existing NL training data will also be rolled back to version ${versionData.version}`,
+                        default: true,
+                    }
+                ]);
+
+                const requestBody = {
+                    author,
+                    changelog,
+                    version: versionData.version
+                }
+
+                if (confirm) {
+                    const { response } = await this.helper.toPromise(
+                        this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost, versionData.id, requestBody
+                    );
+    
+                    if (response && response.body) {
+                        console.log(`Successfully rolled back to version ${versionData.version}`)
+                    } else {
+                        console.log(`Error when trying to rollback to version ${versionData.version}`)
+                    }
+                }
+            }
+        } catch (e) {
             console.log(this.helper.wrapError(e));
         }
     }

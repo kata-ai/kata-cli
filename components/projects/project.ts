@@ -87,6 +87,55 @@ export default class Project {
         }
     }
 
+    public async update(projectName?:string) {
+        let chosen = null
+
+        if (projectName) {
+            chosen = await this.getDataByName(projectName)
+        } else {
+            chosen = await this.choose()
+        }
+        
+        if (chosen) {
+            const { description, privateNlu } = await this.helper.inquirerPrompt([
+                {
+                    type: "text",
+                    name: "description",
+                    message: "Project description:",
+                },
+                {
+                    type: "confirm",
+                    name: "privateNlu",
+                    message: "Is private Nlu?",
+                    default: true,
+                }
+            ]);
+    
+            const nluVisibility = privateNlu ? 'private' : 'public';
+    
+            const requestBody = {
+                id: chosen.id,
+                name: chosen.name,
+                description: description,
+                options: {
+                    timezone: chosen.options.timezone,
+                    nluLang: chosen.options.nluLang,
+                    nluVisibility: nluVisibility,
+                    nluId: chosen.options.nluId
+                }
+            }
+            
+            const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdPut, chosen.id, requestBody);
+            if (response && response.body) {
+                console.log(`Project ${chosen.name} has been updated.`)
+            } else {
+                console.log("Failed when trying update project")
+            }
+        } else {
+            console.log(`Project ${projectName} is not found`)
+        }
+    }
+
     public async list() {
         try {
             const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, {});
@@ -106,7 +155,19 @@ export default class Project {
         }
     }
 
-    public async select() {
+    private async getDataByName(projectName: string) {
+        const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, {});
+
+        if (response && response.body && response.body.data) {
+            const projects = response.body.data
+            const sameName = projects.find((project: any) => project.name === projectName);
+            if (sameName) {
+                return sameName
+            }
+        }
+    }
+
+    private async choose(){
         try {
             let page =  1;
             const pageLimit = 10;
@@ -149,10 +210,7 @@ export default class Project {
                         continue;
                     }
 
-                    this.helper.setProp("projectId", project.id);
-                    this.helper.setProp("projectName", project.name);
-                    console.log(colors.green(`Project "${ project.name }" (${ project.id }) is successfully selected`));
-                    return;
+                    return project;
                 }
                 console.error("Failed to list projects");
             }
@@ -161,4 +219,43 @@ export default class Project {
         }
     }
 
+    public async select() {
+        const chosen = await this.choose()
+        if (chosen) {
+            this.helper.setProp("projectId", chosen.id);
+            this.helper.setProp("projectName", chosen.name);
+            console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));    
+        }
+    }
+
+    public async delete(projectName?: string) {
+        try {
+            const chosen = projectName ? await this.getDataByName(projectName) : await this.choose()
+            if (chosen) {
+                const { yes } = await inquirer.prompt<any>([
+                    {
+                        type: "confirm",
+                        name: "yes",
+                        message: "Are you sure want to delete this project ?",
+                        default: true,
+                    }
+                ]);
+
+                if (yes) {
+                    const deleteProject = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdDelete, chosen.id);
+                    if (deleteProject && deleteProject.response && deleteProject.response.body) {
+                        if (deleteProject.response.body) {
+                            console.log("Project has been deleted.")    
+                        } else {
+                            console.log("Failed when trying delete project")
+                        }
+                    }   
+                }  
+            } else {
+                console.log(`Project ${projectName} is not found`)
+            }
+        } catch (e) {
+            console.error(this.helper.wrapError(e));
+        }
+    }
 }

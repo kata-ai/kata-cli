@@ -298,6 +298,7 @@ export interface IHelper {
     loadYamlOrJsonFile(filePath: string) : JsonObject;
     inquirerPrompt(questions: JsonObject[]): Promise<JsonObject>;
     delete() : Boolean;
+    deleteKeyToken(username: string): JsonObject;
     wrapError(error : any) : string;
     difference(object: any, base: any): Object;
     checkNotificationStatus() : Boolean;
