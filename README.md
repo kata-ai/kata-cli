@@ -69,7 +69,7 @@ Commands  | Functionalities
 
 ### Project Management Command
 
-The new commands (on version 2.3.0) to manage Project are those with asterisk (*).
+The new commands (on version 2.4.0) to manage Project are those with asterisk (*).
 
 Commands  | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ Commands  | Functionalities
 
 #### Bot Management Command
 
-Here are list of commands to manage Bot, those with asterisk (*) are the the new commands on version 2.3.0
+Here are list of commands to manage Bot, those with asterisk (*) are the the new commands on version 2.4.0
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ Commands | Functionalities
 
 #### Deployment Management Command
 
-Here are list of commands to manage Deployment, those with asterisk (*) are the the new commands on version 2.3.0
+Here are list of commands to manage Deployment, those with asterisk (*) are the the new commands on version 2.4.0
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ Commands | Functionalities
 
 #### Environment Management Command
 
-Here are list of commands to manage Environment, those with asterisk (*) are the the new commands on version 2.3.0
+Here are list of commands to manage Environment, those with asterisk (*) are the the new commands on version 2.4.0
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ Commands | Functionalities
 
 #### Channel Management Command
 
-Here are list of commands to manage Channel, those with asterisk (*) are the the new commands on version 2.3.0
+Here are list of commands to manage Channel, those with asterisk (*) are the the new commands on version 2.4.0
 
 Commands | Functionalities
 --------------------- | -------------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ Commands | Functionalities
 
 ### NLU Related Command
 
-Here are list of commands to manage NLU, those with asterisk (*) are the the new commands on version 2.3.0
+Here are list of commands to manage NLU, those with asterisk (*) are the the new commands on version 2.4.0
 
 Commands | Functionalities
 ---------|-----------------
@@ -151,7 +151,7 @@ Commands | Functionalities
 
 ### Outdated Commands on Kata-CLI
 
-Here are the list of outdated commands on version 2.3.0, please refer to [Changelog](Changelog.md) for the details.
+Here are the list of outdated commands on version 2.4.0, please refer to [Changelog](Changelog.md) for the details.
 
 _List of Deprecated Command:_
 - `kata add-channel <channelName>`

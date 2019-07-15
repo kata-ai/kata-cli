@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [2.3.0] - 2019/07/12
+## [2.4.0] - 2019/07/12
 - Add missing feature so that Kata-CLI is aligned with Platform. (#122)
   - For the sake of consistency, we renamed several commands, such as:
     - `kata add-channel` to `kata create-channel`
