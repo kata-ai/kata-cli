@@ -122,6 +122,7 @@ export default class Helper extends Component {
                 delete jsonProp.token[userName];
                 delete jsonProp.projectId;
                 delete jsonProp.projectName;
+                delete jsonProp.isImpersonate;
             } else {
                 return new Error(`Failed to unimpersonate ${(userName)}`);
             }
@@ -171,7 +172,6 @@ export default class Helper extends Component {
             token: tokenProp[currentLogin]
         };
     }
-
     public loadYamlOrJsonFile(filePath : string) {
         if (!fs.existsSync(filePath)) {
             return new Error("FILE NOT FOUND");

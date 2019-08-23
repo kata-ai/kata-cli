@@ -131,7 +131,23 @@ export default class User extends Component {
 
 
             if (type === "team") {
-                const { response } = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, firstLogin.id);
+                // if is_impersonate == false, 
+                let userId: string;
+                const isImpersonate = this.helper.getProp("isImpersonate");
+                if (isImpersonate === true) {    
+                    const currentLoginName = this.helper.getProp("current_login").toString();
+                    userId = (await this.getUserInfo(currentLoginName)).id;
+                } else {
+                    userId = firstLogin.id.toString();
+                }
+                console.log("userId ", userId);
+
+                const { response } = await this.helper.toPromise(
+                    this.api.userApi, 
+                    this.api.userApi.usersUserIdGet, 
+                    userId
+                );
+
 
                 if (!response) {
                     throw new Error("Unable to switch team");
@@ -263,23 +279,34 @@ export default class User extends Component {
                 throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
             } 
             
-            // set header bearer token
+            // set currentToken header bearer token
             const currentToken: string = this.helper.getCurrentToken().token.toString();
+            this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
+            
+            // get admin token
+            // const currentToken: string = this.getToken({name: "admin"});
+            // console.log(currentToken);
             this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
 
             // get user id from username
-            const limit: number = 1;
-            const { response } = await this.helper.toPromise(
-                this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
-            );
-            const users = response.body;
-            const name: string = users.map( (user: any) => user.username )[0].toString();
-            const id: string = users.map( (user: any) => user.userId )[0].toString();
+            const id: string = (await this.getUserInfo(userName)).id;
+            const name: string = (await this.getUserInfo(userName)).name;
+
+            // const limit: number = 1;
+            // const { response } = await this.helper.toPromise(
+            //     this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
+            // );
+            // const users = response.body;
+            // const name: string = users.map( (user: any) => user.username )[0].toString();
+            // const id: string = users.map( (user: any) => user.userId )[0].toString();
             
             if ( userName !== name ) {
                 throw new Error(`Sorry, username is not exist.`);
             }
             
+            // TODO : check tsc error kenapa?
+            // TODO : check message error tidak muncul, kenapa?
+
             // impersonate function
             const result = await this.helper.toPromise(
                 this.api.authApi, this.api.authApi.impersonatePost, 
@@ -292,6 +319,7 @@ export default class User extends Component {
             // set value on .katajson
             const impersonateToken: string = result.data.id.toString();
             const type: string = result.data.type.toString();
+            this.helper.setProp("isImpersonate", true);
             this.setToken({ name, type }, impersonateToken);
 
             console.log(`Succesfully impersonate as ${colors.green(name)}`);
@@ -322,6 +350,27 @@ export default class User extends Component {
         const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
         tokenProp[userInfo.name as string] = token;
         this.helper.setProp("token", tokenProp);
+    }
+
+    private getToken(userInfo: JsonObject) {
+        const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
+        const token: string  = tokenProp[userInfo.name as string].toString();
+        return token;
+    }
+
+    private async getUserInfo(userName: string) {
+        // get userId from currentlogin
+        const limit: number = 1;
+        const { response } = await this.helper.toPromise(
+            this.api.userApi, 
+            this.api.userApi.usersSearchGet, 
+            userName, 
+            limit
+        );
+        const users = response.body;
+        const name: string = users.map( (user: any) => user.username )[0].toString();
+        const id: string = users.map( (user: any) => user.userId )[0].toString();
+        return { id, name };
     }
 
     private async getNewPasswordData(): Promise<JsonObject> {
