@@ -82,7 +82,7 @@ export default class User extends Component {
                     this.helper.setProp("first_login", { type: "user", username: user, id: result.data.userId });
                     this.setToken({ name: user, type: "user", namespace: "platform" }, token);
 
-                    console.log(`Logged in as ${user}`);
+                    console.log(`Logged in as ${colors.green(user)}`);
                 }
             }
         } catch (e) {
@@ -126,12 +126,11 @@ export default class User extends Component {
             const username = name ? name : currentLogin;
 
             if (currentType === type && username === currentLogin) {
-                throw new Error(`Unable to switch : already on ${currentLogin} ${type}`);
+                throw new Error(`Unable to switch : already on ${colors.green(currentLogin)} as ${colors.green(type)}`);
             }
 
             const isImpersonate = this.helper.getProp("isImpersonate");
             if (type === "team") {
-                // if is_impersonate == false, 
                 let userId: string;
                 if (isImpersonate === true) {    
                     const currentLoginName = this.helper.getProp("current_login").toString();
@@ -139,8 +138,6 @@ export default class User extends Component {
                 } else {
                     userId = firstLogin.id.toString();
                 }
-                console.log("userId ", userId);
-
                 const { response } = await this.helper.toPromise(
                     this.api.userApi, 
                     this.api.userApi.usersUserIdGet, 
@@ -149,10 +146,12 @@ export default class User extends Component {
 
 
                 if (!response) {
-                    throw new Error("Unable to switch team");
+                    throw new Error(`Unable to switch team: ${colors.green(name)}`);
                 }
 
-                const teams = response && response.body ? response.body.teams.filter((team: any) => team.username === name) : [];
+                const teams = response && response.body ? 
+                    response.body.teams.filter((team: any) => team.username === name) : [];
+
                 if (teams.length > 0) {
                     const result = await this.helper.toPromise(
                         this.api.authApi, 
@@ -166,20 +165,31 @@ export default class User extends Component {
                     this.setToken({ name, type: "team" }, token);
                     this.helper.setProp("current_login", name);
                     this.helper.setProp("current_user_type", "team");
-                    console.log(`Switched to team: ${name}`);
+                    console.log(`Switched to team: ${colors.green(name)}`);
                 } else {
-                    console.log("Unable to switch to Team : Invalid team");
+                    console.log(`Invalid team name. Unable to switch to team: ${colors.red(name)}`);
                 }
             } else if (type === "user") {
                 if (isImpersonate === true) {
                     // TODO: jika user login sbg admin, impersonate dewi, switch ke team, lalu mau switch ke user yg non-user tsb
-                    // check apakah name == current_login
-                    // jika tidak, throw unable to switch to user
-                    // jika iya, switch ke user tsb
+                    const userTokenInfo = this.getUserTokenInfo(name);
+                    if (!userTokenInfo || userTokenInfo === undefined) {
+                        throw new Error(`${colors.red(name)}'s token is not found.`);
+                    } else if ( userTokenInfo.userName === "admin") {
+                        throw new Error(`Cannot switch to ${colors.red(name)}. Use unimpersonate.`);
+                    } else {
+                        if (name === userTokenInfo.userName) {
+                            this.helper.setProp("current_login", name);
+                            this.helper.setProp("current_user_type", "user");
+                            console.log(`Switched to user ${colors.green(name)}`);
+                        } else {
+                            throw new Error(`Unable to switch to user ${colors.red(name)}.`);
+                        }
+                    }
                 } else {
                     this.helper.setProp("current_login", firstLogin.username);
                     this.helper.setProp("current_user_type", "user");
-                    console.log(`Switched to user ${firstLogin.username}`);
+                    console.log(`Switched to user ${colors.green(firstLogin.username)}`);
                 }
             }
 
@@ -212,7 +222,7 @@ export default class User extends Component {
     public whoami(options: JsonObject) {
         const currentLogin = this.helper.getProp("current_login") as string;
         const currentType = this.helper.getProp("current_user_type") as string;
-        console.log(`Current login: ${currentLogin}, login type: ${currentType}`);
+        console.log(`Current login: ${colors.green(currentLogin)}, login type: ${colors.green(currentType)}`);
     }
 
     public async createTeam(name: string) {
@@ -227,9 +237,9 @@ export default class User extends Component {
             const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsPost, { username: name, password: "", roleId: "teamAdmin" });
 
             if (response && response.body.id) {
-                console.log(`Team ${name} created !`);
+                console.log(`Team ${colors.green(name)} created !`);
             } else {
-                console.log(`Team ${name} exist !`);
+                console.log(`Team ${colors.red(name)} exist !`);
             }
         } catch (error) {
             console.log(this.helper.wrapError(error));
@@ -278,7 +288,7 @@ export default class User extends Component {
 
             const newUser = await this.helper.toPromise(this.api.userApi, this.api.userApi.usersPost, { username, password: password.answer, roleId: role });
 
-            console.log(`New user ${newUser.data.username} created !`);
+            console.log(`New user ${colors.green(newUser.data.username)} created !`);
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
@@ -365,10 +375,16 @@ export default class User extends Component {
         this.helper.setProp("token", tokenProp);
     }
 
-    private getToken(userInfo: JsonObject) {
+    private getUserTokenInfo(name: string) {
         const tokenProp = (this.helper.getProp("token") || {}) as JsonObject;
-        const token: string  = tokenProp[userInfo.name as string].toString();
-        return token;
+        if (name in tokenProp) {
+            const userName: string = name.toString();
+            const token: string  = tokenProp[name as string].toString();
+            return {
+                userName, 
+                token
+            };
+        } 
     }
 
     private async getUserInfo(userName: string) {
@@ -454,10 +470,10 @@ export default class User extends Component {
             if (!current_login) {
                 const { response } = await this.helper.toPromise(this.api.authApi, this.api.authApi.forgotPost, { username });
                 if (response && response.body && response.body.message) {
-                    console.log("Please check your email to reset your password.")
+                    console.log("Please check your email to reset your password.");
                 }
             } else {
-                console.log(`Please log out first`)
+                console.log(`Please log out first`);
             }
         } catch (e) {
             console.error(this.helper.wrapError(e));
