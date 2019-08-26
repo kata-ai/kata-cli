@@ -221,7 +221,7 @@ export default class Project {
 
     public async select(projectName?: string) {
         let chosen: any;
-        if (projectName || typeof projectName === "string") {
+        if (typeof projectName === "string") {
             chosen = await this.getDataByName(projectName);
             if (chosen !== undefined) {
                 // project name found
@@ -229,7 +229,9 @@ export default class Project {
                 this.helper.setProp("projectName", chosen.name);
             } else {
                 // project name not found, select through inquirer
-                console.log(`Project with name ${projectName} is not found. Instead, please choose listed project name below:`);
+                console.log(
+                    `Project with name ${colors.green(projectName)} is not found. ` +
+                    `Please choose listed project name below:`);
                 chosen = await this.choose()
                 if (chosen) {
                     this.helper.setProp("projectId", chosen.id);
