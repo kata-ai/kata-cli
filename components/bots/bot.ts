@@ -406,8 +406,12 @@ export default class Bot extends Component {
             let result;
 
             promise.then((res: any) => {
-                done = true;
-                result = res;
+                if (res.data !== "") {
+                    done = true;
+                    result = res;
+                } else {
+                    error = new Error("Error found. Please check your bot.");
+                }
             }).catch((e: Error) => {
                 error = e;
             });
