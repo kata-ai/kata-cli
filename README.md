@@ -18,8 +18,7 @@ This is the preferred method to install Kata-CLI in a global mode, as it will al
 ### Changelog
 For details about changes between versions, and information about updating from previous releases, see the [Changelog](CHANGELOG.md)
 
-### Upgrading to Kata-CLI 2.0 version
-We upgraded Kata-CLI version into 2.0 along with our Platform to 3.0. There are a number of small backwards incompatible changes with version 2.0.
+### Upgrading to Kata-CLI version
 
 To check your installed Kata-CLI version, use this command:
 
@@ -30,10 +29,10 @@ To check your installed Kata-CLI version, use this command:
 Please refer to the full descriptions on [Changelog](CHANGELOG.md) to check the latest version. *Make sure to update Kata-CLI to the latest stable version before doing some fun with your Bot with this command*:
 
   ```shell
-  ➜  npm i -g kata-cli@2.x.x
+  ➜  npm i -g kata-cli@x.y.z
   ```
 
-you can add `@version-number` to be exact.
+replace `@x.y.z` with exacct version number.
 
 ## Command Overview
 
