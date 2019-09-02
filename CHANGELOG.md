@@ -1,10 +1,5 @@
 # CHANGELOG
 
-## [2.4.5] - 2019/09/02
-- Fix bug when switch to team durinng in impersonate mode ([#126](https://github.com/kata-ai/kata-cli/pull/126))
-- Add feature to select project name inline ([#127](https://github.com/kata-ai/kata-cli/pull/127))
-- Add handler to display notification message when error happened, instead of letting string quotes `''` pop up ([#128](https://github.com/kata-ai/kata-cli/pull/128))
-
 ## [2.4.0] - 2019/07/12
 - Add missing feature so that Kata-CLI is aligned with Platform. (#122)
   - For the sake of consistency, we renamed several commands, such as:
