@@ -149,7 +149,7 @@ Commands | Functionalities
 
 ### Outdated Commands on Kata-CLI
 
-Here are the list of outdated commands on version 2.4.0, please refer to [Changelog](Changelog.md) for the details.
+Here are the list of outdated commands on version 2.4.0, please refer to [Changelog](CHANGELOG.md) for the details.
 
 _List of Deprecated Command:_
 - `kata add-channel <channelName>`
