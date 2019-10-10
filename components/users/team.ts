@@ -10,17 +10,28 @@ export default class Team extends Component {
     public async addMember(username: string, options?: JsonObject) {
         try {
             const role = options.admin ? "teamAdmin" : "teamMember";
-            const { userInfo, teamInfo, teamMember, currentLogin } = await this.getInfo(username);
+            let firstLogin = this.helper.getProp("first_login") as JsonObject;
+
+            const { userInfo, teamInfo, teamMember, currentLogin } = await this.getInfo(
+                username, 
+                (firstLogin.username).toString() 
+            );
 
             if (userInfo && userInfo.id) {
                 if (this.checkUser(userInfo.id, teamMember)) {
                     throw new Error(`User ${username} already on this team`);
                 }
-                const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersUserIdPost, teamInfo.id, userInfo.id,  { roleId: role } );
+                const { response } = await this.helper.toPromise(
+                    this.api.teamApi,
+                    this.api.teamApi.teamsTeamIdUsersUserIdPost, 
+                    teamInfo.teamId, 
+                    userInfo.username,
+                    { 
+                        roleId: role 
+                    });
                 if (!response.body) { 
                     throw new Error("Error adding user to team: invalid roleId");
                 }
-                    
                 console.log(`Success register ${username} to ${currentLogin}`);
             } else {
                 console.log(`User ${username} not found`);
@@ -63,7 +74,7 @@ export default class Team extends Component {
         }
     }
 
-    private async getInfo(username: string) {
+    private async getInfo(username: string, firstLoginUsername?: string) {
         const currentLogin = this.helper.getProp("current_login") as string;
         const currentUserType = this.helper.getProp("current_user_type") as string;
 
@@ -72,17 +83,28 @@ export default class Team extends Component {
         }
 
         const requestTeamData =
-            await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, currentLogin);
+            await this.helper.toPromise(
+                this.api.userApi, 
+                this.api.userApi.usersUserIdTeamsGet, 
+                firstLoginUsername
+            );
 
         let teamInfo: any;
         if (requestTeamData.response && requestTeamData.response.body) {
-            teamInfo = requestTeamData.response.body;
+            const filterTeamBasedOnCurrentTeam = (requestTeamData.response.body).filter(
+                (singleTeam: any) => ( singleTeam.username == currentLogin ));
+            teamInfo = filterTeamBasedOnCurrentTeam[0];
         } else {
             throw new Error("Cannot add user to team");
         }
+        console.log('teamInfo ', teamInfo);
         
         const requestUserData =
-            await this.helper.toPromise(this.api.userApi, this.api.userApi.usersUserIdGet, username);
+            await this.helper.toPromise(
+                this.api.userApi, 
+                this.api.userApi.usersGetInfoKeyGet, 
+                username
+            );
 
         let userInfo: any;
         if (requestUserData && requestUserData.response) {
@@ -91,8 +113,14 @@ export default class Team extends Component {
             throw new Error("Cannot add user to team");
         }
 
+        console.log('userInfo ', userInfo);
+
         const requestTeamMember =
-            await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamInfo.id);
+            await this.helper.toPromise(
+                this.api.teamApi, 
+                this.api.teamApi.teamsTeamIdUsersGet, 
+                teamInfo.teamId
+            );
 
         let teamMember: any[];
         if (requestTeamMember && requestTeamMember.response) {
@@ -100,6 +128,8 @@ export default class Team extends Component {
         } else {
             throw new Error("Cannot add user to team");
         }
+
+        console.log('teamMember ', teamMember);
 
         return {
             teamInfo,
