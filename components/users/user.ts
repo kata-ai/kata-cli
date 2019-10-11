@@ -389,16 +389,14 @@ export default class User extends Component {
 
     private async getUserInfo(userName: string) {
         // get userId from currentlogin
-        const limit: number = 1;
         const { response } = await this.helper.toPromise(
             this.api.userApi, 
-            this.api.userApi.usersSearchGet, 
+            this.api.userApi.usersGetInfoKeyGet, 
             userName, 
-            limit
         );
-        const users = response.body;
-        const name: string = users.map( (user: any) => user.username )[0].toString();
-        const id: string = users.map( (user: any) => user.userId )[0].toString();
+        const user = response.body;
+        const name: string = user.username.toString();
+        const id: string = user.userId.toString();
         return { id, name };
     }
 
