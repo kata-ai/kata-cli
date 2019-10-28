@@ -4,7 +4,7 @@
 [![NPM downloads](https://img.shields.io/npm/dm/kata-cli.svg?style=flat)](https://www.npmjs.com/package/kata-cli)
 
 # Kata-CLI Overview and Command Reference
-Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems. For more information, check our website [http://kata.ai/en](http://kata.ai/en).
+Kata Command Line Interface (Kata CLI) is a tool for creating bots with Kata Markup Language (Kata ML) and helps managing the bots with command line/shell of various operating systems.
 
 ## Installing Kata-CLI
 Install Kata-CLI using the npm package manager.
