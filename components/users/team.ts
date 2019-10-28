@@ -97,15 +97,16 @@ export default class Team extends Component {
         } else {
             throw new Error("Cannot add user to team");
         }
-        console.log('teamInfo ', teamInfo);
+        // console.log('teamInfo ', teamInfo);
         
         const requestUserData =
-            await this.helper.toPromise(
-                this.api.userApi, 
-                this.api.userApi.usersGetInfoKeyGet, 
-                username
+        await this.helper.toPromise(
+            this.api.userApi, 
+            this.api.userApi.usersGetInfoKeyGet, 
+            username
             );
-
+        
+        // console.log('requestUserData ', requestUserData);
         let userInfo: any;
         if (requestUserData && requestUserData.response) {
             userInfo = requestUserData.response.body;
@@ -113,8 +114,7 @@ export default class Team extends Component {
             throw new Error("Cannot add user to team");
         }
 
-        console.log('userInfo ', userInfo);
-
+        // console.log('userInfo ', userInfo);
         const requestTeamMember =
             await this.helper.toPromise(
                 this.api.teamApi, 
@@ -129,8 +129,7 @@ export default class Team extends Component {
             throw new Error("Cannot add user to team");
         }
 
-        console.log('teamMember ', teamMember);
-
+        // console.log('teamMember ', teamMember);
         return {
             teamInfo,
             userInfo,
