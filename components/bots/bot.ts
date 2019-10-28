@@ -5,8 +5,10 @@ import { v4 as uuid } from "uuid";
 import { CatchError } from "../scripts/helper";
 import { isDate } from "util";
 import inquirer = require("inquirer");
-const Table = require("cli-table");
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import * as pako from "pako";
 
+const Table = require("cli-table");
 const colors = require("colors");
 const repl = require("repl");
 const util = require("util");
@@ -200,18 +202,40 @@ export default class Bot extends Component {
 
             if (data.revision) {
                 latestBotRevision = data.revision;
+                const url = `${this.api.apiClient.basePath}/projects/${projectId}/bot/revisions/${latestBotRevision}`;
+                const requestConfig: AxiosRequestConfig = {
+                    headers: {
+                        "Authorization": this.api.bearer.apiKey,
+                    },
+                    timeout: this.api.timeout,
+                }
 
-                const { data: newBot } = await this.helper.toPromise(
-                    this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, 
-                    projectId, latestBotRevision, botDesc
-                );
-                const { data: project } = await this.helper.toPromise(
-                    this.api.projectApi,
-                    this.api.projectApi.projectsProjectIdGet, projectId
-                );
+                if (this.api.gzip) {
+                    requestConfig.transformRequest = (data, headers) => {
+                        headers["content-encoding"] = "gzip";
+                        headers["content-type"] = "text/plain";
+                        return pako.deflate(JSON.stringify(data), { to: "string" });
+                    };
+                }
 
-                console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+                try {
+                    const newBot = await axios.put(url, botDesc, requestConfig)
+                        .then((response: AxiosResponse) => response.data);
 
+                    // const { data: newBot } = await this.helper.toPromise(
+                    //     this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut,
+                    //     projectId, latestBotRevision, botDesc
+                    // );
+                    const { data: project } = await this.helper.toPromise(
+                        this.api.projectApi,
+                        this.api.projectApi.projectsProjectIdGet, projectId
+                    );
+
+                    console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+                } catch (e) {
+                    console.error("Error while updating bot");
+                    console.log(this.helper.wrapError(e));
+                }
             } else {
                 throw Error("Could not find latest bot revision from this project.");
             }
@@ -560,7 +584,7 @@ export default class Bot extends Component {
                         name: environment.name,
                         value: environment.id
                     }));
-            
+
                     let { environmentId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -569,14 +593,14 @@ export default class Bot extends Component {
                             choices: choicesEnvironment
                         }
                     ]);
-            
+
                     const dataChannels = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet , projectId, environmentId, null);
                     const channels: object[] = dataChannels.response.body;
                     const choicesChannel = channels.map((channel: any) => ({
                         name: channel.name,
                         value: channel.id
                     }));
-            
+
                     let { channelId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -585,7 +609,7 @@ export default class Bot extends Component {
                             choices: choicesChannel
                         }
                     ]);
-                    
+
                     let { start, end, error } = await inquirer.prompt<any>([
                         {
                             type: "text",
@@ -613,7 +637,7 @@ export default class Bot extends Component {
                             ]
                         },
                     ]);
-            
+
                     if (isDate(start) == false) {
                         start = new Date().setHours(0,0,0)
                     } else {
@@ -624,12 +648,12 @@ export default class Bot extends Component {
                     } else {
                         end = new Date(end).setHours(23,59,59)
                     }
-            
+
                     const errorGroup = error.group
                     const errorCode = error.code
-            
+
                     const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdErrorsGet , projectId, environmentId, channelId, errorGroup, errorCode, new Date(start).toISOString(), new Date(end).toISOString());
-                
+
                     if (response && response.body && response.body.data) {
                         const table = new Table({
                             head: ["Time", "Error Code", "Error Message"],
@@ -645,7 +669,7 @@ export default class Bot extends Component {
                 }
             } else {
                 console.log("Please select Project first");
-            }               
+            }
         } catch (e) {
             console.error(this.helper.wrapError(e));
         }

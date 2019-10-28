@@ -11,6 +11,8 @@ export default class Api extends Component {
     private userApi: any;
     private teamApi: any;
     public deploymentApi: any;
+    public timeout: any;
+    public gzip: boolean;
     private sessionApi: any;
     private cachesApi: any;
     private utilApi: any;
@@ -31,6 +33,8 @@ export default class Api extends Component {
         const currentLogin = this.helper.getProp("current_login") as string || "user";
         const tokenObj = this.helper.getProp("token") as JsonObject || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
+        this.timeout = this.helper.getProp("timeout") as number || 30000;
+        this.gzip = this.helper.getProp("gzip") as boolean || false;
 
         this.botApi = new this.zaun.BotApi();
         this.authApi = new this.zaun.AuthApi();
