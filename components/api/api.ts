@@ -33,7 +33,7 @@ export default class Api extends Component {
         const currentLogin = this.helper.getProp("current_login") as string || "user";
         const tokenObj = this.helper.getProp("token") as JsonObject || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
-        this.timeout = this.helper.getProp("timeout") as number || 30000;
+        this.timeout = this.helper.getProp("timeout") as number || 300000;
         this.gzip = this.helper.getProp("gzip") as boolean || false;
 
         this.botApi = new this.zaun.BotApi();
