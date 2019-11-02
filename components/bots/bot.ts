@@ -4,9 +4,9 @@ import { Component, Config, IHash, JsonObject } from "merapi";
 import { v4 as uuid } from "uuid";
 import { CatchError } from "../scripts/helper";
 import { isDate } from "util";
+import * as zlib from "zlib";
 import inquirer = require("inquirer");
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import * as pako from "pako";
 
 const Table = require("cli-table");
 const colors = require("colors");
@@ -206,26 +206,36 @@ export default class Bot extends Component {
                 const requestConfig: AxiosRequestConfig = {
                     headers: {
                         "Authorization": this.api.bearer.apiKey,
+                        "user-agent": `kata-cli@${this.api.version}`,
                     },
                     timeout: this.api.timeout,
                 }
 
-                if (this.api.gzip) {
-                    requestConfig.transformRequest = (data, headers) => {
-                        headers["content-encoding"] = "gzip";
-                        headers["content-type"] = "text/plain";
-                        return pako.deflate(JSON.stringify(data), { to: "string" });
-                    };
+                if (this.api.gzip === "true") {
+                    requestConfig.transformRequest = [(data, headers) => {
+                        const botString = JSON.stringify(data);
+                        headers["content-encoding"] = "deflate";
+                        headers["content-type"] = "application/json";
+                        const gzip = zlib.deflateSync(botString, { });
+                        return gzip;
+                    }];
+                }
+
+                let newBot;
+
+                try {
+                    const data = await axios.put(url, botDesc, requestConfig)
+                        .then((response: AxiosResponse) => {
+                            return response.data;
+                        });
+                    newBot = data;
+                } catch (e) {
+                    console.error("Error while updating bot");
+                    console.log(this.helper.wrapError(e));
                 }
 
                 try {
-                    const newBot = await axios.put(url, botDesc, requestConfig)
-                        .then((response: AxiosResponse) => response.data);
-
-                    // const { data: newBot } = await this.helper.toPromise(
-                    //     this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut,
-                    //     projectId, latestBotRevision, botDesc
-                    // );
+                    console.log("getting project details...")
                     const { data: project } = await this.helper.toPromise(
                         this.api.projectApi,
                         this.api.projectApi.projectsProjectIdGet, projectId

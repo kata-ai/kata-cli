@@ -1,0 +1,83 @@
+{
+    "name": "kata-cli",
+    "version": "2.5.0",
+    "description": "Kata AI Command Line Tools",
+    "main": "index.js",
+    "bin": {
+        "kata": "./bin/kata.js"
+    },
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "clean": "rm -rf ./lib",
+        "build": "tsc",
+        "test": "NODE_ENV=test mocha --recursive --compilers ts:ts-node/register --bail",
+        "cover": "sh bin/coverage.sh"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kata-ai/kata-cli.git"
+    },
+    "keywords": [
+        "cli"
+    ],
+    "nyc": {
+        "include": [
+            "components/**/*.ts",
+            "components/*.ts",
+            "interfaces/*.ts"
+        ],
+        "exclude": [
+            "node_modules"
+        ],
+        "extension": [
+            ".ts"
+        ],
+        "require": [
+            "ts-node/register"
+        ],
+        "reporter": [
+            "json",
+            "html"
+        ],
+        "all": true
+    },
+    "author": "Febry Antonius, Yoga Aliarham",
+    "license": "ISC",
+    "homepage": "https://github.com/kata-ai/kata-cli#readme",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "catch-decorator": "^2.0.0",
+        "cli-table": "^0.3.1",
+        "commander": "^2.14.1",
+        "deasync": "^0.1.14",
+        "inquirer": "^3.0.6",
+        "js-yaml": "^3.12.0",
+        "lodash": "^4.17.11",
+        "merapi": "^0.17.1",
+        "merapi-proxy": "^0.1.7",
+        "pako": "^1.0.10",
+        "universal-analytics": "^0.4.20",
+        "uuid": "^3.2.1",
+        "zaun": "^2.3.0"
+    },
+    "devDependencies": {
+        "@types/inquirer": "0.0.43",
+        "@types/js-yaml": "^3.9.0",
+        "@types/lodash": "^4.14.104",
+        "@types/node": "^7.0.55",
+        "@types/pako": "^1.0.1",
+        "@types/sinon": "^2.3.3",
+        "@types/uuid": "^3.4.4",
+        "codacy-coverage": "^2.1.1",
+        "mocha": "^5.2.0",
+        "mocha-lcov-reporter": "^1.3.0",
+        "mocha-typescript": "^1.1.17",
+        "nyc": "^11.9.0",
+        "sinon": "^7.2.2",
+        "ts-node": "^3.3.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.1.6"
+    }
+}
