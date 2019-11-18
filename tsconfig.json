@@ -3,6 +3,7 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
+        "resolveJsonModule": true,
         "baseUrl": "./",
         "sourceMap": true,
         "sourceRoot": "./",
@@ -15,7 +16,8 @@
     "include": [
         "components/**/*.ts",
         "components/*.ts",
-        "interfaces/*.ts"
+        "interfaces/*.ts",
+        "package.json"
     ],
 
     "exclude": [

@@ -1,6 +1,6 @@
 {
   "name": "kata-cli",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Kata AI Command Line Tools",
   "main": "index.js",
   "bin": {
@@ -47,6 +47,7 @@
   "license": "ISC",
   "homepage": "https://github.com/kata-ai/kata-cli#readme",
   "dependencies": {
+    "axios": "^0.19.0",
     "catch-decorator": "^2.0.0",
     "cli-table": "^0.3.1",
     "commander": "^2.14.1",
@@ -56,6 +57,7 @@
     "lodash": "^4.17.11",
     "merapi": "^0.17.1",
     "merapi-proxy": "^0.1.7",
+    "ora": "^4.0.2",
     "universal-analytics": "^0.4.20",
     "uuid": "^3.2.1",
     "zaun": "^2.3.0"

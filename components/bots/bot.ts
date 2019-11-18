@@ -4,9 +4,12 @@ import { Component, Config, IHash, JsonObject } from "merapi";
 import { v4 as uuid } from "uuid";
 import { CatchError } from "../scripts/helper";
 import { isDate } from "util";
+import * as zlib from "zlib";
 import inquirer = require("inquirer");
-const Table = require("cli-table");
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import * as ora from "ora";
 
+const Table = require("cli-table");
 const colors = require("colors");
 const repl = require("repl");
 const util = require("util");
@@ -15,8 +18,14 @@ const fs = require("fs");
 const deasync = require("deasync");
 
 export default class Bot extends Component {
+    private spinner: ora.Ora;
     constructor(private compile: ICompile, private helper: IHelper, private tester: ITester, private api: any) {
         super();
+
+        this.spinner = ora({
+            discardStdin: false,
+            spinner: "line",
+        })
     }
 
     public init(name: string, options: JsonObject) {
@@ -172,9 +181,11 @@ export default class Bot extends Component {
 
     @CatchError
     public async push(options: JsonObject) {
+        this.spinner.prefixText = "[push]"
         const desc = this.helper.loadYaml("./bot.yml");
         desc.tag = options.tag || null;
 
+        this.spinner.start("Compiling your bot...");
         let bot = Config.create(desc, { left: "${", right: "}" });
         bot = this.compile.execDirectives(bot, process.cwd());
         bot.resolve();
@@ -187,37 +198,81 @@ export default class Bot extends Component {
             return;
         }
 
+        this.spinner.succeed();
+
         const projectId = this.getProject();
 
         botDesc.id = projectId;
 
         let latestBotRevision;
         try {
+            this.spinner.start("Getting your project details...");
             const { response: { body: data } } = await this.helper.toPromise(
                 this.api.projectApi,
                 this.api.projectApi.projectsProjectIdBotGet, botDesc.id
             );
 
             if (data.revision) {
+                this.spinner.succeed();
+
                 latestBotRevision = data.revision;
+                const url = `${this.api.apiClient.basePath}/projects/${projectId}/bot/revisions/${latestBotRevision}`;
+                const requestConfig: AxiosRequestConfig = {
+                    headers: {
+                        "Authorization": this.api.bearer.apiKey,
+                        "user-agent": `kata-cli@${this.api.version}`,
+                    },
+                    timeout: this.api.timeout,
+                }
 
-                const { data: newBot } = await this.helper.toPromise(
-                    this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, 
-                    projectId, latestBotRevision, botDesc
-                );
-                const { data: project } = await this.helper.toPromise(
-                    this.api.projectApi,
-                    this.api.projectApi.projectsProjectIdGet, projectId
-                );
+                if (this.api.gzip === "true") {
+                    requestConfig.transformRequest = [(data, headers) => {
+                        const botString = JSON.stringify(data);
+                        headers["content-encoding"] = "deflate";
+                        headers["content-type"] = "application/json";
+                        const gzip = zlib.deflateSync(botString, { });
+                        return gzip;
+                    }];
+                }
 
-                console.log(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+                let newBot;
 
+                try {
+                    this.spinner.start("Pushing your bot...");
+                    const data = await axios.put(url, botDesc, requestConfig)
+                        .then((response: AxiosResponse) => {
+                            return response.data;
+                        });
+                    newBot = data;
+                    this.spinner.succeed();
+                } catch (e) {
+                    console.error("Error while updating bot");
+                    // console.log(this.helper.wrapError(e));
+                    this.spinner.fail(this.helper.wrapError(e));
+                }
+
+                try {
+                    // console.log("getting project details...")
+                    this.spinner.start("Getting project details...");
+                    const { data: project } = await this.helper.toPromise(
+                        this.api.projectApi,
+                        this.api.projectApi.projectsProjectIdGet, projectId
+                    );
+
+                    this.spinner.succeed(`Updated bot ${colors.green(project.name)} with revision: ${newBot.revision.substring(0, 7)}`);
+                } catch (e) {
+                    console.error("Error while updating bot");
+                    // console.log(this.helper.wrapError(e));
+                    this.spinner.fail(this.helper.wrapError(e));
+                }
             } else {
+                this.spinner.fail("Could not find latest bot revision from this project.");
                 throw Error("Could not find latest bot revision from this project.");
             }
         } catch (e) {
             console.error("Error");
-            console.log(this.helper.wrapError(e));
+            // console.log(this.helper.wrapError(e));
+            this.spinner.fail(this.helper.wrapError(e));
         }
 
         this.helper.dumpYaml("./bot.yml", desc);
@@ -560,7 +615,7 @@ export default class Bot extends Component {
                         name: environment.name,
                         value: environment.id
                     }));
-            
+
                     let { environmentId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -569,14 +624,14 @@ export default class Bot extends Component {
                             choices: choicesEnvironment
                         }
                     ]);
-            
+
                     const dataChannels = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet , projectId, environmentId, null);
                     const channels: object[] = dataChannels.response.body;
                     const choicesChannel = channels.map((channel: any) => ({
                         name: channel.name,
                         value: channel.id
                     }));
-            
+
                     let { channelId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -585,7 +640,7 @@ export default class Bot extends Component {
                             choices: choicesChannel
                         }
                     ]);
-                    
+
                     let { start, end, error } = await inquirer.prompt<any>([
                         {
                             type: "text",
@@ -613,7 +668,7 @@ export default class Bot extends Component {
                             ]
                         },
                     ]);
-            
+
                     if (isDate(start) == false) {
                         start = new Date().setHours(0,0,0)
                     } else {
@@ -624,12 +679,12 @@ export default class Bot extends Component {
                     } else {
                         end = new Date(end).setHours(23,59,59)
                     }
-            
+
                     const errorGroup = error.group
                     const errorCode = error.code
-            
+
                     const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdErrorsGet , projectId, environmentId, channelId, errorGroup, errorCode, new Date(start).toISOString(), new Date(end).toISOString());
-                
+
                     if (response && response.body && response.body.data) {
                         const table = new Table({
                             head: ["Time", "Error Code", "Error Message"],
@@ -645,7 +700,7 @@ export default class Bot extends Component {
                 }
             } else {
                 console.log("Please select Project first");
-            }               
+            }
         } catch (e) {
             console.error(this.helper.wrapError(e));
         }
