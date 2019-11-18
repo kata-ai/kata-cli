@@ -314,10 +314,16 @@ export default class User extends Component {
             const name: string = (await this.getUserInfo(userName)).name;
             const email: string = (await this.getUserInfo(userName)).email;
 
-            if ( userName !== name  && userName !== email) {
-                throw new Error(`Sorry, username is not exist.`);
+            if ( name && email ) {
+                // userName is user collected input
+                if ( userName !== name && userName !== email ) {
+                    throw new Error(`Sorry, username is not exist.`);
+                }
+            } else {
+                throw new Error(`Sorry, username is not valid.`);
             }
-            
+
+
             // impersonate function
             const result = await this.helper.toPromise(
                 this.api.authApi, this.api.authApi.impersonatePost, 
@@ -382,9 +388,8 @@ export default class User extends Component {
             this.api.userApi.usersGetInfoKeyGet, 
             userName, 
         );
-        console.log('response ', response.body);
         const user = response.body;
-        const email: string = user.email.toString();
+        const email: string = user.email ? user.email.toString() : "";
         const name: string = user.username.toString();
         const id: string = user.userId.toString();
         return { 
