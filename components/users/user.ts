@@ -307,28 +307,22 @@ export default class User extends Component {
             this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
             
             // get admin token
-            // const currentToken: string = this.getToken({name: "admin"});
-            // console.log(currentToken);
             this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
 
             // get user id from username
             const id: string = (await this.getUserInfo(userName)).id;
             const name: string = (await this.getUserInfo(userName)).name;
+            const email: string = (await this.getUserInfo(userName)).email;
 
-            // const limit: number = 1;
-            // const { response } = await this.helper.toPromise(
-            //     this.api.userApi, this.api.userApi.usersSearchGet, userName, limit
-            // );
-            // const users = response.body;
-            // const name: string = users.map( (user: any) => user.username )[0].toString();
-            // const id: string = users.map( (user: any) => user.userId )[0].toString();
-            
-            if ( userName !== name ) {
-                throw new Error(`Sorry, username is not exist.`);
+            if ( name && email ) {
+                // userName is user collected input
+                if ( userName !== name && userName !== email ) {
+                    throw new Error(`Sorry, username is not exist.`);
+                }
+            } else {
+                throw new Error(`Sorry, username is not valid.`);
             }
-            
-            // TODO : check tsc error kenapa?
-            // TODO : check message error tidak muncul, kenapa?
+
 
             // impersonate function
             const result = await this.helper.toPromise(
@@ -395,9 +389,14 @@ export default class User extends Component {
             userName, 
         );
         const user = response.body;
+        const email: string = user.email ? user.email.toString() : "";
         const name: string = user.username.toString();
         const id: string = user.userId.toString();
-        return { id, name };
+        return { 
+            id, 
+            name, 
+            email,
+         };
     }
 
     private async getNewPasswordData(): Promise<JsonObject> {
