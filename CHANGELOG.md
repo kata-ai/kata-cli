@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## [2.6.0] - 2019/11/19
+- Fix search user by username or email on`kata invite-member` and `kata impersonate`command ([#133](https://github.com/kata-ai/kata-cli/pull/133), [#139](https://github.com/kata-ai/kata-cli/pull/139))
+
 ## [2.5.0] - 2019/09/02
-- Fix bug when switch to team durinng in impersonate mode ([#126](https://github.com/kata-ai/kata-cli/pull/126))
+- Fix bug when switch to team during in impersonate mode ([#126](https://github.com/kata-ai/kata-cli/pull/126))
 - Add feature to select project name inline ([#127](https://github.com/kata-ai/kata-cli/pull/127))
 - Add handler to display notification message when error happened, instead of letting string quotes `''` pop up ([#128](https://github.com/kata-ai/kata-cli/pull/128))
 
