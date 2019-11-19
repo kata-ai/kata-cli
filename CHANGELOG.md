@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## [2.6.0] - 2019/11/19
-- Fix search user on`kata invite-member` and `kata impersonate`command ([#133](https://github.com/kata-ai/kata-cli/pull/133), [#139](https://github.com/kata-ai/kata-cli/pull/139))
+- Fix search user by username or email on`kata invite-member` and `kata impersonate`command ([#133](https://github.com/kata-ai/kata-cli/pull/133), [#139](https://github.com/kata-ai/kata-cli/pull/139))
 
 ## [2.5.0] - 2019/09/02
 - Fix bug when switch to team during in impersonate mode ([#126](https://github.com/kata-ai/kata-cli/pull/126))
