@@ -270,14 +270,22 @@ export default class Nlu extends Component {
             console.log("Missing name in nlu.yml");
             return;
         }
-        // check training job
-        const result = await this.helper.toPromise(this.api.nluApi,
-            this.api.nluApi.projectsProjectIdNlusNluNameHasActiveJobGet, projectId, nluName);
-        if (result.data) {
-            console.log("Sorry, your previous training is still running. " +
-                "Give it another try in a few minutes.");
+
+        // handle when training job checking is failed
+        const hasActiveJobErrMsg = "Sorry, your previous training is still running. Give it another try in a few minutes.";
+        try {
+            // check training job
+            const result = await this.helper.toPromise(this.api.nluApi,
+                this.api.nluApi.projectsProjectIdNlusNluNameHasActiveJobGet, projectId, nluName);
+            if (result.data) {
+                console.log(hasActiveJobErrMsg);
+                return;
+            }
+        } catch (error) {
+            console.log(hasActiveJobErrMsg);
             return;
         }
+        
         try {
             let opts: any = {};
             if (options.file) {
