@@ -34,23 +34,23 @@ export default class Deployment {
         }
 
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi,
+            const { response: { body: data } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdNluRevisionsGet, projectId);
 
-          if (data.data[0] && data.data[0].revision) {
-              nluRevision = data.data[0].revision;
-          }
+            if (data.data[0] && data.data[0].revision) {
+                nluRevision = data.data[0].revision;
+            }
         } catch (e) {
             console.error("Error");
             console.log(this.helper.wrapError(e));
         }
 
         try {
-            const { response: {body: data} } = await this.helper.toPromise(this.api.projectApi, 
+            const { response: { body: data } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdCmsGet, projectId);
             if (data.revision) {
                 cmsRevision = data.revision;
-            } 
+            }
         } catch (e) {
             console.error("Error");
             console.log(this.helper.wrapError(e));
@@ -76,7 +76,7 @@ export default class Deployment {
                 patch = Number(patch) + 1;
             }
             targetVersion = `${major}.${minor}.${patch}`;
-            
+
         } catch (e) {
             targetVersion = "0.0.1";
         }
@@ -84,8 +84,11 @@ export default class Deployment {
         try {
             const postBody = {
                 version: targetVersion,
+                botId: projectId,
                 botRevision,
+                nluId: projectId,
                 nluRevision,
+                cmsId: projectId,
                 cmsRevision,
                 modules: (null as any),
             };
@@ -137,7 +140,12 @@ export default class Deployment {
             const author = this.helper.getProp("current_login");
 
             const { response: { body } } = await this.helper.toPromise(
-                this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet, projectId, { limit: 1000000, page: 1}
+                this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdDeploymentVersionsGet,
+                projectId,
+                {
+                    limit: 1000000,
+                    page: 1
+                }
             );
 
             if (body && body.data) {
@@ -147,7 +155,7 @@ export default class Deployment {
                     throw new Error("Version not found");
                 }
 
-                let { changelog, confirm } = await inquirer.prompt<any>([
+                const { changelog, confirm } = await inquirer.prompt<any>([
                     {
                         type: "text",
                         name: "changelog",
@@ -165,17 +173,19 @@ export default class Deployment {
                     author,
                     changelog,
                     version: versionData.version
-                }
+                };
 
                 if (confirm) {
                     const { response } = await this.helper.toPromise(
-                        this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost, versionData.id, requestBody
+                        this.api.deploymentApi, this.api.deploymentApi.deploymentsDeploymentIdRollbackPost,
+                        versionData.id,
+                        requestBody
                     );
-    
+
                     if (response && response.body) {
-                        console.log(`Successfully rolled back to version ${versionData.version}`)
+                        console.log(`Successfully rolled back to version ${versionData.version}`);
                     } else {
-                        console.log(`Error when trying to rollback to version ${versionData.version}`)
+                        console.log(`Error when trying to rollback to version ${versionData.version}`);
                     }
                 }
             }
