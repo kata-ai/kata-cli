@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.6.3] - 2020/11/11
+
+- Fix select project by name
+
 ## [2.6.1] - 2020/08/25
 
 - Fix when create deployment not set cmsId, nluId, botId
