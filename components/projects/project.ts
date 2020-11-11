@@ -13,24 +13,24 @@ export default class Project {
     ) { }
 
     public async create() {
-        let projectData: Record<string, any> = {name : ""};
+        let projectData: Record<string, any> = { name: "" };
         while (true) {
-          projectData = await this.helper.inquirerPrompt([
-            {
-              type: "text",
-              name: "name",
-              message: "Project name:",
-            },
-          ]);
-          if (projectData.name.length > 20) {
-              console.error("error: Project name length can not exceed 20 characters");
-          }
-          else if (!/^[A-Za-z][A-Za-z0-9_-]*[A-Za-z0-9]$/.test(projectData.name)) {
-              console.error("error: Project name must start with alphabet characters and contains only aplhanumeric character, dash, or underscore");
-          }
-          else {
-              break;
-          }
+            projectData = await this.helper.inquirerPrompt([
+                {
+                    type: "text",
+                    name: "name",
+                    message: "Project name:",
+                },
+            ]);
+            if (projectData.name.length > 20) {
+                console.error("error: Project name length can not exceed 20 characters");
+            }
+            else if (!/^[A-Za-z][A-Za-z0-9_-]*[A-Za-z0-9]$/.test(projectData.name)) {
+                console.error("error: Project name must start with alphabet characters and contains only aplhanumeric character, dash, or underscore");
+            }
+            else {
+                break;
+            }
         }
         const inquiredOptions = await this.helper.inquirerPrompt([
             {
@@ -87,7 +87,7 @@ export default class Project {
         }
     }
 
-    public async update(projectName?:string) {
+    public async update(projectName?: string) {
         let chosen = null
 
         if (projectName) {
@@ -95,7 +95,7 @@ export default class Project {
         } else {
             chosen = await this.choose()
         }
-        
+
         if (chosen) {
             const { description, privateNlu } = await this.helper.inquirerPrompt([
                 {
@@ -110,9 +110,9 @@ export default class Project {
                     default: true,
                 }
             ]);
-    
+
             const nluVisibility = privateNlu ? 'private' : 'public';
-    
+
             const requestBody = {
                 id: chosen.id,
                 name: chosen.name,
@@ -124,7 +124,7 @@ export default class Project {
                     nluId: chosen.options.nluId
                 }
             }
-            
+
             const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdPut, chosen.id, requestBody);
             if (response && response.body) {
                 console.log(`Project ${chosen.name} has been updated.`)
@@ -156,26 +156,21 @@ export default class Project {
     }
 
     private async getDataByName(projectName: string) {
-        const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGet, {});
-
-        if (response && response.body && response.body.data) {
-            const projects = response.body.data
-            const sameName = projects.find((project: any) => project.name === projectName);
-            if (sameName) {
-                return sameName
-            }
+        const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsGetProjectByNameGet, { name: projectName });
+        if (response && response.body && response.body.id) {
+            return response.body;
         }
     }
 
-    private async choose(){
+    private async choose() {
         try {
-            let page =  1;
+            let page = 1;
             const pageLimit = 10;
             while (true) {
                 const { response } = await this.helper.toPromise(
                     this.api.projectApi,
                     this.api.projectApi.projectsGet,
-                    { limit: pageLimit, page}
+                    { limit: pageLimit, page }
                 );
 
                 if (response && response.body && response.body.data) {
@@ -191,14 +186,14 @@ export default class Project {
                     const body = response.body;
 
                     if (body.total > body.page * body.limit) {
-                        choices.push({name: "(Load More)", value: -1});
+                        choices.push({ name: "(Load More)", value: -1 });
                     }
 
                     const { project } = await inquirer.prompt<any>([
                         {
                             type: "list",
                             name: "project",
-                            message: `Select project (page ${ page } / ${ maxPage })`,
+                            message: `Select project (page ${page} / ${maxPage})`,
                             paginated: false,
                             pageSize: pageLimit + 1,
                             choices
@@ -246,18 +241,18 @@ export default class Project {
                 this.helper.setProp("projectName", chosen.name);
             }
         }
-        console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));
+        console.log(colors.green(`Project "${chosen.name}" (${chosen.id}) is successfully selected`));
 
         if (!chosen || chosen === undefined) {
             chosen = await this.choose()
             if (chosen) {
                 this.helper.setProp("projectId", chosen.id);
                 this.helper.setProp("projectName", chosen.name);
-                console.log(colors.green(`Project "${ chosen.name }" (${ chosen.id }) is successfully selected`));
+                console.log(colors.green(`Project "${chosen.name}" (${chosen.id}) is successfully selected`));
             }
         }
 
-        
+
     }
 
     public async delete(projectName?: string) {
@@ -277,12 +272,12 @@ export default class Project {
                     const deleteProject = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdDelete, chosen.id);
                     if (deleteProject && deleteProject.response && deleteProject.response.body) {
                         if (deleteProject.response.body) {
-                            console.log("Project has been deleted.")    
+                            console.log("Project has been deleted.")
                         } else {
                             console.log("Failed when trying delete project")
                         }
-                    }   
-                }  
+                    }
+                }
             } else {
                 console.log(`Project ${projectName} is not found`)
             }
