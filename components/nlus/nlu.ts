@@ -114,8 +114,8 @@ export default class Nlu extends Component {
         try {
             const { response: { body } } = await this.helper.toPromise(this.api.projectApi,
                 this.api.projectApi.projectsProjectIdNluGet, projectId);
-            const {name, lang, visibility, entities} = body;
-            nluDesc = {name, lang, visibility, entities};
+            const { name, lang, visibility, entities } = body;
+            nluDesc = { name, lang, visibility, entities };
         } catch (error) {
             console.log("Error: ", this.helper.wrapError(error));
             return;
@@ -147,7 +147,7 @@ export default class Nlu extends Component {
         const projectId = this.helper.getProp("projectId");
         let nluDesc: any = null;
         try {
-          nluDesc = this.helper.loadYaml("./nlu.yml");
+            nluDesc = this.helper.loadYaml("./nlu.yml");
         } catch (error) {
             if (error.code === "ENOENT") {
                 console.log(
@@ -273,7 +273,7 @@ export default class Nlu extends Component {
         // check training job
         const result = await this.helper.toPromise(this.api.nluApi,
             this.api.nluApi.projectsProjectIdNlusNluNameHasActiveJobGet, projectId, nluName);
-        if (result.data) {
+        if (result.response.body.data) {
             console.log("Sorry, your previous training is still running. " +
                 "Give it another try in a few minutes.");
             return;
@@ -428,7 +428,7 @@ export default class Nlu extends Component {
         }
     }
 
-    public async listTraining(params?:any) {
+    public async listTraining(params?: any) {
         try {
             const projectId = this.helper.getProp("projectId");
             if (projectId) {
@@ -450,7 +450,7 @@ export default class Nlu extends Component {
                     });
 
                     response.body.data.forEach((data: any) => {
-                        const entities: JsonArray = data.entities.map((e:any) => {
+                        const entities: JsonArray = data.entities.map((e: any) => {
                             return `(${e.entity}:${e.label}) ${e.value}`
                         })
                         table.push([data.input, entities.join("\n")]);
@@ -467,7 +467,7 @@ export default class Nlu extends Component {
         }
     }
 
-    public async listPrediction(params?:any) {
+    public async listPrediction(params?: any) {
         try {
             const projectId = this.helper.getProp("projectId");
             if (projectId) {
@@ -488,10 +488,10 @@ export default class Nlu extends Component {
                     });
 
                     response.body.result.forEach((data: any) => {
-                        const entities: JsonArray = data.corrected.entities.map((e:any) => {
+                        const entities: JsonArray = data.corrected.entities.map((e: any) => {
                             return `(${e.entity}:${e.label}) ${e.value}`
                         })
-                        
+
                         table.push([data.corrected.input, entities.join("\n")]);
                     });
                     console.log(table.toString());
@@ -515,13 +515,13 @@ export default class Nlu extends Component {
                     this.api.projectApi.projectsProjectIdNluRevisionsGet,
                     projectId
                 );
-    
+
                 if (response && response.body && response.body.data) {
                     const table = new Table({
                         head: ["Snapshot", "Date"],
                         colWidths: [50, 25]
                     });
-    
+
                     response.body.data.forEach((data: any) => {
                         table.push([data.revision, new Date(data.created_at).toLocaleString()]);
                     });
@@ -546,23 +546,23 @@ export default class Nlu extends Component {
                     this.api.nluApi.projectsProjectIdNluGet,
                     projectId
                 );
-    
+
                 if (response && response.body) {
                     const table = new Table({
                         head: ["NLU Name", "NLU ID", "Language", "Token"]
                     });
-    
+
                     const language = (response.body.lang == "id") ? "Bahasa Indonesia" : "English"
-    
+
                     table.push([response.body.name, response.body.id, language, response.body.token]);
-    
+
                     console.log(table.toString());
                 } else {
                     console.log("Failed when trying get NL detail")
                 }
             } else {
                 console.log("Please select project first")
-            }            
+            }
         } catch (error) {
             console.log(this.helper.wrapError(error));
         }
@@ -589,9 +589,9 @@ export default class Nlu extends Component {
                 }
             } else {
                 console.log("Please select project first")
-            }    
+            }
         } catch (error) {
-            console.log(this.helper.wrapError(error));   
+            console.log(this.helper.wrapError(error));
         }
     }
 }

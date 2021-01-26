@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.6.4] - 2021/01/26
+
+- Fix nl training condition
+
 ## [2.6.3] - 2020/11/11
 
 - Fix select project by name
