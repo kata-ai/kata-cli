@@ -202,7 +202,7 @@ export default class Bot extends Component {
                 latestBotRevision = data.revision;
 
                 const { data: newBot } = await this.helper.toPromise(
-                    this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut, 
+                    this.api.botApi, this.api.botApi.projectsProjectIdBotRevisionsRevisionPut,
                     projectId, latestBotRevision, botDesc
                 );
                 const { data: project } = await this.helper.toPromise(
@@ -522,20 +522,21 @@ export default class Bot extends Component {
         } else {
             // default session
             return {
-                "channel_id" : "console-channel",
-                "environment_id" : "console-environment",
-                "states" : {},
-                "contexes" : {},
-                "history" : [ ],
-                "current" : null,
-                "meta" : null,
+                "id": "test~from~console",
+                "channelId" : "console-channel",
+                "environmentId" : "console-environment",
+                "deploymentId": "console-deployment",
+                "dataKey": null,
+                "states": {},
+                "contexes": {},
+                "history": [ ],
+                "current": null,
+                "meta": null,
                 "timestamp" : Date.now(),
-                "data" : {},
-                "created_at" : Date.now(),
-                "updated_at" : Date.now(),
-                "session_start" : Date.now(),
-                "session_id" : "test~from~console",
-                "id" : "test~from~console"
+                "data": {},
+                "createdAt" : Date.now(),
+                "updatedAt" : Date.now(),
+                "sessionStart" : Date.now(),
             };
         }
     }
@@ -560,7 +561,7 @@ export default class Bot extends Component {
                         name: environment.name,
                         value: environment.id
                     }));
-            
+
                     let { environmentId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -569,14 +570,14 @@ export default class Bot extends Component {
                             choices: choicesEnvironment
                         }
                     ]);
-            
+
                     const dataChannels = await this.helper.toPromise(this.api.deploymentApi, this.api.deploymentApi.projectsProjectIdEnvironmentsEnvironmentIdChannelsGet , projectId, environmentId, null);
                     const channels: object[] = dataChannels.response.body;
                     const choicesChannel = channels.map((channel: any) => ({
                         name: channel.name,
                         value: channel.id
                     }));
-            
+
                     let { channelId } = await inquirer.prompt<any>([
                         {
                             type: "list",
@@ -585,7 +586,7 @@ export default class Bot extends Component {
                             choices: choicesChannel
                         }
                     ]);
-                    
+
                     let { start, end, error } = await inquirer.prompt<any>([
                         {
                             type: "text",
@@ -613,7 +614,7 @@ export default class Bot extends Component {
                             ]
                         },
                     ]);
-            
+
                     if (isDate(start) == false) {
                         start = new Date().setHours(0,0,0)
                     } else {
@@ -624,12 +625,12 @@ export default class Bot extends Component {
                     } else {
                         end = new Date(end).setHours(23,59,59)
                     }
-            
+
                     const errorGroup = error.group
                     const errorCode = error.code
-            
+
                     const { response } = await this.helper.toPromise(this.api.projectApi, this.api.projectApi.projectsProjectIdErrorsGet , projectId, environmentId, channelId, errorGroup, errorCode, new Date(start).toISOString(), new Date(end).toISOString());
-                
+
                     if (response && response.body && response.body.data) {
                         const table = new Table({
                             head: ["Time", "Error Code", "Error Message"],
@@ -645,7 +646,7 @@ export default class Bot extends Component {
                 }
             } else {
                 console.log("Please select Project first");
-            }               
+            }
         } catch (e) {
             console.error(this.helper.wrapError(e));
         }
