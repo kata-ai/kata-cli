@@ -73,7 +73,7 @@ export default class User extends Component {
                 user = answer.user || user;
                 pass = answer.password || pass;
 
-                const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.loginPost, { username: user, password: pass });
+                const result = await this.helper.toPromise(this.api.authApi, this.api.authApi.cliLoginPost, { username: user, password: pass });
                 if (!result.data.isLoggedIn && !result.data.id) {
                     console.log(`username or password is incorrect`);
                 } else {
@@ -111,7 +111,7 @@ export default class User extends Component {
             } else {
                 console.log("Please log in first");
             }
-            
+
             this.helper.clearCommandSession();
         } catch (e) {
             console.log(this.helper.wrapError(e));
@@ -132,15 +132,15 @@ export default class User extends Component {
             const isImpersonate = this.helper.getProp("isImpersonate");
             if (type === "team") {
                 let userId: string;
-                if (isImpersonate === true) {    
+                if (isImpersonate === true) {
                     const currentLoginName = this.helper.getProp("current_login").toString();
                     userId = (await this.getUserInfo(currentLoginName)).id;
                 } else {
                     userId = firstLogin.id.toString();
                 }
                 const { response } = await this.helper.toPromise(
-                    this.api.userApi, 
-                    this.api.userApi.usersUserIdGet, 
+                    this.api.userApi,
+                    this.api.userApi.usersUserIdGet,
                     userId
                 );
 
@@ -149,16 +149,16 @@ export default class User extends Component {
                     throw new Error(`Unable to switch team: ${colors.green(name)}`);
                 }
 
-                const teams = response && response.body ? 
+                const teams = response && response.body ?
                     response.body.teams.filter((team: any) => team.username === name) : [];
 
                 if (teams.length > 0) {
                     const result = await this.helper.toPromise(
-                        this.api.authApi, 
-                        this.api.authApi.tokensPost, 
-                        { 
-                            type: "team", 
-                            teamId: teams[0].teamId 
+                        this.api.authApi,
+                        this.api.authApi.tokensPost,
+                        {
+                            type: "team",
+                            teamId: teams[0].teamId
                         }
                     );
                     const token = result.data.id;
@@ -300,12 +300,12 @@ export default class User extends Component {
             const currentLogin: string = this.helper.getProp("current_login").toString();
             if (currentLogin !== "admin") {
                 throw new Error(`Your login status is not superadmin. You are not authorized to impersonate a user`);
-            } 
-            
+            }
+
             // set currentToken header bearer token
             const currentToken: string = this.helper.getCurrentToken().token.toString();
             this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
-            
+
             // get admin token
             this.api.authApi.apiClient.defaultHeaders.Authorization = `Bearer ${currentToken}`;
 
@@ -326,7 +326,7 @@ export default class User extends Component {
 
             // impersonate function
             const result = await this.helper.toPromise(
-                this.api.authApi, this.api.authApi.impersonatePost, 
+                this.api.authApi, this.api.authApi.impersonatePost,
                 {
                     userId: id,
                     namespace: "platform"
@@ -375,26 +375,26 @@ export default class User extends Component {
             const userName: string = name.toString();
             const token: string  = tokenProp[name as string].toString();
             return {
-                userName, 
+                userName,
                 token
             };
-        } 
+        }
     }
 
     private async getUserInfo(userName: string) {
         // get userId from currentlogin
         const { response } = await this.helper.toPromise(
-            this.api.userApi, 
-            this.api.userApi.usersGetInfoKeyGet, 
-            userName, 
+            this.api.userApi,
+            this.api.userApi.usersGetInfoKeyGet,
+            userName,
         );
         const user = response.body;
         const email: string = user.email ? user.email.toString() : "";
         const name: string = user.username.toString();
         const id: string = user.userId.toString();
-        return { 
-            id, 
-            name, 
+        return {
+            id,
+            name,
             email,
          };
     }
@@ -507,7 +507,7 @@ export default class User extends Component {
                 const choices = teams.map((team: any) => ({
                     name: team.username,
                     value: team.teamId
-                }));                
+                }));
                 let teamId = null
 
                 if (teamName) {
@@ -527,7 +527,7 @@ export default class User extends Component {
 
                     teamId = choice.teamId
                 }
-                
+
 
                 const { response } = await this.helper.toPromise(this.api.teamApi, this.api.teamApi.teamsTeamIdUsersGet, teamId);
                 const table = new Table({
