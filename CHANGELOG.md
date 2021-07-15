@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.7.0] - 2021/07/19
+
+- Add cli-login endpoint
+
 ## [2.6.4] - 2021/01/26
 
 - Fix nl training condition
