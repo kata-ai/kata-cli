@@ -4,6 +4,8 @@
 
 - Add cli-login endpoint
 
+- Fix default session to use camelCase
+
 ## [2.6.4] - 2021/01/26
 
 - Fix nl training condition
