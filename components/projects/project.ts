@@ -45,6 +45,7 @@ export default class Project {
                 message: "Project description:",
             },
         ]);
+        inquiredOptions.timezone = Number(inquiredOptions.timezone)
         const options = { bot: true, cms: true, nlu: true, ...inquiredOptions };
 
         let nluOptions: any = {};
