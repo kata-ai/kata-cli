@@ -1,10 +1,12 @@
 # CHANGELOG
 
-## [2.7.0] - 2021/07/19
+## [2.7.0] - 2021/10/11
 
 - Add cli-login endpoint
 
 - Fix default session to use camelCase
+
+- Fix create project timezone issue
 
 ## [2.6.4] - 2021/01/26
 
