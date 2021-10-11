@@ -21,6 +21,11 @@ export default class Project {
                     name: "name",
                     message: "Project name:",
                 },
+                {
+                    type: "text",
+                    name: "description",
+                    message: "Project description:",
+                },
             ]);
             if (projectData.name.length > 20) {
                 console.error("error: Project name length can not exceed 20 characters");
@@ -38,11 +43,6 @@ export default class Project {
                 name: "timezone",
                 message: "Timezone (UTC)",
                 default: 7,
-            },
-            {
-                type: "text",
-                name: "description",
-                message: "Project description:",
             },
         ]);
         inquiredOptions.timezone = Number(inquiredOptions.timezone)
