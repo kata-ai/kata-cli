@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [2.7.2] - 2021/11/04
+
+- Update zaun version to 2.7.1
+
 ## [2.7.1] - 2021/10/11
 
 - Fix create project timezone and description bug
