@@ -29,8 +29,14 @@ export default class Api extends Component {
         this.apiClient.basePath = basePath;
         this.bearer = this.apiClient.authentications.Bearer;
         const currentLogin = this.helper.getProp("current_login") as string || "user";
+        const currentUserType = this.helper.getProp("current_user_type") as string || "user";
         const tokenObj = this.helper.getProp("token") as JsonObject || {};
         this.bearer.apiKey = `Bearer ${tokenObj[currentLogin]}`;
+        if (currentUserType === "team") {
+            const teamId = this.helper.getProp("team_id");
+            console.log({teamId})
+            this.apiClient.defaultHeaders = { "X-auth-teamid": teamId };
+        }
 
         this.botApi = new this.zaun.BotApi();
         this.authApi = new this.zaun.AuthApi();
