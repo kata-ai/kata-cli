@@ -153,16 +153,12 @@ export default class User extends Component {
                     response.body.teams.filter((team: any) => team.username === name) : [];
 
                 if (teams.length > 0) {
-                    const result = await this.helper.toPromise(
-                        this.api.authApi,
-                        this.api.authApi.tokensPost,
-                        {
-                            type: "team",
-                            teamId: teams[0].teamId
-                        }
-                    );
-                    const token = result.data.id;
-                    this.setToken({ name, type: "team" }, token);
+                    const team = teams[0];
+                    const currentToken = this.helper.getProp("token") as JsonObject || {}
+                    const currentLogin = this.helper.getProp("current_login") as string || "user";
+
+                    this.setToken({ name, type: "team" }, currentToken[currentLogin] as string);
+                    this.helper.setProp("team_id", team.teamId);
                     this.helper.setProp("current_login", name);
                     this.helper.setProp("current_user_type", "team");
                     console.log(`Switched to team: ${colors.green(name)}`);
